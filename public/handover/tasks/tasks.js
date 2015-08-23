@@ -43,6 +43,7 @@
 .controller('taskDetailController', function(authData,$scope,comments,task,$window,$rootScope){
 	$scope.task = task;
 	$scope.comments = comments;
+
 	$rootScope.$on("logout", function() {
 		comments.$destroy();
 	});

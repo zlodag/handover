@@ -5,10 +5,10 @@
 		</div> -->
 		<ul class="nav navbar-nav">
 			<li class="navbar-brand">Handover</li>
-			<li ui-sref-active="active"><a ui-sref="login">Login</a></li>
-			<li ui-sref-active="active"><a ui-sref="admin">Admin</a></li>
-			<li ui-sref-active="active"><a ui-sref="profile.public({userId:auth.uid})">Profile</a></li>
-			<li ui-sref-active="active"><a ui-sref="tasks.overview">Tasks</a></li>
+			<li ui-sref-active="active" ng-hide="auth"><a ui-sref="login">Login</a></li>
+			<li ui-sref-active="active" ng-show="auth"><a ui-sref="admin">Admin</a></li>
+			<li ui-sref-active="active" ng-show="auth"><a ui-sref="profile.public({userId:auth.uid})">Profile</a></li>
+			<li ui-sref-active="active" ng-show="auth"><a ui-sref="tasks.overview">Tasks</a></li>
 			<!-- <li class="dropdown" dropdown>
 				<a href dropdown-toggle>Dropdown <span class="caret"></span></a>
 				<ul class="dropdown-menu">

@@ -8,13 +8,12 @@
 	.state('login', {
 		url: "/login",
 		templateUrl: "/handover/login/login.html",
-		resolve: {
-			wait: function(Auth) {
-				//return Auth;
-				return Auth.$waitForAuth();
-		    }
-		},
 		controller: 'loginController'
+	})
+	.state('register', {
+		url: "/register",
+		templateUrl: "/handover/login/register.html",
+		controller: 'registerController'
 	})
 	// .state('logout', {
 	// 	url: "/logout",
@@ -32,12 +31,45 @@
 	// 	}
 	// })
 })
-.controller('loginController',function($scope,Auth,$state){
+.controller('registerController',function($scope,Auth,$state,$window){
+	$scope.createAccount = function(credentials) {
+		var email = credentials.email,
+		password = credentials.password,
+		firstname = credentials.firstname,
+		lastname = credentials.lastname;
+        Auth.$createUser({
+        	email: email,
+        	password: password
+		})
+		.then(function() {
+			return Auth.$authWithPassword({ email: email, password: password });
+		})
+		.then(
+			function(user) {
+				var ref = new $window.Firebase("https://nutm.firebaseio.com/users").child(user.uid);
+				ref.set({firstname: firstname, lastname: lastname}, function(err){
+					if (err) {
+						console.error("Unable to update user profile", err);
+					}
+					else {
+						$state.go('profile.public',{userId:user.uid});
+					}
+				});
+			},
+			function(err) {
+            	console.error("Create user failed", err);
+			}
+		);
+    };
+})
+.controller('loginController',function($scope,Auth,$state,$window){
+
 	$scope.login = function(credentials){
-		Auth.$authWithPassword(credentials)
+		Auth.$authWithPassword(credentials,{rememberMe: true})
 		.then(function(authData) {
 			console.log("Logged in as:", authData.uid);
-			$state.go('profile.public',{userId:authData.uid});
+			$state.go('tasks.overview');
+			// $state.go('profile.public',{userId:authData.uid});
 		}).catch(function(error) {
 			console.error("Authentication failed:", error);
 		});

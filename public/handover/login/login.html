@@ -1,4 +1,4 @@
-<form ng-hide="auth" ng-submit="login(credentials)">
+<form ng-submit="login(credentials)">
     <div class="form-group">
         <label for="email">Email</label>
         <input class="form-control" type="email" id="email" ng-model="credentials.email" required/>
@@ -11,3 +11,4 @@
 	<button class="btn btn-default" type="button" ng-click="login({email:'zlodag@gmail.com',password:'zlodag'})">Log in as zlodag</button>
 	<button class="btn btn-default" type="button" ng-click="login({email:'tickled_goat',password:'anonymous'})">Log in as user</button>
 </form>
+<a class="btn btn-primary" ui-sref="register">Register</a>
