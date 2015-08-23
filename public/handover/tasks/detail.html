@@ -16,25 +16,28 @@
     <p ng-bind="task.text"></p>
     <div>
         Added
-        by <a ui-sref="user({userId: task.added.user})" ng-bind="task.added.user"></a>
+        by <a ui-sref="profile.public({userId: task.added.user.uid})" ng-bind="task.added.user.name"></a>
         at <em ng-bind="task.added.timestamp | date : 'short'"></em>
     </div>
     <div ng-if="task.accepted">
         Accepted
-        by <a ui-sref="user({userId: task.accepted.user})" ng-bind="task.accepted.user"></a>
+        by <a ui-sref="profile.public({userId: task.accepted.user.uid})" ng-bind="task.accepted.user.name"></a>
         at <em ng-bind="task.accepted.timestamp | date : 'short'"></em>
     </div>
     <div ng-if="task.completed">
         Completed
-        by <a ui-sref="user({userId: task.completed.user})" ng-bind="task.completed.user"></a>
+        by <a ui-sref="profile.public({userId: task.completed.user.uid})" ng-bind="task.completed.user.name"></a>
         at <em ng-bind="task.completed.timestamp | date : 'short'"></em>
     </div>
     <div ng-if="task.cancelled">
         Cancelled
-        by <a ui-sref="user({userId: task.completed.user})" ng-bind="task.cancelled.user"></a>
+        by <a ui-sref="profile.public({userId: task.cancelled.user.uid})" ng-bind="task.cancelled.user.name"></a>
         at <em ng-bind="task.cancelled.timestamp | date : 'short'"></em>
         <span class="glyphicon glyphicon-comment" tooltip="{{task.cancelled.reason}}"></span>
     </div>
+    <button type="button" class="btn btn-info" ng-if="canStamp('accepted')" ng-click="stamp('accepted')">Accept</button>
+    <button type="button" class="btn btn-success" ng-if="canStamp('completed')" ng-click="stamp('completed')">Complete</button>
+    <button type="button" class="btn btn-danger" ng-if="canStamp('cancelled')" ng-click="stamp('cancelled', 'because...')">Cancel</button>
 </div>
 <blockquote ng-repeat="comment in comments">
     <p ng-bind="comment.comment"></p>

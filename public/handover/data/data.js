@@ -7,6 +7,10 @@
 	var ref = new $window.Firebase("https://nutm.firebaseio.com/specialties");
 	return $firebaseArray(ref);
 })
+.factory('wardArray',function($firebaseArray,$window) {
+	var ref = new $window.Firebase("https://nutm.firebaseio.com/wards");
+	return $firebaseArray(ref);
+})
 .run(function($rootScope, $state, Auth) {
 	Auth.$onAuth(function(authData) {
 		$rootScope.auth = authData;

@@ -1,3 +1,4 @@
+<a class="btn btn-success" ui-sref="tasks.new">New Task</a>
 <div class="table-responsive">
     <table class="table">
         <thead>
@@ -33,25 +34,25 @@
                 </td>
                 <td>
                     <div>
-						<a ui-sref="user({userId: task.added.user})" ng-bind="task.added.user"></a>
+						<a ui-sref="profile.public({userId: task.added.user.uid})" ng-bind="task.added.user.name"></a>
                         <em ng-bind="task.added.timestamp | date : 'mediumTime'"></em>
                     </div>
                 </td>
                 <td>
                     <div ng-if="task.accepted">
-                        <a ui-sref="user({userId: task.accepted.user})" ng-bind="task.accepted.user"></a>
+                        <a ui-sref="profile.public({userId: task.accepted.user.uid})" ng-bind="task.accepted.user.name"></a>
                         <em ng-bind="task.accepted.timestamp | date : 'mediumTime'"></em>
                     </div>
                 </td>
                 <td>
                     <div ng-if="task.completed">
-                        <a ui-sref="user({userId: task.completed.user})" ng-bind="task.completed.user"></a>
+                        <a ui-sref="profile.public({userId: task.completed.user.uid})" ng-bind="task.completed.user.name"></a>
                         <em ng-bind="task.completed.timestamp | date : 'mediumTime'"></em>
                     </div>
                 </td>
                 <td>
                     <div ng-if="task.cancelled">
-                        <a ui-sref="user({userId: task.completed.user})" ng-bind="task.cancelled.user"></a>
+                        <a ui-sref="profile.public({userId: task.cancelled.user.uid})" ng-bind="task.cancelled.user.name"></a>
                         <em ng-bind="task.cancelled.timestamp | date : 'mediumTime'"></em>
                         <span class="glyphicon glyphicon-comment" tooltip="{{task.cancelled.reason}}"></span>
                     </div>
