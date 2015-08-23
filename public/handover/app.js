@@ -10,9 +10,13 @@
 	$urlRouterProvider.otherwise("/login");
 	$locationProvider.html5Mode(true);
 })
-.run(function($rootScope, $state, Auth) {
+.run(function($rootScope, $state, Auth, $window,$firebaseObject) {
 	Auth.$onAuth(function(authData) {
-		if (!authData){
+		if (authData) {
+			var ref = new $window.Firebase("https://nutm.firebaseio.com/users").child(authData.uid).child('public');
+			$rootScope.profile = $firebaseObject(ref);
+		} else {
+			if ($rootScope.profile) { $rootScope.profile.$destroy(); }
 			console.log('Logged out');
 			$state.go("login");
 		}

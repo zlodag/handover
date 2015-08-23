@@ -14,11 +14,14 @@
 				return $firebaseArray(ref).$loaded();
 			}
 		},
-		controller: function($scope,tasks,$rootScope){
+		controller: function($scope,tasks,$rootScope,Auth){
 			$scope.tasks = tasks;
-			$rootScope.$on("logout", function() {
+			Auth.$onAuth(function(authData) {if (!authData){
 				tasks.$destroy();
-			});
+			}});
+			// $rootScope.$on("logout", function() {
+			// 	tasks.$destroy();
+			// });
 		}
 	})
 	.state('tasks.overview', {
@@ -40,13 +43,15 @@
 		controller: 'taskDetailController'
 	});
 })
-.controller('taskDetailController', function(authData,$scope,comments,task,$window,$rootScope){
+.controller('taskDetailController', function(authData,$scope,comments,task,$window,Auth){
 	$scope.task = task;
 	$scope.comments = comments;
-
-	$rootScope.$on("logout", function() {
+	Auth.$onAuth(function(authData) {if (!authData){
 		comments.$destroy();
-	});
+	}});
+	// $rootScope.$on("logout", function() {
+	// 	comments.$destroy();
+	// });
 	$scope.addComment = function(comment){
 		comments.$add({
 			user: authData.uid,

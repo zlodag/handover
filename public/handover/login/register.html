@@ -1,11 +1,11 @@
-<form ng-submit="createAccount(credentials)">
+<form ng-submit="createAccount(credentials)" name="register">
     <div class="form-group">
         <label for="firstname">First name</label>
-        <input class="form-control" type="text" id="firstname" ng-model="credentials.firstname" required/>
+        <input class="form-control" type="text" id="firstname" ng-model="credentials.firstname" maxlength="20" ng-minlength="2" required/>
     </div>
     <div class="form-group">
         <label for="lastname">Last name</label>
-        <input class="form-control" type="text" id="lastname" ng-model="credentials.lastname" required/>
+        <input class="form-control" type="text" id="lastname" ng-model="credentials.lastname" maxlength="20" ng-minlength="2" required/>
     </div>
     <div class="form-group">
         <label for="email">Email</label>
@@ -15,6 +15,6 @@
         <label for="password">Password</label>
         <input class="form-control" type="password" id="password" ng-model="credentials.password" required/>
     </div>
-    <button class="btn btn-default" type="submit">Register!</button>
+    <button class="btn btn-default" type="submit" ng-disabled="register.$invalid">Register!</button>
 </form>
 <pre ng-bind="credentials  | json"></pre>

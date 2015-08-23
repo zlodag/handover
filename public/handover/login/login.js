@@ -46,7 +46,7 @@
 		})
 		.then(
 			function(user) {
-				var ref = new $window.Firebase("https://nutm.firebaseio.com/users").child(user.uid);
+				var ref = new $window.Firebase("https://nutm.firebaseio.com/users").child(user.uid).child('public');
 				ref.set({firstname: firstname, lastname: lastname}, function(err){
 					if (err) {
 						console.error("Unable to update user profile", err);

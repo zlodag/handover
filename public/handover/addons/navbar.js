@@ -7,7 +7,7 @@
 				// this.path = $route.path;
 				$scope.state = $state;
 				$scope.logout = function(){
-					$rootScope.$broadcast('logout');
+					// $rootScope.$broadcast('logout');
 					Auth.$unauth();
 				};
 			},

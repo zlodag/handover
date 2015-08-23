@@ -52,20 +52,27 @@
 		controller: 'profilePrivateController'
 	});
 })
-.controller('profilePublicController',function($scope,canEdit,publicData,$rootScope){
-	$rootScope.$on("logout", function() {
+.controller('profilePublicController',function($scope,canEdit,publicData,Auth){
+	// $rootScope.$on("logout", function() {
+	// 	publicData.$destroy();
+	// });
+	Auth.$onAuth(function(authData) {if (!authData){
 		publicData.$destroy();
-	});
+	}});
 	$scope.publicData = publicData;
 	$scope.canEdit = canEdit;
 })
-.controller('profilePrivateController',function($scope,specialties,privateData,publicData,$rootScope){
+.controller('profilePrivateController',function($scope,specialties,privateData,publicData,Auth){
 	$scope.specialties = specialties;
 	$scope.privateData = privateData;
-	$rootScope.$on("logout", function() {
+	Auth.$onAuth(function(authData) {if (!authData){
 		specialties.$destroy();
 		privateData.$destroy();
-	});
+	}});
+	// $rootScope.$on("logout", function() {
+	// 	specialties.$destroy();
+	// 	privateData.$destroy();
+	// });
 	$scope.newUser = {}
 	if(publicData.firstname){$scope.newUser.firstname = publicData.firstname}
 	if(publicData.lastname){$scope.newUser.lastname = publicData.lastname}
