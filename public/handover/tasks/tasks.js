@@ -7,26 +7,44 @@
 		template: '<ui-view />',
 		resolve: {
 			authData: function(Auth) {
+				console.log('waiting 0');
 				return Auth.$requireAuth();
 		    },
-		    tasks: function($firebaseArray,$window,authData){
-				var ref = new $window.Firebase("https://nutm.firebaseio.com/tasks");
-				return $firebaseArray(ref).$loaded();
+		    tasksRef: function($window,authData){
+				console.log('waiting 1');
+				return new $window.Firebase("https://nutm.firebaseio.com/tasks");
 			}
-		},
-		controller: function($scope,tasks,$rootScope,Auth){
-			$scope.tasks = tasks;
-			Auth.$onAuth(function(authData) {if (!authData){
-				tasks.$destroy();
-			}});
-			// $rootScope.$on("logout", function() {
-			// 	tasks.$destroy();
-			// });
 		}
 	})
 	.state('tasks.overview', {
 		url: "/",
-		templateUrl: '/handover/tasks/overview.html'
+		templateUrl: '/handover/tasks/overview.html',
+		resolve: {
+			tasks: function($firebaseArray,tasksRef){
+				console.log('waiting 2');
+				var ref = tasksRef.orderByChild("completed").equalTo(null);
+				return $firebaseArray(ref).$loaded();
+			},
+			recent: function($firebaseArray,tasksRef){
+				console.log('waiting 2.5');
+				var ref = tasksRef.orderByChild("inactive").limitToLast(3);
+				return $firebaseArray(ref).$loaded();
+			}
+		},
+		controller: function($scope,tasks,recent,Auth){
+			$scope.tasks = tasks;
+			$scope.recent = recent;
+			Auth.$onAuth(function(authData) {if (!authData){
+				tasks.$destroy();
+				recent.$destroy();
+			}});
+			$scope.glyph = function(urgency){
+				if (urgency === 1) {return 'pushpin';}
+				if (urgency === 2) {return 'info-sign';}
+				if (urgency === 3) {return 'alert';}
+				return 'apple';
+			};
+		}
 	})
 	.state('tasks.new', {
 		url: "/new",
@@ -34,10 +52,12 @@
 		// template: "<p>New task</p>",
 		resolve: {
 			specialties: function(specialtyArray){
+				console.log('waiting 3');
 		    	return specialtyArray.$loaded();
 		    },
 		    wards: function(wardArray){
-		    	return wardArray.$loaded();
+				console.log('waiting 4');
+  		    	return wardArray.$loaded();
 		    }
 		},
 		controller: 'newTaskController'
@@ -47,32 +67,39 @@
 		templateUrl: '/handover/tasks/detail.html',
 		resolve: {
 			comments: function($firebaseArray,$window,$stateParams){
+				console.log('waiting 5');
 				var ref = new $window.Firebase("https://nutm.firebaseio.com/comments").child($stateParams.taskId);
 				return $firebaseArray(ref).$loaded();
 			},
-			task: function($stateParams, tasks){
-				return tasks.$getRecord($stateParams.taskId);
+			task: function(tasksRef,$firebaseObject,$stateParams){
+				console.log('waiting 6');
+				var ref = tasksRef.child($stateParams.taskId);
+				return $firebaseObject(ref).$loaded();
 			}
 		},
 		controller: 'taskDetailController'
 	})
 	;
 })
-.controller('newTaskController', function($scope,$window,authData,tasks,$state,specialties,wards){
+.controller('newTaskController', function($scope,authData,Auth,$state,specialties,wards,tasksRef,$window){
 	$scope.specialties = specialties;
 	$scope.wards = wards;
+	$scope.newTask = {
+  "patient": {
+    "name": "Humphrey Herbert",
+    "nhi": "LKJ1551",
+    "ward": "M12",
+    "bed": "5A",
+    "specialty": "Obstetrics & Gynaecology"
+  },
+  "text": "He is the wrong gender for this ward!",
+  "urgency": 1
+};
+	Auth.$onAuth(function(authData) {if (!authData){
+		specialties.$destroy();
+		wards.$destroy();
+	}});
 	$scope.addTask = function(newTask){
-		var mock = {
-		  "patient": {
-		    "ward": "A2",
-		    "specialty": "General Medicine",
-		    "name": "Banjo Kazooie",
-		    "nhi": "LKJ1234",
-		    "bed": "6A"
-		  },
-		  "text": "Help me get this guy off the bed",
-		  "urgency": 2
-		};
 		var task = angular.extend({},newTask,{
 			added : {
 				user: {
@@ -83,50 +110,55 @@
 			}
 		});
 		console.log(task);
-		tasks.$add(task)
-		.then(function(ref) {
-			console.log("added record with id " + ref.key());
-			$state.go('tasks.detail',{taskId:ref.key()});
-			// list.$indexFor(id); // returns location in the array
-		}, function(error){
-			console.error("there was a problem", error);
+		var ref = tasksRef.push(task, function(error) {
+			if (error){return console.error("There was a problem adding the task: ", error);}
+			console.log("Added task");
 		});
+		$state.go('tasks.detail',{taskId:ref.key()});
 	};
 })
-.controller('taskDetailController', function(authData,$scope,comments,task,tasks,$window,Auth){
+.controller('taskDetailController', function(authData,$scope,comments,task,$window,Auth){
+	// console.log('starting details controller');
 	$scope.task = task;
 	$scope.comments = comments;
 	Auth.$onAuth(function(authData) {if (!authData){
+		task.$destroy();
 		comments.$destroy();
 	}});
-	// $rootScope.$on("logout", function() {
-	// 	comments.$destroy();
-	// });
 	$scope.canStamp = function(stamp){
-		if (stamp === 'accepted') { return !task.accepted && !task.completed && !task.cancelled;}
-		else if (stamp === 'completed' || stamp === 'cancelled') { return !task.completed && !task.cancelled;}
+		if (stamp === 'accepted') { return !task.accepted && !task.completed;}
+		else if (stamp === 'completed' || stamp === 'cancelled') { return !task.completed;}
 		else { return false; }
 	};
-	$scope.stamp = function(stamp, reason){
-		var newStamp = {
+	$scope.stamp = function(stamp, cancelled){
+		var updateObject = {};
+		updateObject[stamp] = {
 			user: {
 				uid: authData.uid,
 				name: $scope.profile.firstname + ' ' + $scope.profile.lastname
 			},
 			timestamp:$window.Firebase.ServerValue.TIMESTAMP
 		};
-		if (reason) {newStamp.reason = reason;}
-		console.log(newStamp);
-		var ref = new $window.Firebase("https://nutm.firebaseio.com/tasks").child(task.$id).child(stamp);
-		ref.set(newStamp);
-		// tasks.$update();
-	}
+		if (stamp === 'completed'){
+			if (cancelled) {updateObject.completed.cancelled = cancelled;}
+			updateObject.inactive = $window.Firebase.ServerValue.TIMESTAMP;
+		}
+		console.log(updateObject);
+		task.$ref().update(updateObject, function(error){
+			if (error){return console.error("There was a problem updating the task: ", error);}
+			console.log('Updated task');
+		});
+	};
 	$scope.addComment = function(comment){
 		comments.$add({
-			user: authData.uid,
+			user: {
+				uid: authData.uid,
+				name: $scope.profile.firstname + ' ' + $scope.profile.lastname
+			},
          	comment: comment,
          	timestamp: $window.Firebase.ServerValue.TIMESTAMP}
      	);
+     	return true;
 	};
 })
 ;
