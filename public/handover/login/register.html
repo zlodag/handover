@@ -1,0 +1,20 @@
+<form ng-submit="createAccount(credentials)">
+    <div class="form-group">
+        <label for="firstname">First name</label>
+        <input class="form-control" type="text" id="firstname" ng-model="credentials.firstname" required/>
+    </div>
+    <div class="form-group">
+        <label for="lastname">Last name</label>
+        <input class="form-control" type="text" id="lastname" ng-model="credentials.lastname" required/>
+    </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input class="form-control" type="email" id="email" ng-model="credentials.email" required/>
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input class="form-control" type="password" id="password" ng-model="credentials.password" required/>
+    </div>
+    <button class="btn btn-default" type="submit">Register!</button>
+</form>
+<pre ng-bind="credentials  | json"></pre>
