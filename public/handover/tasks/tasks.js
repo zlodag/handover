@@ -1,4 +1,4 @@
-(function(){angular.module('handover.tasks',['ui.router','firebase','handover.auth'])
+(function(){angular.module('handover.tasks',['ui.router','firebase','handover.data'])
 .config(function($stateProvider) {
 	$stateProvider
 	.state('tasks', {
@@ -9,12 +9,16 @@
 			authData: function(Auth) {
 				return Auth.$requireAuth();
 		    },
-		    tasks: function(TaskArray){
-		    	return TaskArray.$loaded();
-		    }
+		    tasks: function($firebaseArray,$window,authData){
+				var ref = new $window.Firebase("https://nutm.firebaseio.com/tasks");
+				return $firebaseArray(ref).$loaded();
+			}
 		},
-		controller: function($scope,tasks){
+		controller: function($scope,tasks,$rootScope){
 			$scope.tasks = tasks;
+			$rootScope.$on("logout", function() {
+				tasks.$destroy();
+			});
 		}
 	})
 	.state('tasks.overview', {
@@ -36,14 +40,12 @@
 		controller: 'taskDetailController'
 	});
 })
-.factory('TaskArray',function($firebaseArray,$window){
-	var ref = new $window.Firebase("https://nutm.firebaseio.com/tasks");
-	return $firebaseArray(ref);
-})
-.controller('taskDetailController', function(authData,$scope,comments,task,$window){
-	// console.log(authData,$scope,comments,task);
+.controller('taskDetailController', function(authData,$scope,comments,task,$window,$rootScope){
 	$scope.task = task;
 	$scope.comments = comments;
+	$rootScope.$on("logout", function() {
+		comments.$destroy();
+	});
 	$scope.addComment = function(comment){
 		comments.$add({
 			user: authData.uid,

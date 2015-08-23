@@ -12,8 +12,10 @@ router.get('*',function(req, res, next) {
 	  		'/angular-bootstrap/ui-bootstrap-tpls',
 	  		// '/angular-loading-bar/build/loading-bar',
 	  		'/handover/app',
-	  		'/handover/auth/auth',
-	  		'/handover/navbar/navbar',
+	  		'/handover/login/login',
+	  		'/handover/profile/profile',
+	  		'/handover/data/data',
+	  		'/handover/addons/navbar',
 	  		'/handover/tasks/tasks'
 		],
 		styles : [
