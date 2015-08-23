@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <title>Handover</title>
+    <% for (var i = 0; i < scripts.length; i++) { %>
+    <script src="<%= scripts[i] %>.js"></script>
+    <% } for (var i = 0; i < styles.length; i++) { %>
+    <link rel="stylesheet" href="<%= styles[i] %>.css" />
+    <% } %>
+    <base href="/">
   </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+  <body ng-app="handover">
+    <handover-navbar></handover-navbar>
+    <div class="container" ui-view></div>
   </body>
 </html>

@@ -1,0 +1,63 @@
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>NHI</th>
+                <th>Patient</th>
+                <th>Ward</th>
+                <th>Specialty</th>
+                <th>Urgency</th>
+                <th>Text</th>
+                <th>Added</th>
+                <th>Accepted</th>
+                <th>Completed</th>
+                <th>Cancelled</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="task in tasks">
+                <td ng-bind="task.patient.nhi"></td>
+                <td ng-bind="task.patient.name"</td>
+                <td>
+                    <a ui-sref="ward({wardId: task.patient.ward })">{{task.patient.ward}} - {{task.patient.bed}}</a>
+                </td>
+                <td>
+                    <a ui-sref="specialty({specialtyId: task.patient.specialty })" ng-bind="task.patient.specialty"></a>
+                </td>
+                <td ng-bind="task.urgency"></td>
+                <td>
+                    <a ui-sref="^.detail({taskId:task.$id})">
+                        <span ng-bind="task.text"></span>
+                        <!-- <span class="badge" ng-if="task.comments" ng-bind="task.comments"></span> -->
+                    </a>
+                </td>
+                <td>
+                    <div>
+						<a ui-sref="user({userId: task.added.user})" ng-bind="task.added.user"></a>
+                        <em ng-bind="task.added.timestamp | date : 'mediumTime'"></em>
+                    </div>
+                </td>
+                <td>
+                    <div ng-if="task.accepted">
+                        <a ui-sref="user({userId: task.accepted.user})" ng-bind="task.accepted.user"></a>
+                        <em ng-bind="task.accepted.timestamp | date : 'mediumTime'"></em>
+                    </div>
+                </td>
+                <td>
+                    <div ng-if="task.completed">
+                        <a ui-sref="user({userId: task.completed.user})" ng-bind="task.completed.user"></a>
+                        <em ng-bind="task.completed.timestamp | date : 'mediumTime'"></em>
+                    </div>
+                </td>
+                <td>
+                    <div ng-if="task.cancelled">
+                        <a ui-sref="user({userId: task.completed.user})" ng-bind="task.cancelled.user"></a>
+                        <em ng-bind="task.cancelled.timestamp | date : 'mediumTime'"></em>
+                        <span class="glyphicon glyphicon-comment" tooltip="{{task.cancelled.reason}}"></span>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<pre ng-bind="tasks | json"></pre>

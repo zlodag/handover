@@ -1,0 +1,33 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container">
+		<!-- <div class="navbar-header">
+			<a class="navbar-brand">Handover</a>
+		</div> -->
+		<ul class="nav navbar-nav">
+			<li class="navbar-brand">Handover</li>
+			<li ui-sref-active="active"><a ui-sref="login">Login</a></li>
+			<li ui-sref-active="active"><a ui-sref="profile.public({userId:auth.uid})">Profile</a></li>
+			<li ui-sref-active="active"><a ui-sref="tasks.overview">Tasks</a></li>
+			<li ui-sref-active="active"><a ui-sref="admin">Admin</a></li>
+			<!-- <li class="dropdown" dropdown>
+				<a href dropdown-toggle>Dropdown <span class="caret"></span></a>
+				<ul class="dropdown-menu">
+					<li><a href>Action</a></li>
+					<li><a href>Another action</a></li>
+					<li><a href>Something else here</a></li>
+					<li class="divider"></li>
+					<li class="dropdown-header">Nav header</li>
+					<li><a href>Separated link</a></li>
+					<li><a href>One more separated link</a></li>
+				</ul>
+			</li> -->
+		</ul>
+		<ul ng-show="auth" class="nav navbar-nav navbar-right">
+			<li><img ng-src="{{auth.password.profileImageURL}}" height="50px"/></li>
+            <li><a href ng-click="logout()">
+                <span class="glyphicon glyphicon-log-out"></span>
+                Log out
+            </a></li>
+		</ul>
+	</div>
+</nav>

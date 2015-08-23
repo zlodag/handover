@@ -1,0 +1,25 @@
+{
+  "name": "Handover",
+  "version": "0.0.0",
+  "homepage": "https://github.com/zlodag/handover",
+  "authors": [
+    "zlodag"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.4",
+    "angular-bootstrap": "~0.13.3",
+    "bootstrap-css-only": "~3.3.5",
+    "angular-ui-router": "~0.2.15",
+    "angularfire": "~1.1.2",
+    "firebase": "~2.2.9"
+  },
+  "devDependencies": {
+    "angular-mocks": "~1.4.4"
+  }
+}

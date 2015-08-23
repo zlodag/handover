@@ -1,0 +1,54 @@
+<div class="jumbotron">
+	<dl class="dl-horizontal">
+	    <dt>Patient</dt>
+	    <dd ng-bind="task.patient.name"></dd>
+	    <dt>NHI</dt>
+	    <dd ng-bind="task.patient.nhi"></dd>
+	    <dt>Specialty</dt>
+	    <dd><a ui-sref="specialty({specialtyId: task.patient.specialty})" ng-bind="task.patient.specialty"></a></dd>
+	    <dt>Ward</dt>
+	    <dd><a ui-sref="ward({wardId: task.patient.ward})" ng-bind="task.patient.ward"></a></dd>
+	    <dt>Bed</dt>
+	    <dd ng-bind="task.patient.bed"></dd>
+	    <dt>Urgency</dt>
+	    <dd ng-bind="task.urgency"></dd>
+    </dl>
+    <p ng-bind="task.text"></p>
+    <div>
+        Added
+        by <a ui-sref="user({userId: task.added.user})" ng-bind="task.added.user"></a>
+        at <em ng-bind="task.added.timestamp | date : 'short'"></em>
+    </div>
+    <div ng-if="task.accepted">
+        Accepted
+        by <a ui-sref="user({userId: task.accepted.user})" ng-bind="task.accepted.user"></a>
+        at <em ng-bind="task.accepted.timestamp | date : 'short'"></em>
+    </div>
+    <div ng-if="task.completed">
+        Completed
+        by <a ui-sref="user({userId: task.completed.user})" ng-bind="task.completed.user"></a>
+        at <em ng-bind="task.completed.timestamp | date : 'short'"></em>
+    </div>
+    <div ng-if="task.cancelled">
+        Cancelled
+        by <a ui-sref="user({userId: task.completed.user})" ng-bind="task.cancelled.user"></a>
+        at <em ng-bind="task.cancelled.timestamp | date : 'short'"></em>
+        <span class="glyphicon glyphicon-comment" tooltip="{{task.cancelled.reason}}"></span>
+    </div>
+</div>
+<blockquote ng-repeat="comment in comments">
+    <p ng-bind="comment.comment"></p>
+    <footer>by <a ui-sref="user({userId: comment.user})" ng-bind="comment.user"></a>
+                            at <em ng-bind="comment.timestamp | date : 'short'"></em></footer>
+</blockquote>
+<form class="form-inline" ng-submit="addComment(newComment)">
+    <div class="form-group">
+	    <label for="newComment">Add a new comment</label>
+        <input type="text" id="newComment" class="form-control" placeholder="Comment" ng-model="newComment"></input>
+    </div>
+    <div class="form-group">
+	    <button type="submit" class="btn btn-primary">Post</button>
+    </div>
+</form>
+
+<button class="btn btn-default" ng-click="state.go('^.overview')">Back</button>
