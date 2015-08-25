@@ -18,7 +18,7 @@
 	})
 	.state('tasks.overview', {
 		url: "/",
-		templateUrl: '/handover/tasks/overview.html',
+		templateUrl: '/handover/tasks/overview_alt.html',
 		resolve: {
 			tasks: function($firebaseArray,tasksRef){
 				console.log('waiting 2');
@@ -31,20 +31,7 @@
 				return $firebaseArray(ref).$loaded();
 			}
 		},
-		controller: function($scope,tasks,recent,Auth){
-			$scope.tasks = tasks;
-			$scope.recent = recent;
-			Auth.$onAuth(function(authData) {if (!authData){
-				tasks.$destroy();
-				recent.$destroy();
-			}});
-			$scope.glyph = function(urgency){
-				if (urgency === 1) {return 'pushpin';}
-				if (urgency === 2) {return 'info-sign';}
-				if (urgency === 3) {return 'alert';}
-				return 'apple';
-			};
-		}
+		controller: 'overviewController'
 	})
 	.state('tasks.new', {
 		url: "/new",
@@ -80,6 +67,20 @@
 		controller: 'taskDetailController'
 	})
 	;
+})
+.controller('overviewController',function($scope,tasks,recent,Auth){
+	$scope.tasks = tasks;
+	$scope.recent = recent;
+	Auth.$onAuth(function(authData) {if (!authData){
+		tasks.$destroy();
+		recent.$destroy();
+	}});
+	$scope.glyph = function(urgency){
+		if (urgency === 1) {return 'pushpin';}
+		if (urgency === 2) {return 'info-sign';}
+		if (urgency === 3) {return 'alert';}
+		return 'apple';
+	};
 })
 .controller('newTaskController', function($scope,authData,Auth,$state,specialties,wards,tasksRef,$window){
 	$scope.specialties = specialties;
