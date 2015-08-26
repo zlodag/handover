@@ -13,15 +13,11 @@
 		    canEdit: function(authData,$stateParams){
 		    	return authData.uid === $stateParams.userId;
 		    },
-		    userRef: function($window,$stateParams) {
-		    	return new $window.Firebase("https://nutm.firebaseio.com/users").child($stateParams.userId);
-		    },
-			publicData: function(userRef, $firebaseObject){
-				var ref = userRef.child('public');
-				return $firebaseObject(ref).$loaded();
-			}
+		    user: function(userFactory,$stateParams) {
+		    	return userFactory($stateParams.userId).$loaded();
+		    }
 		},
-		controller: 'profilePublicController'
+		controller: 'profileController'
 	})
 	.state('profile.public',{
 		url: '/',
@@ -44,43 +40,36 @@
 			specialties: function(specialtyArray){
 		    	return specialtyArray.$loaded();
 		    },
-			privateData: function(userRef, $firebaseArray){
-				var ref = userRef.child('private');
-				return $firebaseArray(ref).$loaded();
-			}
+			roles: function(roleArray){
+		    	return roleArray.$loaded();
+		    }
 		},
-		controller: 'profilePrivateController'
+		controller: 'profileEditController'
 	});
 })
-.controller('profilePublicController',function($scope,canEdit,publicData,Auth){
-	// $rootScope.$on("logout", function() {
-	// 	publicData.$destroy();
-	// });
+.controller('profileController',function($scope,canEdit,user,Auth){
 	Auth.$onAuth(function(authData) {if (!authData){
-		publicData.$destroy();
+		user.$destroy();
 	}});
-	$scope.publicData = publicData;
+	$scope.user = user;
 	$scope.canEdit = canEdit;
 })
-.controller('profilePrivateController',function($scope,specialties,privateData,publicData,Auth){
+.controller('profileEditController',function($scope,user,specialties,roles,Auth){
 	$scope.specialties = specialties;
-	$scope.privateData = privateData;
+	$scope.roles = roles;
 	Auth.$onAuth(function(authData) {if (!authData){
 		specialties.$destroy();
-		privateData.$destroy();
+		roles.$destroy();
 	}});
-	// $rootScope.$on("logout", function() {
-	// 	specialties.$destroy();
-	// 	privateData.$destroy();
-	// });
 	$scope.newUser = {}
-	if(publicData.firstname){$scope.newUser.firstname = publicData.firstname}
-	if(publicData.lastname){$scope.newUser.lastname = publicData.lastname}
-	if(publicData.contact){$scope.newUser.contact = publicData.contact}
-	if(publicData.specialty && specialties.$indexFor(publicData.specialty) !== -1){$scope.newUser.specialty = publicData.specialty}
+	if(user.firstname){$scope.newUser.firstname = user.firstname}
+	if(user.lastname){$scope.newUser.lastname = user.lastname}
+	if(user.contact){$scope.newUser.contact = user.contact}
+	if(user.specialty && specialties.$indexFor(user.specialty) !== -1){$scope.newUser.specialty = user.specialty}
+	if(user.role && roles.$indexFor(user.role) !== -1){$scope.newUser.role = user.role}
 	$scope.update = function(newUser){
 		if (!newUser.contact){delete newUser.contact;}
-		publicData.$ref().set(newUser);
+		user.$ref().set(newUser);
 	};
 })
 ;

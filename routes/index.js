@@ -20,7 +20,8 @@ router.get('*',function(req, res, next) {
 		],
 		styles : [
 			'/bootstrap-css-only/css/bootstrap.min',
-			'/styles/style'
+			'/styles/style',
+			'/styles/overview'
 		]
   	});
 });

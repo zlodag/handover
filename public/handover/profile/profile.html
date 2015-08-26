@@ -1,8 +1,10 @@
-<h2 ng-bind="publicData.firstname + ' ' + publicData.lastname"></h2>
+<h2 ng-bind="user.firstname + ' ' + user.lastname"></h2>
 <dl class="dl-horizontal">
-	<dt ng-if="publicData.contact">Contact</dt>
-	<dd ng-if="publicData.contact" ng-bind="publicData.contact"></dd>
-	<dt ng-if="publicData.specialty">Specialty</dt>
-	<dd ng-if="publicData.specialty" ng-bind="publicData.specialty"></dd>
+	<dt ng-if="user.contact">Contact</dt>
+	<dd ng-if="user.contact" ng-bind="user.contact"></dd>
+	<dt ng-if="user.specialty">Specialty</dt>
+	<dd ng-if="user.specialty" ng-bind="user.specialty"></dd>
+	<dt ng-if="user.role">Role</dt>
+	<dd ng-if="user.role" ng-bind="user.role"></dd>
 </dl>
 <ui-view></ui-view>

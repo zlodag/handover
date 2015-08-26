@@ -1,25 +1,25 @@
 <form ng-submit="addTask(newTask)" name="form" novalidate>
 	<div class="form-group" ng-class="{'has-error':form.patient.$dirty && form.patient.$invalid}">
 		<label for="patient">Patient name</label>
-		<input id="patient" name="patient" class="form-control" type="text" ng-model="newTask.patient.name" required/>
+		<input id="patient" name="patient" class="form-control" type="text" ng-model="newTask.patient" required/>
 	</div>
 	<div class="form-group" ng-class="{'has-error':form.nhi.$dirty && form.nhi.$invalid}">
 		<label for="nhi">NHI</label>
-		<input id="nhi" name="nhi" class="form-control" type="text" ng-model="newTask.patient.nhi" required ng-pattern="/^[a-zA-Z]{3}[0-9]{4}$/"/>
+		<input id="nhi" name="nhi" class="form-control" type="text" ng-model="newTask.nhi" required ng-pattern="/^[a-zA-Z]{3}[0-9]{4}$/"/>
 	</div>
 	<div class="form-group" ng-class="{'has-error':form.ward.$dirty && form.ward.$invalid}">
 		<label for="ward">Ward</label>
-		<select id="ward" name="ward" class="form-control" ng-model="newTask.patient.ward" required
+		<select id="ward" name="ward" class="form-control" ng-model="newTask.ward" required
 			ng-options="ward.$id as ward.$id group by ward.$value for ward in wards"
 		><option value="">Select a ward</option></select>
 	</div>
 	<div class="form-group" ng-class="{'has-error':form.bed.$dirty && form.bed.$invalid}">
 		<label for="bed">Bed</label>
-		<input id="bed" name="bed" class="form-control" type="text" ng-model="newTask.patient.bed" required ng-maxlength="3"/>
+		<input id="bed" name="bed" class="form-control" type="text" ng-model="newTask.bed" required ng-maxlength="3"/>
 	</div>
 	<div class="form-group" ng-class="{'has-error':form.specialty.$dirty && form.specialty.$invalid}">
 		<label for="specialty">Specialty</label>
-		<select id="specialty" name="specialty" class="form-control" ng-model="newTask.patient.specialty" required
+		<select id="specialty" name="specialty" class="form-control" ng-model="newTask.specialty" required
 			ng-options="specialty.$id as specialty.$id for specialty in specialties"
 		><option value="">Select a specialty</option></select>
 	</div>

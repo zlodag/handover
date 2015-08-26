@@ -1,0 +1,122 @@
+{
+  "rules": {
+    ".read" : "auth !== null && root.child('users/'+ auth.uid).exists() && root.child('admin/'+ auth.uid).exists()",
+    "completed": {
+      ".read" : "auth !== null && root.child('users/'+ auth.uid).exists()",
+      "$time" : {
+        ".write" : "auth !== null && root.child('users/'+ auth.uid).exists() && !data.exists() && newData.exists() && newData.isString() && root.child('tasks').child(newData.val()).exists() && root.child('tasks').child(newData.val()).child('completed').exists()"
+      }
+    },
+    "tasks": {
+      ".indexOn": ["completed","inactive"],
+      ".read" : "auth !== null && root.child('users/'+ auth.uid).exists()",
+      "$task": {
+        ".write" : "auth !== null && root.child('users/'+ auth.uid).exists() && ((!data.exists() && newData.exists()) || root.child('admin/'+ auth.uid).exists())",
+        ".validate": "newData.hasChildren(['patient','text','urgency','added'])",
+        "inactive" : {
+          ".write" : "auth !== null && root.child('users/'+ auth.uid).exists() && !data.exists() && newData.exists()",
+          ".validate" : "!data.parent().child('completed').exists() && newData.parent().child('completed').exists() && newData.val() === now"
+        },
+        "patient" : {
+          ".validate": "newData.hasChildren(['name','nhi','ward','bed','specialty'])",
+          "name": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 20" },
+          "nhi" : {".validate": "newData.isString() && newData.val().matches(/^[A-Z]{3}[0-9]{4}$/)"},
+          "ward" : {".validate": "newData.isString() && root.child('wards/'+newData.val()).exists()"},
+          "bed": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 3" },
+          "specialty" : {".validate": "newData.isString() && root.child('specialties/'+newData.val()).exists()"},
+          "$other" : {".validate": false}
+        },
+        "text": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 500" },
+        "urgency": { ".validate": "newData.isNumber() && newData.val() % 1 === 0 && newData.val() >= 1 && newData.val() <= 3" },
+        "$update": {
+          ".write": "auth !== null && root.child('users/'+ auth.uid).exists() && !data.exists() && newData.exists()",
+          ".validate": "(
+              ($update ==='added' && !data.parent().child('accepted').exists() && !data.parent().child('completed').exists()) ||
+              ($update ==='accepted' && !data.parent().child('completed').exists()) ||
+              $update ==='completed'
+            ) && newData.hasChildren(['user','timestamp'])",
+          "user": {
+            ".validate" : "newData.hasChildren(['uid','name'])",
+            "uid": {".validate": "newData.val() === auth.uid"},
+            "name": {".validate": "newData.isString() && newData.val() === root.child('users').child(auth.uid).child('public').child('firstname').val() + ' ' + root.child('users').child(auth.uid).child('public').child('lastname').val()"},
+            "$other": {".validate": false}
+          },
+          "timestamp": {".validate": "newData.val() === now"},
+          "cancelled": { ".validate": "$update ==='completed' && newData.isString() && newData.val().length > 0 && newData.val().length <= 100" },
+          "$other": {".validate": false}
+        }
+      }
+    },
+    "specialties":{
+      ".read" : "auth !== null && root.child('users/'+ auth.uid).exists()",
+      "$specialty" : {
+        ".write" : "auth !== null && root.child('users/'+ auth.uid).exists() && root.child('admin/'+ auth.uid).exists()",
+        ".validate": "newData.val() === true"
+      }
+    },
+    "buildings":{
+      ".read" : "auth !== null && root.child('users/'+ auth.uid).exists()",
+      "$building" : {
+        ".write" : "auth !== null && root.child('users/'+ auth.uid).exists() && root.child('admin/'+ auth.uid).exists()",
+        ".validate": "newData.val() === true"
+      }
+    },
+    "wards":{
+      ".read" : "auth !== null && root.child('users/'+ auth.uid).exists()",
+      ".indexOn": ".value",
+      "$ward" : {
+        ".validate" : "(newData.isString() && root.child('buildings/'+newData.val()).exists()) || (newData.val() === false)"
+      }
+    },
+    "comments":{
+      ".indexOn": ["user"],
+      "$task" : {
+        ".read" : "auth !== null && root.child('users/'+ auth.uid).exists()",
+        ".validate" : "root.child('tasks/'+ $task).exists()",
+        "$comment": {
+          ".write": "auth !== null && root.child('users/'+ auth.uid).exists() && !data.exists() && newData.exists() && !root.child('tasks').child($task).child('completed').exists()",
+          ".validate" : "newData.hasChildren(['user','comment','timestamp'])",
+          "user": {
+            ".validate" : "newData.hasChildren(['uid','name'])",
+            "uid": {".validate": "newData.val() === auth.uid"},
+            "name": {".validate": "newData.isString() && newData.val() === root.child('users').child(auth.uid).child('public').child('firstname').val() + ' ' + root.child('users').child(auth.uid).child('public').child('lastname').val()"},
+            "$other": {".validate": false}
+          },
+          "comment": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 100" },
+          "timestamp": {".validate": "newData.val() === now"},
+          "$other": {".validate": false}
+        }
+      }
+    },
+    "users": {
+      "$uid": {
+        ".write" : "auth !== null && root.child('users/'+ auth.uid).exists() && root.child('admin/'+ auth.uid).exists()",
+        ".validate" : "newData.hasChild('public')",
+        "public" : {
+          ".read" : "auth !== null && root.child('users/'+ auth.uid).exists()",
+          ".write": "auth !== null && auth.uid === $uid && newData.exists()",
+          ".validate" : "newData.hasChildren(['firstname','lastname'])",
+          "firstname": { ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 20" },
+          "lastname": { ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 20" },
+          "contact": { ".validate": "newData.isString() && newData.val().matches(/^[0-9]{3,20}$/)" },
+          "specialty" : {".validate": "newData.isString() && root.child('specialties/'+newData.val()).exists()"},
+          "$other": {".validate": false}
+        },
+        "private" : {
+          ".read": "auth !== null && auth.uid === $uid",
+          ".write": "auth !== null && auth.uid === $uid"
+        },
+        "$other": {".validate": false}
+      }
+    },
+    "admin":{
+      "$uid" : {
+        ".validate": "newData.val() === true && root.child('users/'+ $uid).exists()"
+      }
+    },
+    "syncedValue": {
+      ".read" : "true",
+      ".write" : "true"
+    }
+  }
+}

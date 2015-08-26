@@ -31,7 +31,7 @@
 	// 	}
 	// })
 })
-.controller('registerController',function($scope,Auth,$state,$window){
+.controller('registerController',function($scope,Auth,$state,FB){
 	$scope.createAccount = function(credentials) {
 		var email = credentials.email,
 		password = credentials.password,
@@ -46,7 +46,7 @@
 		})
 		.then(
 			function(user) {
-				var ref = new $window.Firebase("https://nutm.firebaseio.com/users").child(user.uid).child('public');
+				var ref = FB.child('users').child(user.uid);
 				ref.set({firstname: firstname, lastname: lastname}, function(err){
 					if (err) {
 						console.error("Unable to update user profile", err);
@@ -62,7 +62,7 @@
 		);
     };
 })
-.controller('loginController',function($scope,Auth,$state,$window){
+.controller('loginController',function($scope,Auth,$state){
 
 	$scope.login = function(credentials){
 		Auth.$authWithPassword(credentials,{rememberMe: true})
