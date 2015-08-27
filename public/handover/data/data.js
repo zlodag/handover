@@ -18,6 +18,9 @@
 .factory('wardArray',function(FB,$firebaseArray) {
 	return $firebaseArray(FB.child("wards"));
 })
+.factory('allUsers', function(FB,$firebaseObject) {
+	return $firebaseObject(FB.child("users"));
+})
 .factory('userFactory', function(FB,$firebaseObject) {
 	return function(userId){
 		return $firebaseObject(FB.child('users').child(userId));

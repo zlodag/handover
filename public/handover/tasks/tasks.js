@@ -53,16 +53,24 @@
 		url: "/:taskId",
 		templateUrl: '/handover/tasks/detail.html',
 		resolve: {
-			comments: function(FB,$firebaseArray,$stateParams){
-				console.log('waiting 5'); console.log($firebaseArray,$stateParams);
-				var ref = FB.child("comments").child($stateParams.taskId);
+			taskId: function($stateParams){
+				return $stateParams.taskId;
+			},
+			comments: function(FB,$firebaseArray,taskId){
+				console.log('waiting 5');
+				var ref = FB.child("comments").child(taskId);
 				return $firebaseArray(ref).$loaded();
 			},
-			task: function(tasksRef,$firebaseObject,$stateParams){
+			referrals: function(FB,$firebaseArray,taskId){
+				// console.log('waiting 6');
+				var ref = FB.child("referrals").child(taskId);
+				return $firebaseArray(ref).$loaded();
+			},
+			task: function(tasksRef,$firebaseObject,taskId){
 				console.log('waiting 6');
-				var ref = tasksRef.child($stateParams.taskId);
+				var ref = tasksRef.child(taskId);
 				return $firebaseObject(ref).$loaded();
-			}
+			},
 		},
 		controller: 'taskDetailController'
 	})
@@ -109,15 +117,16 @@
 		$state.go('tasks.detail',{taskId:ref.key()});
 	};
 })
-.controller('taskDetailController', function(authData,$scope,
-            comments,
-            task,Auth,Stamp,TIMESTAMP){
+.controller('taskDetailController', function(authData,$scope, comments, referrals, task, Auth,Stamp,TIMESTAMP,FB,taskId, allUsers){
 	console.log('starting details controller');
 	$scope.task = task;
 	$scope.comments = comments;
+	$scope.referrals = referrals;
+	$scope.allUsers = allUsers;
 	Auth.$onAuth(function(authData) {if (!authData){
 		task.$destroy();
 		comments.$destroy();
+		referrals.$destroy();
 	}});
 	$scope.canStamp = function(stamp){
 		if (stamp === 'accepted') { return !task.accepted && !task.completed;}
@@ -141,6 +150,26 @@
 		var comment = Stamp();
 		comment.text = commentText;
 		comments.$add(comment);
+	};
+	$scope.disabled = function(key){
+		 return (referrals.$indexFor(key) !== -1 || key === authData.uid);
+	};
+	$scope.refer = function(target){
+		var userId = target.id,
+		userName = target.name,
+		ref = FB.child('referrals').child(taskId).child(userId),
+		stamp = Stamp();
+		stamp.to = userName;
+		ref.set(stamp,function(error){
+			if (error){return console.error("There was a problem referring the task: ", error);}
+			console.log("Task referred");
+			ref.child('at').once("value", function(snap){
+				 FB.child('taskboard').child(userId).child(taskId).set(snap.val(),function(error){
+	 				if (error){return console.error("There was a problem posting the task to the user's taskboard: ", error);}
+					console.log("Task posted to user's taskboard");
+				 });
+			});
+		});
 	};
 })
 ;

@@ -38,6 +38,19 @@
     <button type="button" class="btn btn-info" ng-if="canStamp('accepted')" ng-click="stamp('accepted')">Accept</button>
     <button type="button" class="btn btn-success" ng-if="canStamp('completed')" ng-click="stamp('completed')">Complete</button>
     <button type="button" class="btn btn-danger" ng-if="canStamp('cancelled')" ng-click="stamp('completed', 'because...')">Cancel</button>
+    <div ng-repeat="referral in referrals">
+        Referred to <a ui-sref="profile.public({userId: referral.$id})" ng-bind="referral.to"></a>
+        by <a ui-sref="profile.public({userId: referral.id})" ng-bind="referral.by"></a>
+        at {{ referral.at | date : "h:mma 'on' dd/MM/yyyy"}}
+    </div>
+    <select ng-model="target"
+        ng-options="{id:key,name:value.firstname + ' ' + value.lastname}
+                    as value.firstname + ' ' + value.lastname
+                    disable when disabled(key)
+                    for (key, value)
+                    in allUsers">
+        <option value="">Refer to</option></select>
+    <button type="button" class="btn btn-default" ng-show="target" ng-click="refer(target)">Refer</button>
 </div>
 <blockquote ng-repeat="comment in comments">
     <p ng-bind="comment.text"></p>
