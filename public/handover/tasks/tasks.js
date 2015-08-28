@@ -83,12 +83,11 @@
 		tasks.$destroy();
 		recent.$destroy();
 	}});
-	// $scope.glyph = function(urgency){
-	// 	if (urgency === 1) {return 'pushpin';}
-	// 	if (urgency === 2) {return 'info-sign';}
-	// 	if (urgency === 3) {return 'alert';}
-	// 	return 'apple';
-	// };
+	$scope.getStatus = function(task){
+		return ('completed' in task) ?
+			('cancelled' in task.completed ? 'Cancelled' : 'Completed') :
+			('accepted' in task ? 'Accepted' : 'Added');
+	};
 })
 .controller('newTaskController', function($scope,authData,Auth,$state,specialties,wards,tasksRef,Stamp){
 	$scope.specialties = specialties;
