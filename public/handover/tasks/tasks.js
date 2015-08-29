@@ -6,10 +6,10 @@
 		url: "/tasks",
 		template: '<ui-view />',
 		resolve: {
-			authData: function(Auth) {
-				// console.log('waiting 0');
-				return Auth.$requireAuth();
-		    },
+			// authData: function(Auth) {
+			// 	// console.log('waiting 0');
+			// 	return Auth.$requireAuth();
+		 //    },
 		    tasksRef: function(FB){
 				console.log('waiting 1');
 				return FB.child("tasks");
@@ -76,20 +76,24 @@
 	})
 	;
 })
-.controller('overviewController',function($scope,tasks,recent,Auth){
+.controller('overviewController',function($scope,tasks,recent
+            // ,Auth
+            ){
 	$scope.tasks = tasks;
 	$scope.recent = recent;
-	Auth.$onAuth(function(authData) {if (!authData){
-		tasks.$destroy();
-		recent.$destroy();
-	}});
+	// Auth.$onAuth(function(authData) {if (!authData){
+	// 	tasks.$destroy();
+	// 	recent.$destroy();
+	// }});
 	$scope.getStatus = function(task){
 		return ('completed' in task) ?
 			('cancelled' in task.completed ? 'Cancelled' : 'Completed') :
 			('accepted' in task ? 'Accepted' : 'Added');
 	};
 })
-.controller('newTaskController', function($scope,authData,Auth,$state,specialties,wards,tasksRef,Stamp){
+.controller('newTaskController', function($scope,
+            // authData,Auth,
+            $state,specialties,wards,tasksRef,Stamp){
 	$scope.specialties = specialties;
 	$scope.wards = wards;
 	$scope.newTask = {
@@ -101,10 +105,10 @@
 		"text": "He is the wrong gender for this ward!",
 		"urgency": 1
 	};
-	Auth.$onAuth(function(authData) {if (!authData){
-		specialties.$destroy();
-		wards.$destroy();
-	}});
+	// Auth.$onAuth(function(authData) {if (!authData){
+	// 	specialties.$destroy();
+	// 	wards.$destroy();
+	// }});
 	$scope.addTask = function(newTask){
 		var task = angular.copy(newTask);
 		task.added = Stamp();
@@ -116,17 +120,19 @@
 		$state.go('tasks.detail',{taskId:ref.key()});
 	};
 })
-.controller('taskDetailController', function(authData,$scope, comments, referrals, task, Auth,Stamp,TIMESTAMP,FB,taskId, allUsers){
+.controller('taskDetailController', function(
+            // authData,Auth,
+            $scope, comments, referrals, task,Stamp,TIMESTAMP,FB,taskId, allUsers){
 	console.log('starting details controller');
 	$scope.task = task;
 	$scope.comments = comments;
 	$scope.referrals = referrals;
 	$scope.allUsers = allUsers;
-	Auth.$onAuth(function(authData) {if (!authData){
-		task.$destroy();
-		comments.$destroy();
-		referrals.$destroy();
-	}});
+	// Auth.$onAuth(function(authData) {if (!authData){
+	// 	task.$destroy();
+	// 	comments.$destroy();
+	// 	referrals.$destroy();
+	// }});
 	$scope.canStamp = function(stamp){
 		if (stamp === 'accepted') { return !task.accepted && !task.completed;}
 		else if (stamp === 'completed' || stamp === 'cancelled') { return !task.completed;}

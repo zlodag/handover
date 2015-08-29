@@ -31,48 +31,10 @@
 	// 	}
 	// })
 })
-.controller('registerController',function($scope,Auth,$state,FB){
-	$scope.createAccount = function(credentials) {
-		var email = credentials.email,
-		password = credentials.password,
-		firstname = credentials.firstname,
-		lastname = credentials.lastname;
-        Auth.$createUser({
-        	email: email,
-        	password: password
-		})
-		.then(function() {
-			return Auth.$authWithPassword({ email: email, password: password });
-		})
-		.then(
-			function(user) {
-				var ref = FB.child('users').child(user.uid);
-				ref.set({firstname: firstname, lastname: lastname}, function(err){
-					if (err) {
-						console.error("Unable to update user profile", err);
-					}
-					else {
-						$state.go('profile.public',{userId:user.uid});
-					}
-				});
-			},
-			function(err) {
-            	console.error("Create user failed", err);
-			}
-		);
-    };
+.controller('registerController',function($scope,Profile){
+	$scope.register = Profile.register;
 })
-.controller('loginController',function($scope,Auth,$state){
-
-	$scope.login = function(credentials){
-		Auth.$authWithPassword(credentials,{rememberMe: true})
-		.then(function(authData) {
-			console.log("Logged in as:", authData.uid);
-			$state.go('tasks.overview');
-			// $state.go('profile.public',{userId:authData.uid});
-		}).catch(function(error) {
-			console.error("Authentication failed:", error);
-		});
-	};
+.controller('loginController',function($scope,Profile){
+	$scope.login = Profile.login;
 })
 })();
