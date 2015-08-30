@@ -1,10 +1,10 @@
-<h2 ng-bind="user.firstname + ' ' + user.lastname"></h2>
+<h2 ng-bind="getInfo().firstname + ' ' + getInfo().lastname"></h2>
 <dl class="dl-horizontal">
-	<dt ng-if="user.contact">Contact</dt>
-	<dd ng-if="user.contact" ng-bind="user.contact"></dd>
-	<dt ng-if="user.specialty">Specialty</dt>
-	<dd ng-if="user.specialty" ng-bind="user.specialty"></dd>
-	<dt ng-if="user.role">Role</dt>
-	<dd ng-if="user.role" ng-bind="user.role"></dd>
+	<dt ng-if="getInfo().contact">Contact</dt>
+	<dd ng-if="getInfo().contact" ng-bind="getInfo().contact"></dd>
+	<dt ng-if="getInfo().specialty">Specialty</dt>
+	<dd ng-if="getInfo().specialty" ng-bind="getInfo().specialty"></dd>
+	<dt ng-if="getInfo().role">Role</dt>
+	<dd ng-if="getInfo().role" ng-bind="getInfo().role"></dd>
 </dl>
 <ui-view></ui-view>

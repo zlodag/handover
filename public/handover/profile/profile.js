@@ -13,8 +13,12 @@
 		    // canEdit: function(authData,$stateParams){
 		    // 	return authData.uid === $stateParams.userId;
 		    // },
-		    userRef: function(FB,$stateParams){
-		    	return FB.child('users').child($stateParams.userId);
+		    isMe: function($stateParams,Profile){
+		    	return $stateParams.userId === Profile.auth.uid;
+		    },
+		    userRef: function(isMe,FB,$stateParams){
+		    	if (isMe) {return Profile.ref;}
+		    	else {return FB.child('users').child($stateParams.userId);}
 		    }
 
 		    // user: function(userFactory,$stateParams) {
@@ -51,17 +55,18 @@
 		template: '<a class="btn btn-default" ui-sref="^.edit">Edit</a>'
 	});
 })
-.controller('profileController',function($scope,userRef,FB){
-	var onValueChange = userRef.on('value',function(snap){
-		$scope.user = snap.val();
-		if(!$scope.$$phase) {$scope.$apply();}
-	});
-	FB.onAuth(function(authData){
-		if (!authData){
-			userRef.off('value',onValueChange);
-		}
-	});
-	// $scope.canEdit = canEdit;
+.controller('profileController',function($scope,isMe,userRef,Profile){
+	var info;
+	if (isMe) {
+		$scope.getInfo = function(){return Profile.info;}
+	} else {
+		userRef.on('value',function(snap){
+			info = snap.val();
+			if(!$scope.$$phase) {$scope.$apply();}
+		});
+		Profile.addWatcher(userRef);
+		$scope.getInfo = function(){return info;}
+	}
 })
 .controller('profileEditController',function($scope,
             // user,

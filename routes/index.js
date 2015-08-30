@@ -6,7 +6,7 @@ router.get('*',function(req, res, next) {
 	res.render('index',{
 	  	scripts: [
 			'/angular/angular',
-			'/firebase/firebase',
+			'/firebase/firebase-debug',
 			'/angularfire/dist/angularfire',
 			'/angular-ui-router/release/angular-ui-router',
 	  		'/angular-bootstrap/ui-bootstrap-tpls',
