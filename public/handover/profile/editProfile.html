@@ -1,3 +1,12 @@
+<h2 ng-bind="Profile.info.firstname + ' ' + Profile.info.lastname"></h2>
+<dl class="dl-horizontal">
+	<dt ng-if="Profile.info.contact">Contact</dt>
+	<dd ng-if="Profile.info.contact" ng-bind="Profile.info.contact"></dd>
+	<dt ng-if="Profile.info.specialty">Specialty</dt>
+	<dd ng-if="Profile.info.specialty" ng-bind="Profile.info.specialty"></dd>
+	<dt ng-if="Profile.info.role">Role</dt>
+	<dd ng-if="Profile.info.role" ng-bind="Profile.info.role"></dd>
+</dl>
 <div class="row">
 	<div class="col-md-8">
 		<div class="panel panel-primary">
@@ -49,7 +58,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-md-4">
+<!-- 	<div class="col-md-4">
 		<div class="panel panel-primary">
 			<div class="panel-heading">To Do List <small>(click to remove)</small></div>
 			<div class="panel-body">
@@ -71,4 +80,4 @@
 			</div>
 		</div>
 	</div>
-</div>
+ --></div>

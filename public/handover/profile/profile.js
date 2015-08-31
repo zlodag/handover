@@ -3,44 +3,19 @@
 	$stateProvider
 	.state('profile', {
 		abstract: true,
-		url: "/profile/:userId",
-		templateUrl: "/handover/profile/profile.html",
+		url: "/profile",
+		template: "<ui-view />",
 		resolve: {
-			// authData: function(Auth) {
-			// 	//return Auth;
-			// 	return Auth.$requireAuth();
-		 //    },
-		    // canEdit: function(authData,$stateParams){
-		    // 	return authData.uid === $stateParams.userId;
-		    // },
-		    isMe: function($stateParams,Profile){
-		    	return $stateParams.userId === Profile.auth.uid;
-		    },
-		    userRef: function(isMe,FB,$stateParams){
-		    	if (isMe) {return Profile.ref;}
-		    	else {return FB.child('users').child($stateParams.userId);}
+		    ensureAuth: function(Profile){
+		    	return Profile.ensureAuth();
 		    }
-
-		    // user: function(userFactory,$stateParams) {
-		    // 	return userFactory($stateParams.userId).$loaded();
-		    // }
-		},
-		controller: 'profileController'
+		}
+// 		controller: 'profileController'
 	})
 	.state('profile.edit', {
 		url: '/edit',
-		templateUrl: "/handover/profile/edit.html",
-		// template: '<p>Resolved!</p>',
+		templateUrl: "/handover/profile/editProfile.html",
 		resolve: {
-			// allow: function($q,canEdit){
-			// 	var deferred = $q.defer();
-			// 	if (canEdit) {
-   //                  deferred.resolve();
-   //              } else {
-   //                  deferred.reject('You cannot edit another profile!');
-   //              }
-   //              return deferred.promise;
-			// },
 			specialties: function(specialtyArray){
 		    	return specialtyArray.$loaded();
 		    },
@@ -48,48 +23,42 @@
 		    	return roleArray.$loaded();
 		    }
 		},
-		controller: 'profileEditController'
+		controller: function($scope,Profile,specialties,roles){
+			$scope.specialties = specialties;
+			Profile.addWatcher(specialties.$ref());
+			$scope.roles = roles;
+			Profile.addWatcher(roles.$ref());
+			var user = $scope.user;
+			$scope.newUser = {};
+			if(Profile.info.firstname){$scope.newUser.firstname = Profile.info.firstname}
+			if(Profile.info.lastname){$scope.newUser.lastname = Profile.info.lastname}
+			if(Profile.info.contact){$scope.newUser.contact = Profile.info.contact}
+			if(Profile.info.specialty && specialties.$indexFor(Profile.info.specialty) !== -1){$scope.newUser.specialty = Profile.info.specialty}
+			if(Profile.info.role && roles.$indexFor(Profile.info.role) !== -1){$scope.newUser.role = Profile.info.role}
+			$scope.update = function(newUser){
+				if (!newUser.contact){delete newUser.contact;}
+				Profile.ref.set(newUser);
+			};
+		}
 	})
 	.state('profile.public',{
-		url: '/',
-		template: '<a class="btn btn-default" ui-sref="^.edit">Edit</a>'
+		url: '/:userId',
+		templateUrl: "/handover/profile/profile.html",
+		resolve: {
+			info: function($stateParams,FB,$q){
+				var deferred = $q.defer();
+				FB.child('users').child($stateParams.userId).once('value',function(snap){
+					deferred.resolve(snap.val());
+				}, function(error){
+					deferred.reject(error);
+				});
+				return deferred.promise;
+			}
+		},
+		controller: function($scope,info){
+			$scope.info = info;
+		}
 	});
-})
-.controller('profileController',function($scope,isMe,userRef,Profile){
-	var info;
-	if (isMe) {
-		$scope.getInfo = function(){return Profile.info;}
-	} else {
-		userRef.on('value',function(snap){
-			info = snap.val();
-			if(!$scope.$$phase) {$scope.$apply();}
-		});
-		Profile.addWatcher(userRef);
-		$scope.getInfo = function(){return info;}
-	}
-})
-.controller('profileEditController',function($scope,
-            // user,
-            //Profile,
-            specialties,roles,FB,userRef){
-	$scope.specialties = specialties;
-	$scope.roles = roles;
-	//$scope.user = Profile; //debug
-	FB.onAuth(function(authData) {if (!authData){
-		specialties.$destroy();
-		roles.$destroy();
-	}});
-	var user = $scope.user;
-	$scope.newUser = {};
-	if(user.firstname){$scope.newUser.firstname = user.firstname}
-	if(user.lastname){$scope.newUser.lastname = user.lastname}
-	if(user.contact){$scope.newUser.contact = user.contact}
-	if(user.specialty && specialties.$indexFor(user.specialty) !== -1){$scope.newUser.specialty = user.specialty}
-	if(user.role && roles.$indexFor(user.role) !== -1){$scope.newUser.role = user.role}
-	$scope.update = function(newUser){
-		if (!newUser.contact){delete newUser.contact;}
-		userRef.set(newUser);
-	};
 })
 ;
 })();

@@ -91,9 +91,7 @@
 			('accepted' in task ? 'Accepted' : 'Added');
 	};
 })
-.controller('newTaskController', function($scope,
-            // authData,Auth,
-            $state,specialties,wards,tasksRef,Stamp){
+.controller('newTaskController', function($scope,$state,specialties,wards,tasksRef,Stamp){
 	$scope.specialties = specialties;
 	$scope.wards = wards;
 	$scope.newTask = {
@@ -122,7 +120,7 @@
 })
 .controller('taskDetailController', function(
             // authData,Auth,
-            $scope, comments, referrals, task,Stamp,TIMESTAMP,FB,taskId, allUsers){
+            $scope, comments, referrals, task,Stamp,TIMESTAMP,FB,taskId, allUsers,Profile){
 	console.log('starting details controller');
 	$scope.task = task;
 	$scope.comments = comments;
@@ -157,7 +155,7 @@
 		comments.$add(comment);
 	};
 	$scope.disabled = function(key){
-		 return (referrals.$indexFor(key) !== -1 || key === authData.uid);
+		 return (referrals.$indexFor(key) !== -1 || key === Profile.auth.uid);
 	};
 	$scope.refer = function(target){
 		var userId = target.id,

@@ -37,6 +37,7 @@
 			info = null;
 		}
 	});
+
 	function addWatcher(ref){
 		watching.push(ref);
 	}
@@ -56,6 +57,18 @@
 				deferred.resolve(obj.authData.uid);
 			}
 		});
+		return deferred.promise;
+	}
+	function ensureAuth() {
+		var deferred = $q.defer();
+		if (!auth) {deferred.reject('Not authorised');}
+		else {
+			getProfile(auth.uid).then(function(uid){
+				deferred.resolve(uid);
+			}).catch(function(error){
+				deferred.reject(error);
+			});
+		}
 		return deferred.promise;
 	}
 	function newAccount(credentials) {
@@ -110,15 +123,18 @@
 	}
 	function getProfile(uid) {
 		var deferred = $q.defer();
-		ref = FB.child('users').child(uid);
-		ref.on('value', function(snap){
-			info = snap.val();
-			console.log('about to resolve',deferred.promise);
-			deferred.resolve(uid);
-		},function(error){
-			deferred.reject(error);
-		});
-		addWatcher(ref);
+		if (info) {deferred.resolve(uid);}
+		else {
+			ref = FB.child('users').child(uid);
+			ref.on('value', function(snap){
+				info = snap.val();
+				console.log('about to resolve',deferred.promise);
+				deferred.resolve(uid);
+			},function(error){
+				deferred.reject(error);
+			});
+			addWatcher(ref);
+		}
 		return deferred.promise;
 	}
 	function register(credentials){
@@ -146,14 +162,17 @@
 		login : login,
 		logout: logout,
 		register : register,
-		addWatcher: addWatcher
+		addWatcher: addWatcher,
+		ensureAuth: ensureAuth
 	};
 })
 .factory('Stamp',function(Profile,TIMESTAMP){
-	return {
+	return function(){
+		return {
 		at: TIMESTAMP,
 		by: Profile.info.firstname + ' ' + Profile.info.lastname,
 		id: Profile.auth.uid
+		};
 	};
 })
 ;

@@ -1,10 +1,10 @@
 (function(){angular.module('handover.login',['ui.router','handover.data'])
 .config(function($stateProvider) {
 	$stateProvider
-	.state('admin', {
-		url: '/admin',
-		template: '<p>Admin stuff here</p>'
-	})
+	// .state('admin', {
+	// 	url: '/admin',
+	// 	template: '<p>Admin stuff here</p>'
+	// })
 	.state('login', {
 		url: "/login",
 		templateUrl: "/handover/login/login.html",
