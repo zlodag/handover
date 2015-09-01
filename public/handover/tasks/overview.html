@@ -1,115 +1,73 @@
-<a class="btn btn-success" ui-sref="^.new">New Task</a>
-<!-- <div class="panel panel-default">
-    <div class="panel-heading">Current</div>
--->
-<div class="table-responsive">
-    <table class="table table-condensed">
-        <caption>Current</caption>
-        <thead>
-            <tr>
-                <th></th>
-                <th>Patient</th>
-                <th>Location</th>
-                <th>Specialty</th>
-                <th>Text</th>
-                <th>Added</th>
-                <th>Accepted</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="task in tasks">
-                <td><span class="glyphicon" ng-class="'glyphicon-' + glyph(task.urgency)"></span></td>
-                <td>
-                    <div ng-bind="task.patient.name"></div>
-                    <div ng-bind="task.patient.nhi"></div>
-                </td>
-                <td>
-                    <span><a ui-sref="ward({wardId: task.patient.ward })" ng-bind="task.patient.ward"></a></span>
-                    - <span ng-bind="task.patient.bed"></span>
-                </td>
-                <td>
-                    <a ui-sref="specialty({specialtyId: task.patient.specialty })" ng-bind="task.patient.specialty"></a>
-                </td>
-                <td>
-                    <a ui-sref="^.detail({taskId:task.$id})">
-                        <span ng-bind="task.text"></span>
-                        <!-- <span class="badge" ng-if="task.comments" ng-bind="task.comments"></span> -->
-                    </a>
-                </td>
-                <td>
-                    <div>
-						<div><a ui-sref="profile.public({userId: task.added.user.uid})" ng-bind="task.added.user.name"></a></div>
-                        <div><em ng-bind="task.added.timestamp | date : 'mediumTime'"></em></div>
-                    </div>
-                </td>
-                <td ng-class="{info: !!task.accepted}">
-                    <div ng-if="task.accepted">
-                        <div><a ui-sref="profile.public({userId: task.accepted.user.uid})" ng-bind="task.accepted.user.name"></a></div>
-                        <div><em ng-bind="task.accepted.timestamp | date : 'mediumTime'"></em></div>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-<!-- </div>
-
-<div class="panel panel-default">
-    <div class="panel-heading">Recent</div>
- -->
- <div class="table-responsive">
-    <table class="table">
-        <caption>Recent</caption>
-        <thead>
-            <tr>
-                <th></th>
-                <th>Patient</th>
-                <th>Location</th>
-                <th>Specialty</th>
-                <th>Text</th>
-                <th>Completed</th>
-                <th>Cancelled</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="task in recent">
-                <td><span class="glyphicon" ng-class="'glyphicon-' + glyph(task.urgency)"></span></td>
-                <td>
-                    <div ng-bind="task.patient.name"></div>
-                    <div ng-bind="task.patient.nhi"></div>
-                </td>
-                <td>
-                    <span><a ui-sref="ward({wardId: task.patient.ward })" ng-bind="task.patient.ward"></a></span>
-                    - <span ng-bind="task.patient.bed"></span>
-                </td>
-                <td>
-                    <a ui-sref="specialty({specialtyId: task.patient.specialty })" ng-bind="task.patient.specialty"></a>
-                </td>
-                <td>
-                    <a ui-sref="^.detail({taskId:task.$id})">
-                        <span ng-bind="task.text"></span>
-                        <!-- <span class="badge" ng-if="task.comments" ng-bind="task.comments"></span> -->
-                    </a>
-                </td>
-                <td ng-class="{success: !task.completed.cancelled}">
-                    <div ng-if="!task.completed.cancelled">
-                        <div><a ui-sref="profile.public({userId: task.completed.user.uid})" ng-bind="task.completed.user.name"></a></div>
-                        <div><em ng-bind="task.completed.timestamp | date : 'mediumTime'"></em></div>
-                    </div>
-                </td>
-                <td ng-class="{danger: !!task.completed.cancelled}">
-                    <div ng-if="task.completed.cancelled">
-                        <div><a ui-sref="profile.public({userId: task.completed.user.uid})" ng-bind="task.completed.user.name"></a></div>
-                        <div>
-                            <em ng-bind="task.completed.timestamp | date : 'mediumTime'"></em>
-                            <span class="glyphicon glyphicon-comment" tooltip="{{task.completed.cancelled}}"></span>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-<!-- </div>
- -->
-<!-- <pre ng-bind="tasks | json"></pre> -->
+<a ui-sref="^.new">New Task</a>
+<ul>
+  <li ng-repeat="(taskId, task) in tasks" ng-class="{high: task.urgency === 3,medium: task.urgency === 2,low: task.urgency === 1}">
+    <div class="cont">
+      <div class="patient">
+        <h3>Patient</h3>
+        <dl>
+          <dt class="patient">Patient</dt>
+          <dd class="patient" ng-bind="task.patient"></dd>
+          <dt class="nhi">NHI</dt>
+          <dd class="nhi" ng-bind="task.nhi"></dd>
+          <dt class="location">Location</dt>
+          <dd class="location">
+            <span class="ward">
+              <a ui-sref="ward({wardId: task.ward })" ng-bind="task.ward"></a>
+            </span>
+            <span class="bed" ng-bind="task.bed"></span>
+          </dd>
+          <dt class="specialty">Specialty</dt>
+          <dd class="specialty">
+            <a ui-sref="specialty({specialtyId: task.specialty })" ng-bind="task.specialty"></a>
+          </dd>
+        </dl>
+      </div>
+      <div class="task">
+        <h3>Task</h3>
+        <dl>
+          <dt class="text">Text</dt>
+          <dd class="text"><a ui-sref="^.detail({taskId:taskId})" ng-bind="task.text"></a></dd>
+          <dt class="status">Status</dt>
+          <dd class="status" ng-bind="getStatus(task)"></dd>
+        </dl>
+      </div>
+    </div>
+    <div class="box" ng-class="getStatus(task)"></div>
+  </li>
+</ul>
+<ul>
+  <li ng-repeat="task in recent" ng-class="{high: task.urgency === 3,medium: task.urgency === 2,low: task.urgency === 1}">
+    <div class="cont">
+      <div class="patient">
+        <h3>Patient</h3>
+        <dl>
+          <dt class="patient">Patient</dt>
+          <dd class="patient" ng-bind="task.patient"></dd>
+          <dt class="nhi">NHI</dt>
+          <dd class="nhi" ng-bind="task.nhi"></dd>
+          <dt class="location">Location</dt>
+          <dd class="location">
+            <span class="ward">
+              <a ui-sref="ward({wardId: task.ward })" ng-bind="task.ward"></a>
+            </span>
+            <span class="bed" ng-bind="task.bed"></span>
+          </dd>
+          <dt class="specialty">Specialty</dt>
+          <dd class="specialty">
+            <a ui-sref="specialty({specialtyId: task.specialty })" ng-bind="task.specialty"></a>
+          </dd>
+        </dl>
+      </div>
+      <div class="task">
+        <h3>Task</h3>
+        <dl>
+          <dt class="text">Text</dt>
+          <dd class="text"><a ui-sref="^.detail({taskId:task.$id})" ng-bind="task.text"></a></dd>
+          <dt class="status">Status</dt>
+          <dd class="status" ng-bind="getStatus(task)"></dd>
+        </dl>
+      </div>
+    </div>
+    <div class="box" ng-class="getStatus(task)"></div>
+  </li>
+</ul>
