@@ -1,0 +1,31 @@
+<h2>{{context}} tasks</h2>
+<ul>
+  <li ng-repeat="(taskId, task) in Tasks[context]">
+    <div class="urgency" ng-class="{high: task.urgency === 3,medium: task.urgency === 2,low: task.urgency === 1}"></div>
+    <div class="box" ng-class="getStatus(task)"></div>
+    <div class="cont">
+        <dl>
+          <dt class="patient">Patient</dt>
+          <dd class="patient" ng-bind="task.patient"></dd>
+          <dt class="nhi">NHI</dt>
+          <dd class="nhi" ng-bind="task.nhi"></dd>
+          <dt class="location">Location</dt>
+          <dd class="location">
+            <span class="ward">
+              <a ui-sref="ward({wardId: task.ward })" ng-bind="task.ward"></a>
+            </span>
+            <span class="bed" ng-bind="task.bed"></span>
+          </dd>
+          <dt class="specialty">Specialty</dt>
+          <dd class="specialty">
+            <a ui-sref="specialty({specialtyId: task.specialty })" ng-bind="task.specialty"></a>
+          </dd>
+          <dt class="text">Text</dt>
+          <dd class="text"><a ui-sref="^.detail({taskId:taskId})" ng-bind="task.text"></a></dd>
+          <dt class="status">Status</dt>
+          <dd class="status" ng-bind="getStatus(task)"></dd>
+        </dl>
+      </div>
+    </div>
+  </li>
+</ul>

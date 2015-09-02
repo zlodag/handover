@@ -1,0 +1,111 @@
+* {
+    box-sizing: border-box;
+}
+h2 {
+    font-size: 20px;
+    text-align: center;
+    text-transform:capitalize;
+}
+ul {
+    padding: 0;
+    margin: 0;
+}
+li {
+    list-style-type: none;
+    margin: 5px 0;
+    border: 3px solid black;
+    position: relative;
+}
+div.urgency, div.box {
+    width: 40px;
+    position: absolute;
+    left: 0;
+}
+div.urgency {
+    top: 0;
+    height: 20px;
+    border-bottom: 1px solid black;
+}
+div.urgency.high {
+    background: red;
+}
+div.urgency.medium {
+    background: gold;
+}
+div.urgency.low {
+    background: green;
+}
+div.box {
+    height: 40px;
+    bottom: 0;
+    background-repeat: no-repeat;
+    background-size: 50%;
+    background-position: center;
+}
+div.box.Added {
+        background-image: url("/icons/ellipses.svg");
+}
+div.box.Accepted {
+    background-image: url("/icons/clock.svg");
+}
+div.box.Completed {
+    background-image: url("/icons/task.svg");
+}
+div.box.Cancelled {
+    background-image: url("/icons/ban.svg");
+}
+
+div.cont {
+    border-left: 1px solid black;
+    padding: 0;
+    margin-left: 40px;
+}
+dl {
+    padding: 0.5em;
+    overflow: auto;
+    margin: 0;
+}
+dt {
+    display: none;
+}
+dd {
+    background-repeat: no-repeat;
+    background-size: 0.8em;
+    background-position: left;
+    padding-left: 1.5em;
+    float: left;
+    clear: left;
+    font-family: sans-serif;
+    margin: 0;
+}
+dd.nhi,.specialty {
+    float: right;
+    clear: right;
+}
+dd.patient {
+    background-image: url("/icons/person.svg");
+}
+dd.nhi {
+    background-image: url("/icons/medical-cross.svg");
+}
+dd.location {
+    background-image: url("/icons/home.svg");
+}
+dd.location>.ward:after {
+    content: "-"
+}
+dd.specialty {
+    background-image: url("/icons/tag.svg");
+}
+dd.text {
+    background-image: url("/icons/comment-square.svg");
+    font-family: serif;
+    font-style: italic;
+    padding-top:5px;
+    margin-top:5px;
+    border-top:1px solid black;
+    width:100%;
+}
+dd.status {
+    display: none;
+}

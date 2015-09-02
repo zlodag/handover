@@ -1,4 +1,14 @@
 (function(){angular.module('handover.tasks',['ui.router','firebase','handover.data'])
+.directive('taskList',function(){
+	return {
+		restrict: 'E',
+		templateUrl: '/handover/tasks/taskList.html',
+		scope: true,
+		controller: function($scope,$attrs){
+			$scope.context = $attrs.context;
+		}
+	};
+})
 .factory('Tasks',function(FB,Profile,$rootScope){
 	function updatedChild (snap) {
 		console.log('updated or added one task', snap.key());
@@ -149,7 +159,7 @@
 			},
 
 		},
-		controller: function($scope, taskId, commentsRef, referralsRef, taskRef, users, taskboardRef, Stamp, TIMESTAMP, Profile){
+		controller: function($scope, taskId, commentsRef, referralsRef, taskRef, users, taskboardRef, Stamp, TIMESTAMP, Profile, $q){
 			$scope.taskId = taskId;
 			$scope.users = users;
 

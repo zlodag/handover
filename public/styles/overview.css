@@ -9,6 +9,8 @@ ui-view li {
   width: 100%;
 }
 ui-view div.box {
+    margin: 0;
+    background-color: grey;
     position: absolute;
     right: 0;
     bottom: 0;
@@ -35,20 +37,17 @@ ui-view div.box.Cancelled{
 
 ui-view div.cont {
   border-left: 3px solid black;
-  background-color: white;
+  background-color: #F4F1FF;
   overflow: auto;
   padding: 10px 0;
-}
-ui-view div.cont>div {
-  margin: 0 10px;
 }
 ui-view ul {
   padding: 5px;
 }
-ui-view div.patient, div.requestor,div.task {
+ui-view div.patient,div.task {
   /* background-color: lightgrey; */
-  display: block;
-  margin: 0;
+/*   display: block; */
+  margin: 0 10px;
   /*padding: 15px;*/
   /*border-radius: 15px;*/
   float: left;
