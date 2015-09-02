@@ -1,43 +1,43 @@
 (function(){angular.module('handover.tasks',['ui.router','firebase','handover.data'])
-.factory('Tasks',function(FB,Profile){
-	var tasks = {}, recent = {},
-	ref = FB.child("tasks"),
-	currentRef = ref.orderByChild("completed").equalTo(null),
-	recentRef = ref.orderByChild("inactive").limitToLast(3);
-
-	console.log('Setting up callbacks for current tasks');
-	currentRef.on('child_added',snapToCurrent,errorHandler);
-	currentRef.on('child_changed',snapToCurrent,errorHandler);
-	currentRef.on('child_removed',function snapToCurrent (snap) {
+.factory('Tasks',function(FB,Profile,$rootScope){
+	function updatedChild (snap) {
+		console.log('updated or added one task', snap.key());
+		this[snap.key()] = snap.val();
+		$rootScope.$apply();
+	}
+	function removedChild (snap) {
 		console.log('removed one task', snap.key());
-		delete tasks[snap.key()];
-	},errorHandler);
+		delete this[snap.key()];
+		$rootScope.$apply();
+	}
+	function errorHandler (error) {
+		console.error(error);
+	}
+	var ref = FB.child("tasks");
+
+	var current = {},
+	currentRef = ref.orderByChild("completed").equalTo(null);
+	console.log('Setting up callbacks for current tasks');
+	currentRef.on('child_added',updatedChild,errorHandler,current);
+	currentRef.on('child_changed',updatedChild,errorHandler,current);
+	currentRef.on('child_removed',removedChild,errorHandler,current);
 	Profile.addWatcher(currentRef);
 
+	var recent = {},
+	recentRef = ref.orderByChild("inactive").limitToLast(3);
 	console.log('Setting up callbacks for recent tasks');
-	recentRef.on('child_added',snapToRecent,errorHandler);
-	recentRef.on('child_changed',snapToRecent,errorHandler);
-	recentRef.on('child_removed',function snapToRecent (snap) {
-		console.log('removed one task', snap.key());
-		delete tasks[snap.key()];
-	},errorHandler);
+	recentRef.on('child_added',updatedChild,errorHandler,recent);
+	recentRef.on('child_changed',updatedChild,errorHandler,recent);
+	recentRef.on('child_removed',removedChild,errorHandler,recent);
 	Profile.addWatcher(recentRef);
 
-	function errorHandler (error) {
-		tasks = {};
-		this.reject(error);
-	}
-	function snapToCurrent (snap) {
-		console.log('updated or added one current task', snap.key());
-		tasks[snap.key()] = snap.val();
-	}
-	function snapToRecent (snap) {
-		console.log('updated or added one recent task', snap.key());
-		recent[snap.key()] = snap.val();
-	}
 	return {
-		get tasks(){return tasks;},
-		get recent(){return recent;}
+		get current(){return current;},
+		get recent(){return recent;},
+		clear : function(){
+			currentRef = null; recentRef = null;
+			current = {}; recent = {};
+		}
 	};
 })
 .config(function($stateProvider) {
@@ -49,12 +49,18 @@
 		resolve: {
 		    ensureAuth: function(Profile){
 		    	return Profile.ensureAuth();
-		    }
+		    },
+			taskboardRef: function(FB,ensureAuth,Profile){
+				return FB.child("taskboard").child(Profile.auth.uid);
+			}
 		},
-		controller: function($scope, Profile,Tasks){
-			$scope.current = Tasks.current;
-			$scope.recent = Tasks.recent;
-			$scope.recent = {};
+		controller: function($scope, Profile,Tasks,FB){
+			$scope.Tasks = Tasks;
+			FB.onAuth(function(authData){
+				if(!authData){
+					Tasks.clear();
+				}
+			});
 			$scope.getStatus = function(task){
 				return ('completed' in task) ?
 				('cancelled' in task.completed ? 'Cancelled' : 'Completed') :
@@ -91,6 +97,7 @@
 			},
 		},
 		controller: function($scope,$state,specialties,wards,tasksRef,Stamp){
+			console.log('starting controller');
 			$scope.specialties = specialties;
 			$scope.wards = wards;
 			$scope.newTask = {
@@ -128,11 +135,8 @@
 			referralsRef: function(FB,ensureAuth,taskId){
 				return FB.child("referrals").child(taskId);
 			},
-			taskboardRef: function(FB,ensureAuth){
-				return FB.child("taskboard");
-			},
-			taskRef: function(tasksRef,taskId){
-				return tasksRef.child(taskId);
+			taskRef: function(FB,taskId){
+				return FB.child("tasks").child(taskId);
 			},
 		    users: function(FB,ensureAuth,$q){
 		    	var deferred = $q.defer();
@@ -145,22 +149,28 @@
 			},
 
 		},
-		controller: function($scope, users, taskId, commentsRef, referralsRef, taskboardRef, taskRef, Stamp, TIMESTAMP,Profile){
-			console.log('starting details controller');
+		controller: function($scope, taskId, commentsRef, referralsRef, taskRef, users, taskboardRef, Stamp, TIMESTAMP, Profile){
 			$scope.taskId = taskId;
 			$scope.users = users;
+
+			$scope.task = {};
+			taskRef.on('value',function(snap){
+				$scope.task = snap.val();
+				$scope.$apply();
+			});
+			Profile.addWatcher(taskRef);
 
 			$scope.comments = {};
 			commentsRef.on('child_added',function(snap,prevKey){
 				$scope.comments[snap.key()] = snap.val();
-				$scope.$apply();
+				// $scope.$apply();
 			});
 			Profile.addWatcher(commentsRef);
 
 			$scope.referrals = {};
 			referralsRef.on('child_added',function(snap,prevKey){
 				$scope.referrals[snap.key()] = snap.val();
-				$scope.$apply();
+				// $scope.$apply();
 			});
 			Profile.addWatcher(referralsRef);
 
@@ -200,7 +210,7 @@
 					if (error){return console.error("There was a problem referring the task: ", error);}
 					console.log("Task referred");
 					ref.child('at').once("value", function(snap){
-						 taskboardRef.child(userId).child(taskId).set(snap.val(),function(error){
+						 taskboardRef.child(taskId).set(snap.val(),function(error){
 			 				if (error){return console.error("There was a problem posting the task to the user's taskboard: ", error);}
 							console.log("Task posted to user's taskboard");
 						 });

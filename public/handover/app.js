@@ -18,7 +18,7 @@
 			Profile.ensureAuth();
 		}
 	});
-	$rootScope.$on("$stateChangeError", function(event, next, previous, error) {
+	$rootScope.$on("$stateChangeError", function(event, toState, toParams, fromState, fromParams, error) {
 		console.error('The error was: ', error);
 		if (error === "AUTH_REQUIRED") {
 			console.error('Authentication required');

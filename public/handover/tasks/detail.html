@@ -1,49 +1,49 @@
 <div class="jumbotron">
 	<dl class="dl-horizontal">
 	    <dt>Patient</dt>
-	    <dd ng-bind="tasks[taskId].patient"></dd>
+	    <dd ng-bind="task.patient"></dd>
 	    <dt>NHI</dt>
-	    <dd ng-bind="tasks[taskId].nhi"></dd>
+	    <dd ng-bind="task.nhi"></dd>
 	    <dt>Specialty</dt>
-	    <dd><a ui-sref="specialty({specialtyId: tasks[taskId].specialty})" ng-bind="tasks[taskId].specialty"></a></dd>
+	    <dd><a ui-sref="specialty({specialtyId: task.specialty})" ng-bind="task.specialty"></a></dd>
 	    <dt>Ward</dt>
-	    <dd><a ui-sref="ward({wardId: tasks[taskId].ward})" ng-bind="tasks[taskId].ward"></a></dd>
+	    <dd><a ui-sref="ward({wardId: task.ward})" ng-bind="task.ward"></a></dd>
 	    <dt>Bed</dt>
-	    <dd ng-bind="tasks[taskId].bed"></dd>
+	    <dd ng-bind="task.bed"></dd>
 	    <dt>Urgency</dt>
-	    <dd ng-bind="tasks[taskId].urgency"></dd>
+	    <dd ng-bind="task.urgency"></dd>
     </dl>
-    <p ng-bind="tasks[taskId].text"></p>
+    <p ng-bind="task.text"></p>
     <div>
         Added
-        by <a ui-sref="profile.public({userId: tasks[taskId].added.id})" ng-bind="tasks[taskId].added.by"></a>
-        at {{ tasks[taskId].added.at | date : "h:mma 'on' dd/MM/yyyy"}}
+        by <a ui-sref="profile.public({userId: task.added.id})" ng-bind="task.added.by"></a>
+        at {{ task.added.at | date : "h:mma 'on' dd/MM/yyyy"}}
     </div>
-    <div ng-if="tasks[taskId].accepted">
+    <div ng-if="task.accepted">
         Accepted
-        by <a ui-sref="profile.public({userId: tasks[taskId].accepted.id})" ng-bind="tasks[taskId].accepted.by"></a>
-        at {{ tasks[taskId].accepted.at | date : "h:mma 'on' dd/MM/yyyy"}}
+        by <a ui-sref="profile.public({userId: task.accepted.id})" ng-bind="task.accepted.by"></a>
+        at {{ task.accepted.at | date : "h:mma 'on' dd/MM/yyyy"}}
     </div>
-    <div ng-if="tasks[taskId].completed && !tasks[taskId].completed.cancelled">
+    <div ng-if="task.completed && !task.completed.cancelled">
         Completed
-        by <a ui-sref="profile.public({userId: tasks[taskId].completed.id})" ng-bind="tasks[taskId].completed.by"></a>
-        at {{ tasks[taskId].completed.at | date : "h:mma 'on' dd/MM/yyyy"}}
+        by <a ui-sref="profile.public({userId: task.completed.id})" ng-bind="task.completed.by"></a>
+        at {{ task.completed.at | date : "h:mma 'on' dd/MM/yyyy"}}
     </div>
-    <div ng-if="tasks[taskId].completed && tasks[taskId].completed.cancelled">
+    <div ng-if="task.completed && task.completed.cancelled">
         Cancelled
-        by <a ui-sref="profile.public({userId: tasks[taskId].completed.id})" ng-bind="tasks[taskId].completed.by"></a>
-        at {{ tasks[taskId].completed.at | date : "h:mma 'on' dd/MM/yyyy"}}
-        <span class="glyphicon glyphicon-comment" tooltip="{{tasks[taskId].completed.cancelled}}"></span>
+        by <a ui-sref="profile.public({userId: task.completed.id})" ng-bind="task.completed.by"></a>
+        at {{ task.completed.at | date : "h:mma 'on' dd/MM/yyyy"}}
+        <span class="glyphicon glyphicon-comment" tooltip="{{task.completed.cancelled}}"></span>
     </div>
-    <button type="button" class="btn btn-info" ng-if="canStamp('accepted',tasks[taskId])" ng-click="stamp('accepted')">Accept</button>
-    <button type="button" class="btn btn-success" ng-if="canStamp('completed',tasks[taskId])" ng-click="stamp('completed')">Complete</button>
-    <button type="button" class="btn btn-danger" ng-if="canStamp('cancelled',tasks[taskId])" ng-click="stamp('completed', 'because...')">Cancel</button>
+    <button type="button" class="btn btn-info" ng-if="canStamp('accepted',task)" ng-click="stamp('accepted')">Accept</button>
+    <button type="button" class="btn btn-success" ng-if="canStamp('completed',task)" ng-click="stamp('completed')">Complete</button>
+    <button type="button" class="btn btn-danger" ng-if="canStamp('cancelled',task)" ng-click="stamp('completed', 'because...')">Cancel</button>
     <div ng-repeat="referral in referrals">
         Referred to <a ui-sref="profile.public({userId: referral.$id})" ng-bind="referral.to"></a>
         by <a ui-sref="profile.public({userId: referral.id})" ng-bind="referral.by"></a>
         at {{ referral.at | date : "h:mma 'on' dd/MM/yyyy"}}
     </div>
-    <div ng-hide="tasks[taskId].completed">
+    <div ng-hide="task.completed">
         <select ng-model="target"
             ng-options="{id:key,name:value.firstname + ' ' + value.lastname}
                         as value.firstname + ' ' + value.lastname
@@ -59,7 +59,7 @@
     <footer>by <a ui-sref="profile.public({userId: comment.id})" ng-bind="comment.by"></a>
                             at <em ng-bind="comment.at | date : 'short'"></em></footer>
 </blockquote>
-<form ng-hide="tasks[taskId].completed" class="form-inline" ng-submit="addComment(newComment); newComment = ''">
+<form ng-hide="task.completed" class="form-inline" ng-submit="addComment(newComment); newComment = ''">
     <div class="form-group">
 	    <label for="newComment">Add a new comment</label>
         <input type="text" id="newComment" class="form-control" placeholder="Comment" ng-model="newComment"></input>

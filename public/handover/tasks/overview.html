@@ -1,6 +1,7 @@
 <a ui-sref="^.new">New Task</a>
+<h2>Current Tasks</h2>
 <ul>
-  <li ng-repeat="(taskId, task) in tasks" ng-class="{high: task.urgency === 3,medium: task.urgency === 2,low: task.urgency === 1}">
+  <li ng-repeat="(taskId, task) in Tasks.current" ng-class="{high: task.urgency === 3,medium: task.urgency === 2,low: task.urgency === 1}">
     <div class="cont">
       <div class="patient">
         <h3>Patient</h3>
@@ -35,8 +36,9 @@
     <div class="box" ng-class="getStatus(task)"></div>
   </li>
 </ul>
+<h2>Recent Tasks</h2>
 <ul>
-  <li ng-repeat="task in recent" ng-class="{high: task.urgency === 3,medium: task.urgency === 2,low: task.urgency === 1}">
+  <li ng-repeat="(taskId, task) in Tasks.recent" ng-class="{high: task.urgency === 3,medium: task.urgency === 2,low: task.urgency === 1}">
     <div class="cont">
       <div class="patient">
         <h3>Patient</h3>
@@ -62,7 +64,7 @@
         <h3>Task</h3>
         <dl>
           <dt class="text">Text</dt>
-          <dd class="text"><a ui-sref="^.detail({taskId:task.$id})" ng-bind="task.text"></a></dd>
+          <dd class="text"><a ui-sref="^.detail({taskId:taskId})" ng-bind="task.text"></a></dd>
           <dt class="status">Status</dt>
           <dd class="status" ng-bind="getStatus(task)"></dd>
         </dl>
