@@ -4,8 +4,9 @@
 		restrict: 'E',
 		templateUrl: '/handover/tasks/taskList.html',
 		scope: true,
-		controller: function($scope,$attrs){
+		controller: function($scope,$attrs,$state){
 			$scope.context = $attrs.context;
+			$scope.go = $state.go;
 		}
 	};
 })
@@ -106,10 +107,11 @@
 				return deferred.promise;
 			},
 		},
-		controller: function($scope,$state,specialties,wards,tasksRef,Stamp){
+		controller: function($scope,$state,specialties,wards,FB,Stamp){
 			console.log('starting controller');
 			$scope.specialties = specialties;
 			$scope.wards = wards;
+			console.log(specialties, wards);
 			$scope.newTask = {
 				"patient": "Humphrey Herbert",
 				"nhi": "LKJ1551",
@@ -123,7 +125,7 @@
 				var task = angular.copy(newTask);
 				task.added = Stamp();
 				console.log(task);
-				var ref = tasksRef.push();
+				var ref = FB.child("tasks").push();
 				ref.set(task, function(error) {
 					if (error){return console.error("There was a problem adding the task: ", error);}
 					console.log("Added task");
@@ -166,7 +168,6 @@
 			$scope.task = {};
 			taskRef.on('value',function(snap){
 				$scope.task = snap.val();
-				$scope.$apply();
 			});
 			Profile.addWatcher(taskRef);
 

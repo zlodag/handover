@@ -6,52 +6,62 @@ h2 {
     text-align: center;
     text-transform:capitalize;
 }
-ul {
+.tasks {
     padding: 0;
     margin: 0;
 }
-li {
+.tasks>li {
     list-style-type: none;
-    margin: 5px 0;
+    margin: 15px 0;
     border: 3px solid black;
     position: relative;
 }
-div.urgency, div.box {
+
+.task-leave.task-leave-active,
+.task-enter {
+  transition:0.5s ease all;
+  opacity:0;
+}
+.task-enter.task-enter-active,
+.task-leave {
+  opacity:1;
+}
+.urgency, .box {
     width: 40px;
     position: absolute;
     left: 0;
 }
-div.urgency {
+.urgency {
     top: 0;
     height: 20px;
     border-bottom: 1px solid black;
 }
-div.urgency.high {
+.urgency.high {
     background: red;
 }
-div.urgency.medium {
+.urgency.medium {
     background: gold;
 }
-div.urgency.low {
+.urgency.low {
     background: green;
 }
-div.box {
+.box {
     height: 40px;
     bottom: 0;
     background-repeat: no-repeat;
     background-size: 50%;
     background-position: center;
 }
-div.box.Added {
+.box.Added {
         background-image: url("/icons/ellipses.svg");
 }
-div.box.Accepted {
+.box.Accepted {
     background-image: url("/icons/clock.svg");
 }
-div.box.Completed {
+.box.Completed {
     background-image: url("/icons/task.svg");
 }
-div.box.Cancelled {
+.box.Cancelled {
     background-image: url("/icons/ban.svg");
 }
 
@@ -60,15 +70,21 @@ div.cont {
     padding: 0;
     margin-left: 40px;
 }
-dl {
+div.cont:hover{
+    background-color: lightcyan;
+}
+div.cont:active{
+    background-color: rgb(162, 249, 198);
+}
+dl.task {
     padding: 0.5em;
     overflow: auto;
     margin: 0;
 }
-dt {
+dl.task>dt {
     display: none;
 }
-dd {
+dl.task>dd {
     background-repeat: no-repeat;
     background-size: 0.8em;
     background-position: left;
@@ -78,26 +94,26 @@ dd {
     font-family: sans-serif;
     margin: 0;
 }
-dd.nhi,.specialty {
+.nhi,.specialty {
     float: right;
     clear: right;
 }
-dd.patient {
+.patient {
     background-image: url("/icons/person.svg");
 }
-dd.nhi {
+.nhi {
     background-image: url("/icons/medical-cross.svg");
 }
-dd.location {
+.location {
     background-image: url("/icons/home.svg");
 }
-dd.location>.ward:after {
+.location>.ward:after {
     content: "-"
 }
-dd.specialty {
+.specialty {
     background-image: url("/icons/tag.svg");
 }
-dd.text {
+.text {
     background-image: url("/icons/comment-square.svg");
     font-family: serif;
     font-style: italic;
@@ -106,6 +122,6 @@ dd.text {
     border-top:1px solid black;
     width:100%;
 }
-dd.status {
+.status {
     display: none;
 }

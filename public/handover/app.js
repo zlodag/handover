@@ -1,4 +1,5 @@
 (function(){angular.module('handover',[
+ 	'ngAnimate',
  	'ui.router',
  	'ui.bootstrap',
  	'handover.login',

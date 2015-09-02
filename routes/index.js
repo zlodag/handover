@@ -6,6 +6,7 @@ router.get('*',function(req, res, next) {
 	res.render('index',{
 	  	scripts: [
 			'/angular/angular',
+			'/angular-animate/angular-animate',
 			'/firebase/firebase-debug',
 			'/angularfire/dist/angularfire',
 			'/angular-ui-router/release/angular-ui-router',
@@ -20,7 +21,7 @@ router.get('*',function(req, res, next) {
 		],
 		styles : [
 			'/bootstrap-css-only/css/bootstrap.min',
-			'/styles/style',
+			// '/styles/style',
 			'/styles/simple'
 			// '/styles/overview'
 		]
