@@ -6,7 +6,7 @@
 	]);
 	app.config(["$urlRouterProvider", "$locationProvider", function($urlRouterProvider, $locationProvider) {
 		$urlRouterProvider.otherwise("/tasks/");
-		$locationProvider.html5Mode(false);
+		$locationProvider.html5Mode(true);
 	}]);
 	app.factory("FB",["$window", function($window){
 		return new $window.Firebase("https://nutm.firebaseio.com");

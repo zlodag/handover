@@ -5,5 +5,9 @@
     "**/.*",
   	"index-dev.html",
     "components/"
-  ]
+  ],
+  "rewrites": [{
+    "source": "**",
+    "destination": "/index.html"
+  }]
 }
