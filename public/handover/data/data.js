@@ -26,6 +26,17 @@
 		return $firebaseObject(FB.child('users').child(userId));
 	}
 })
+.factory('rolesPromise', function(FB,$q){
+	var deferred = $q.defer();
+	console.log('about to find the different roles');
+	FB.child("roles").once('value',function(snap){
+		console.log('got the different roles');
+		deferred.resolve(snap.val());
+	}, function(error){
+		deferred.reject(error);
+	});
+	return deferred.promise;
+})
 .factory('Profile',function(FB,$q,$state){
 	var info,
 	auth,
@@ -37,7 +48,6 @@
 			info = null;
 		}
 	});
-
 	function addWatcher(ref){
 		watching.push(ref);
 	}
@@ -47,8 +57,8 @@
 	}
 	function makeProfile(obj){
 		var deferred = $q.defer(),
-		profileData = {firstname: obj.name.first, lastname: obj.name.last};
-		FB.child('users').child(obj.authData.uid).set(profileData, function(error){
+		profileData = {f: obj.name.first, l: obj.name.last, r: obj.role};
+		FB.child('users/index/' + obj.authData.uid).set(profileData, function(error){
 			if (error){
 				deferred.reject(error);
 			}
@@ -73,11 +83,12 @@
 	}
 	function newAccount(credentials) {
 		var deferred = $q.defer();
-		if (!credentials || !credentials.firstname || !credentials.lastname) {
-			deferred.reject('Provide a first and last name');
+		if (!credentials || !credentials.firstname || !credentials.lastname || !credentials.role) {
+			deferred.reject('Provide a first name, last name and role');
 		} else {
 			var firstname = credentials.firstname,
 			lastname = credentials.lastname,
+			role = credentials.role,
 			email = credentials.email,
 			password = credentials.password;
 			if (email && password) {
@@ -92,7 +103,7 @@
 								deferred.reject(error);
 							} else {
 								console.log('Authed in as new user', authData);
-								deferred.resolve({authData: authData, name: {first: firstname, last: lastname}});
+								deferred.resolve({authData: authData, name: {first: firstname, last: lastname}, role: role});
 							}
 						});
 					}
@@ -103,7 +114,7 @@
 						deferred.reject(error);
 					} else {
 						console.log('Authed in as anonymous user', authData);
-						deferred.resolve({authData: authData, name: {first: firstname, last: lastname}});
+						deferred.resolve({authData: authData, name: {first: firstname, last: lastname}, role: role});
 					}
 				});
 			}
@@ -125,7 +136,7 @@
 		var deferred = $q.defer();
 		if (info) {deferred.resolve(uid);}
 		else {
-			ref = FB.child('users').child(uid);
+			ref = FB.child('users/index/' + uid);
 			ref.on('value', function(snap){
 				info = snap.val();
 				console.log('about to resolve',deferred.promise);
@@ -170,7 +181,7 @@
 	return function(){
 		return {
 		at: TIMESTAMP,
-		by: Profile.info.firstname + ' ' + Profile.info.lastname,
+		by: Profile.info.f + ' ' + Profile.info.l,
 		id: Profile.auth.uid
 		};
 	};

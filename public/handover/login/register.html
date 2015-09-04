@@ -8,6 +8,13 @@
         <input class="form-control" type="text" id="lastname" ng-model="credentials.lastname" maxlength="20" ng-minlength="2" required/>
     </div>
     <div class="form-group">
+        <label for="role">Role</label>
+        <select id="role" ng-model="credentials.role"
+            ng-options="role as role for (role,value) in roles">
+            <option value="">No role</option>
+        </select>
+    </div>
+    <div class="form-group">
         <label for="email">Email</label>
         <input class="form-control" type="email" id="email" ng-model="credentials.email"/>
     </div>

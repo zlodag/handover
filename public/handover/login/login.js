@@ -13,6 +13,11 @@
 	.state('register', {
 		url: "/register",
 		templateUrl: "/handover/login/register.html",
+		resolve: {
+			roles: function(rolesPromise){
+				return rolesPromise;
+			}
+		},
 		controller: 'registerController'
 	})
 	// .state('logout', {
@@ -31,8 +36,11 @@
 	// 	}
 	// })
 })
-.controller('registerController',function($scope,Profile){
+.controller('registerController',function($scope,Profile,roles){
 	$scope.register = Profile.register;
+	$scope.roles = roles;
+	console.log('The roles are now', $scope.roles);
+	// roles.then(function(){console.log('The roles are now', $scope.roles);});
 })
 .controller('loginController',function($scope,Profile){
 	$scope.login = Profile.login;

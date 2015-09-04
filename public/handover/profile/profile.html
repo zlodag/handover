@@ -1,9 +1,9 @@
-<h2 ng-bind="info.firstname + ' ' + info.lastname"></h2>
+<h2 ng-bind="info.f + ' ' + info.l"></h2>
 <dl class="dl-horizontal">
 	<dt ng-if="info.contact">Contact</dt>
 	<dd ng-if="info.contact" ng-bind="info.contact"></dd>
 	<dt ng-if="info.specialty">Specialty</dt>
 	<dd ng-if="info.specialty" ng-bind="info.specialty"></dd>
-	<dt ng-if="info.role">Role</dt>
-	<dd ng-if="info.role" ng-bind="info.role"></dd>
+	<dt ng-if="info.r">Role</dt>
+	<dd ng-if="info.r" ng-bind="info.r"></dd>
 </dl>

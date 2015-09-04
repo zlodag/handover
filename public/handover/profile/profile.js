@@ -30,11 +30,11 @@
 			Profile.addWatcher(roles.$ref());
 			var user = $scope.user;
 			$scope.newUser = {};
-			if(Profile.info.firstname){$scope.newUser.firstname = Profile.info.firstname}
-			if(Profile.info.lastname){$scope.newUser.lastname = Profile.info.lastname}
+			if(Profile.info.f){$scope.newUser.firstname = Profile.info.f}
+			if(Profile.info.l){$scope.newUser.lastname = Profile.info.l}
 			if(Profile.info.contact){$scope.newUser.contact = Profile.info.contact}
 			if(Profile.info.specialty && specialties.$indexFor(Profile.info.specialty) !== -1){$scope.newUser.specialty = Profile.info.specialty}
-			if(Profile.info.role && roles.$indexFor(Profile.info.role) !== -1){$scope.newUser.role = Profile.info.role}
+			if(Profile.info.r && roles.$indexFor(Profile.info.r) !== -1){$scope.newUser.role = Profile.info.r}
 			$scope.update = function(newUser){
 				if (!newUser.contact){delete newUser.contact;}
 				Profile.ref.set(newUser);
