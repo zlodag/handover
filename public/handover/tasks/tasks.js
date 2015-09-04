@@ -8,11 +8,10 @@ angular.module('handover.tasks',['ui.router','firebase'])
 	};
 })
 .config(function($stateProvider) {
-	$stateProvider
-	.state('tasks', {
+	$stateProvider.state('tasks', {
 		url: "/tasks",
-		abstract: true,
-		templateUrl: '/handover/tasks/overview.html',
+		// abstract: true,
+		templateUrl: '/handover/tasks/tasks.html',
 		controller: function($scope){
 			$scope.getStatus = function(task){
 				return ('completed' in task) ?
@@ -21,35 +20,46 @@ angular.module('handover.tasks',['ui.router','firebase'])
 			};
 		}
 	})
-	.state('tasks.overview',{
-		url: '/',
-		views: {
-			current: {
-				templateUrl: '/handover/tasks/taskList.html',
-				resolve: {
-				    tasks: function(Tasks){
-				    	return Tasks.current.$loaded();
-				    }
-				},
-				controller: function($scope,tasks){
-					$scope.tasks = tasks;
-					$scope.context = 'Current';
-				}
-			},
-			recent: {
-				templateUrl: '/handover/tasks/taskList.html',
-				resolve: {
-				    tasks: function(Tasks){
-				    	return Tasks.recent.$loaded();
-				    }
-				},
-				controller: function($scope,tasks){
-					$scope.tasks = tasks;
-					$scope.context = 'Recent';
-				}
-			}
+	.state('tasks.current',{
+		url: '/current',
+		templateUrl: '/handover/tasks/taskList.html',
+		resolve: {
+		    tasks: function(Tasks){
+		    	return Tasks.current.$loaded();
+		    }
+		},
+		controller: function($scope,tasks){
+			$scope.tasks = tasks;
+			$scope.context = 'Current';
 		}
 	})
+	.state('tasks.recent',{
+		url: '/recent',
+		templateUrl: '/handover/tasks/taskList.html',
+		resolve: {
+		    tasks: function(Tasks){
+		    	return Tasks.recent.$loaded();
+		    }
+		},
+		controller: function($scope,tasks){
+			$scope.tasks = tasks;
+			$scope.context = 'Recent';
+		}
+	})
+	.state('tasks.new',{
+		url: '/new',
+		templateUrl: '/handover/tasks/newTask.html',
+		// resolve: {
+		//     tasks: function(Tasks){
+		//     	return Tasks.recent.$loaded();
+		//     }
+		// },
+		// controller: function($scope,tasks){
+		// 	$scope.tasks = tasks;
+		// 	$scope.context = 'Recent';
+		// }
+	})
+	;
 })
 ;
 })();

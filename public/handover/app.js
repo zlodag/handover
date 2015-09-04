@@ -5,7 +5,7 @@
 	 	'handover.tasks'
 	]);
 	app.config(["$urlRouterProvider", "$locationProvider", function($urlRouterProvider, $locationProvider) {
-		$urlRouterProvider.otherwise("/tasks/");
+		$urlRouterProvider.otherwise("/tasks/current");
 		$locationProvider.html5Mode(true);
 	}]);
 	app.factory("FB",["$window", function($window){
