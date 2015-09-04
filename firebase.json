@@ -1,0 +1,9 @@
+{
+  "firebase": "nutm",
+  "public": "public",
+  "ignore": [
+    "**/.*",
+  	"index-dev.html",
+    "components/"
+  ]
+}

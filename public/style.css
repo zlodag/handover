@@ -1,22 +1,36 @@
 * {
     box-sizing: border-box;
 }
+body {
+    margin: 0;
+}
+.tasklist {
+    margin-top: 1em;
+    display:block;
+}
 h2 {
     font-size: 20px;
     text-align: center;
     text-transform:capitalize;
+    border-style: solid;
+    margin: 0;
+    background-color: lightblue;
+    border-width: 1px 0 0;
 }
-.tasks {
+ul.tasks {
     padding: 0;
     margin: 0;
 }
-.tasks>li {
+ul.tasks>li {
     list-style-type: none;
-    margin: 15px 0;
-    border: 3px solid black;
     position: relative;
+    border-style: solid;
+    border-width: 0 0 1px;
+    background-color:white;
 }
-
+ul.tasks>li:first-of-type {
+    border-top-width:1px;
+}
 .task-leave.task-leave-active,
 .task-enter {
   transition:0.5s ease all;
@@ -53,7 +67,7 @@ h2 {
     background-position: center;
 }
 .box.Added {
-        background-image: url("/icons/ellipses.svg");
+    background-image: url("/icons/ellipses.svg");
 }
 .box.Accepted {
     background-image: url("/icons/clock.svg");
@@ -76,52 +90,56 @@ div.cont:hover{
 div.cont:active{
     background-color: rgb(162, 249, 198);
 }
-dl.task {
+dl {
     padding: 0.5em;
     overflow: auto;
     margin: 0;
 }
-dl.task>dt {
+dl>dt {
     display: none;
 }
-dl.task>dd {
+dl.meta>dd, dl.text>dd {
     background-repeat: no-repeat;
     background-size: 0.8em;
-    background-position: left;
-    padding-left: 1.5em;
-    float: left;
-    clear: left;
     font-family: sans-serif;
     margin: 0;
 }
-.nhi,.specialty {
+dl.meta>dd.patient,dl.meta>dd.location,dl.text>dd {
+    background-position: left;
+    padding-left: 1.3em;
+    float: left;
+    clear: left;
+}
+dl.meta>dd.nhi,dl.meta>dd.specialty {
+    background-position: right;
+    padding-right: 1.3em;
     float: right;
     clear: right;
+    background-position: right;
 }
-.patient {
+dl.meta>dd.status {
+    display: none;
+}
+dl.meta>dd.patient {
     background-image: url("/icons/person.svg");
 }
-.nhi {
+dl.meta>dd.nhi {
     background-image: url("/icons/medical-cross.svg");
 }
-.location {
+dl.meta>dd.location {
     background-image: url("/icons/home.svg");
 }
-.location>.ward:after {
+dl.meta>dd.location>span.ward:after {
     content: "-"
 }
-.specialty {
+dl.meta>dd.specialty {
     background-image: url("/icons/tag.svg");
 }
-.text {
+dl.text {
+    border-top: 1px solid black;
+}
+dl.text>dd {
     background-image: url("/icons/comment-square.svg");
     font-family: serif;
     font-style: italic;
-    padding-top:5px;
-    margin-top:5px;
-    border-top:1px solid black;
-    width:100%;
-}
-.status {
-    display: none;
 }

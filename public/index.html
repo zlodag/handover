@@ -2,25 +2,17 @@
 <html>
   <head>
     <title>Handover</title>
-    <script src="/components/angular/angular.js"></script>
-    <script src="/components/angular-animate/angular-animate.js"></script>
-    <script src="/components/firebase/firebase-debug.js"></script>
-    <script src="/components/angularfire/dist/angularfire.js"></script>
-    <script src="/components/angular-ui-router/release/angular-ui-router.js"></script>
-    <!-- <script src="/components/angular-bootstrap/ui-bootstrap-tpls.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-animate.min.js"></script>
+    <script src="https://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
+    <script src="https://cdn.firebase.com/libs/angularfire/1.1.2/angularfire.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"></script>
     <script src="/handover/app.js"></script>
-    <script src="/handover/login/login.js"></script>
-    <script src="/handover/profile/profile.js"></script>
-    <script src="/handover/data/data.js"></script>
-    <script src="/handover/addons/navbar.js"></script>
     <script src="/handover/tasks/tasks.js"></script>
-    <!-- <link rel="stylesheet" href="/components/bootstrap-css-only/css/bootstrap.min.css" /> -->
-    <link rel="stylesheet" href="/styles/simple.css" />
+    <link rel="stylesheet" href="/style.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <base href="/" />
   </head>
   <body ng-app="handover">
-    <handover-navbar></handover-navbar>
-    <ui-view></ui-view>
+    <ui-view/>
   </body>
 </html>

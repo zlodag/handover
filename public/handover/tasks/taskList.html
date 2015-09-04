@@ -1,25 +1,27 @@
 <h2>{{context}} tasks</h2>
 <ul class="tasks">
-  <li ng-repeat="(taskId, task) in Tasks[context]" ng-animate="'task'">
+  <li ng-repeat="(taskId, task) in tasks" ng-animate="'task'">
     <div class="urgency" ng-class="{high: task.urgency === 3,medium: task.urgency === 2,low: task.urgency === 1}"></div>
     <div class="box" ng-class="getStatus(task)"></div>
     <div class="cont" ng-click="go('^.detail',{taskId:taskId})">
-        <dl class="task">
-          <dt class="patient">Patient</dt>
+        <dl class="meta">
+          <dt>Patient</dt>
           <dd class="patient" ng-bind="task.patient"></dd>
-          <dt class="nhi">NHI</dt>
+          <dt>NHI</dt>
           <dd class="nhi" ng-bind="task.nhi"></dd>
-          <dt class="location">Location</dt>
+          <dt>Location</dt>
           <dd class="location">
             <span class="ward" ng-bind="task.ward"></span>
             <span class="bed" ng-bind="task.bed"></span>
           </dd>
-          <dt class="specialty">Specialty</dt>
+          <dt>Specialty</dt>
           <dd class="specialty" ng-bind="task.specialty"></dd>
-          <dt class="text">Text</dt>
-          <dd class="text" ng-bind="task.text"></dd>
-          <dt class="status">Status</dt>
+          <dt>Status</dt>
           <dd class="status" ng-bind="getStatus(task)"></dd>
+        </dl>
+        <dl class="text">
+          <dt>Text</dt>
+          <dd ng-bind="task.text"></dd>
         </dl>
       </div>
     </div>

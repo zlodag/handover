@@ -1,30 +1,17 @@
-(function(){angular.module('handover',[
- 	'ngAnimate',
- 	'ui.router',
- 	'handover.login',
- 	'handover.profile',
- 	'handover.tasks',
- 	'handover.data'
-])
-.config(function($urlRouterProvider, $locationProvider) {
-	$urlRouterProvider.otherwise("/login");
-	$locationProvider.html5Mode(false);
-})
-// .run(function($rootScope, $state, Profile, $window, FB) {
-// 	$window.Firebase.enableLogging(false);
-// 	$rootScope.Profile = Profile;
-// 	FB.onAuth(function(authData){
-// 		if(authData){
-// 			Profile.ensureAuth();
-// 		}
-// 	});
-// 	$rootScope.$on("$stateChangeError", function(event, toState, toParams, fromState, fromParams, error) {
-// 		console.error('The error was: ', error);
-// 		if (error === "AUTH_REQUIRED") {
-// 			console.error('Authentication required');
-// 			$state.go("login");
-// 		}
-// 	});
-// })
-;
+(function(){
+	var app = angular.module('handover',[
+	 	'ngAnimate',
+	 	'ui.router',
+	 	'handover.tasks'
+	]);
+	app.config(["$urlRouterProvider", "$locationProvider", function($urlRouterProvider, $locationProvider) {
+		$urlRouterProvider.otherwise("/tasks/");
+		$locationProvider.html5Mode(false);
+	}]);
+	app.factory("FB",["$window", function($window){
+		return new $window.Firebase("https://nutm.firebaseio.com");
+	}]);
+	app.factory("TIMESTAMP",["$window",function($window){
+		return $window.Firebase.ServerValue.TIMESTAMP;
+	}]);
 })();
