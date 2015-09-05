@@ -1,6 +1,6 @@
 (function(){
 	angular.module('handover.auth',['firebase','handover.data'])
-		.factory('Profile',function(FB,$firebaseAuth,$firebaseObject,$q){
+		.factory('Profile',function(FB,$firebaseAuth,$firebaseObject,$q,TIMESTAMP){
 			var authObj = $firebaseAuth(FB),
 			authData = null, info = null;
 			authObj.$onAuth(handleAuth);
@@ -47,6 +47,12 @@
 				},
 				ensureCurrent: function(){
 					return authObj.$requireAuth().then(refreshInfo);
+				},
+				stamp: function(){
+					this.at = TIMESTAMP
+					this.by = info.f + ' ' + info.l;
+					this.id = authData.uid;
+					console.log('The stamp is',this);
 				}
 			};
 		})
@@ -76,12 +82,13 @@
 						return Profile.ensureCurrent();
 					}
 				},
-				controller: function($scope,Profile,Hospital){
+				controller: function($scope,Profile,Hospital,$state){
 					$scope.indexObject = angular.copy(Profile.info);
 					$scope.profile = Profile;
 					$scope.roles = Hospital.roles;
 					$scope.logout = function(){
 						Profile.authObj.$unauth();
+						$state.go('login');
 					};
 					$scope.update = Profile.update;
 				}

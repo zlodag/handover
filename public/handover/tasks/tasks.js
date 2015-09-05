@@ -61,7 +61,7 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 			    	return Hospital.specialties.$loaded();
 			    }
 			},
-			controller: function($scope,wards,specialties,Stamp,Tasks,$state){
+			controller: function($scope,wards,specialties,Profile,Tasks,$state){
 				$scope.wards = wards;
 				$scope.specialties = specialties;
 				$scope.newTask = {
@@ -75,7 +75,7 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 				};
 				$scope.addTask = function(newTask){
 					// var task = angular.copy(newTask);
-					newTask.added = new Stamp();
+					newTask.added = new Profile.stamp();
 					// var ref = FB.child("tasks").push();
 					// ref.set(newTask, function(error) {
 					// 	if (error){return console.error("There was a problem adding the task: ", error);}
@@ -87,7 +87,7 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 						console.log("added record with id " + id);
 						$state.go('tasks.detail',{taskId:ref.key()});
 					}).catch(function(error){
-						console.error('Unable to add task: ', error);
+						console.error('Unable to add task: ',newTask, error);
 					});
 				};
 			}
@@ -104,11 +104,11 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 			    	return Tasks.comments($stateParams.taskId).$loaded();
 			    }
 			},
-			controller: function($scope,task,comments,Stamp){
+			controller: function($scope,task,comments,Profile){
 				$scope.task = task;
 				$scope.comments = comments;
 				$scope.addComment = function(commentText){
-					var comment = new Stamp();
+					var comment = new Profile.stamp();
 					comment.text = commentText;
 					comments.$add(comment);
 				};
