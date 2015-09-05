@@ -2,7 +2,7 @@ form {
     margin-top:1em;
 }
 form>* {
-    display:inline-block;
+    display: inline-block;
 }
 form>label+*{
     width:70%;
@@ -16,4 +16,7 @@ form>label {
     width:20%;
     text-align:right;
     margin:0 4%;
+}
+form>input[type=submit] {
+    display:block;
 }

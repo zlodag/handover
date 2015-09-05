@@ -1,7 +1,13 @@
 <div class="content">
-	<h2>{{user.f}} {{user.l}}</h2>
+	<h2>User Info</h2>
 	<dl>
+		<dt>Name</dt>
+		<dd ng-bind="user.info.f + ' ' + user.info.l"></dd>
 		<dt>Role</dt>
-		<dd ng-bind="user.r"></dd>
+		<dd ng-bind="user.info.r"></dd>
+		<dt ng-if="user.details && user.details.specialty">Specialty</dt>
+		<dd ng-if="user.details && user.details.specialty" ng-bind="user.details.specialty"></dd>
+		<dt ng-if="user.details && user.details.contact">Contact</dt>
+		<dd ng-if="user.details && user.details.contact" ng-bind="user.details.contact"></dd>
 	</dl>
 </div>
