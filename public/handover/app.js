@@ -1,17 +1,25 @@
 (function(){
-	var app = angular.module('handover',[
+	angular.module('handover',[
 	 	'ngAnimate',
 	 	'ui.router',
+	 	'handover.auth',
 	 	'handover.tasks'
-	]);
-	app.config(["$urlRouterProvider", "$locationProvider", function($urlRouterProvider, $locationProvider) {
+	])
+	.config(["$urlRouterProvider", "$locationProvider", function($urlRouterProvider, $locationProvider) {
 		$urlRouterProvider.otherwise("/tasks/new");
 		$locationProvider.html5Mode(true);
-	}]);
-	app.factory("FB",["$window", function($window){
-		return new $window.Firebase("https://nutm.firebaseio.com");
-	}]);
-	app.factory("TIMESTAMP",["$window",function($window){
-		return $window.Firebase.ServerValue.TIMESTAMP;
-	}]);
+	}])
+	.directive('handoverNavbar',function(){
+		return {
+			restrict: 'E',
+			scope: {},
+			templateUrl: '/handover/navbar.html',
+			controller: function($scope,Profile){
+				$scope.loggedIn = function(){
+					return !!Profile.info;
+				};
+			}
+		};
+	})
+	;
 })();

@@ -1,0 +1,14 @@
+<div class="content">
+	<h2>{{profile.info.f}} {{profile.info.l}}</h2>
+	<p ng-hide="profile.info">Retrieving user information...</p>
+	<p ng-show="profile.info">Logged in as {{profile.info.f}} {{profile.info.l}} ({{profile.info.r}})</p>
+
+	<form name="updateIndexForm" ng-submit="profile.update('index',indexObject)">
+		<label for="firstname">First name:</label><input id="firstname" ng-model="indexObject.f" type="text" required />
+		<label for="lastname">Last name:</label><input id="lastname" ng-model="indexObject.l" type="text" required />
+			<select id="role" ng-model="indexObject.r" required ng-options="role.$id as role.$id for role in roles"><option value="">Select a role</option></select>
+		<input type="submit" ng-disabled="updateIndexForm.$invalid"/>
+	</form>
+
+	<button type="button" ng-click="logout()">Logout</button>
+</div>

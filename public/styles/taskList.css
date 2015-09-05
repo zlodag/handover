@@ -63,14 +63,13 @@ ul.tasks>li:first-of-type {
 .box.Cancelled {
     background-image: url("/icons/ban.svg");
 }
-
 div.cont {
     border-left: 1px solid black;
     padding: 0;
     margin-left: 40px;
 }
 div.cont:hover{
-    background-color: lightcyan;
+    cursor: pointer;
 }
 div.cont:active{
     background-color: rgb(162, 249, 198);
@@ -80,7 +79,7 @@ dl {
     overflow: auto;
     margin: 0;
 }
-dl>dt {
+dl.meta>dt,dl.text>dt {
     display: none;
 }
 dl.meta>dd, dl.text>dd {

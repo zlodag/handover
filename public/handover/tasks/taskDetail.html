@@ -1,4 +1,6 @@
-	<dl>
+<div class="content">
+    <h2>{{getStatus(task)}} task</h2>
+    <dl>
 	    <dt>Patient</dt>
 	    <dd ng-bind="task.patient"></dd>
 	    <dt>NHI</dt>
@@ -52,19 +54,18 @@
             <option value="">Refer to</option></select>
         <button type="button" class="btn btn-default" ng-show="target" ng-click="refer(target)">Refer</button>
     </div> -->
+    <blockquote ng-repeat="comment in comments">
+        <p ng-bind="comment.text"></p>
+        <footer>by <a ui-sref="profile.public({userId: comment.id})" ng-bind="comment.by"></a>
+                                at <em ng-bind="comment.at | date : 'short'"></em></footer>
+    </blockquote>
+    <form ng-hide="task.completed" class="form-inline" ng-submit="addComment(newComment); newComment = ''">
+        <div class="form-group">
+    	    <label for="newComment">Add a new comment</label>
+            <input type="text" id="newComment" class="form-control" placeholder="Comment" ng-model="newComment"></input>
+        </div>
+        <div class="form-group">
+    	    <button type="submit" class="btn btn-primary">Post</button>
+        </div>
+    </form>
 </div>
-<blockquote ng-repeat="comment in comments">
-    <p ng-bind="comment.text"></p>
-    <footer>by <a ui-sref="profile.public({userId: comment.id})" ng-bind="comment.by"></a>
-                            at <em ng-bind="comment.at | date : 'short'"></em></footer>
-</blockquote>
-<form ng-hide="task.completed" class="form-inline" ng-submit="addComment(newComment); newComment = ''">
-    <div class="form-group">
-	    <label for="newComment">Add a new comment</label>
-        <input type="text" id="newComment" class="form-control" placeholder="Comment" ng-model="newComment"></input>
-    </div>
-    <div class="form-group">
-	    <button type="submit" class="btn btn-primary">Post</button>
-    </div>
-</form>
-<link rel="stylesheet" href="/styles/taskDetail.css" />
