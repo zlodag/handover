@@ -1,0 +1,28 @@
+{
+  "name": "handover",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zlodag/handover.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zlodag/handover/issues"
+  },
+  "homepage": "https://github.com/zlodag/handover#readme",
+  "dependencies": {
+    "debug": "^2.2.0",
+    "express": "^4.13.3",
+    "http": "0.0.0",
+    "morgan": "^1.6.1",
+    "path": "^0.11.14",
+    "serve-favicon": "^2.3.0"
+  }
+}

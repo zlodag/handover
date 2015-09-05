@@ -1,0 +1,19 @@
+form {
+    margin-top:1em;
+}
+form>* {
+    display:inline-block;
+}
+form>label+*{
+    width:70%;
+    margin-bottom:1em;
+}
+form>button {
+    margin:0 30%;
+    width:40%;
+}
+form>label {
+    width:20%;
+    text-align:right;
+    margin:0 4%;
+}
