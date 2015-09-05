@@ -17,31 +17,31 @@
     <p ng-bind="task.text"></p>
     <div>
         Added
-        by <a ui-sref="profile.public({userId: task.added.id})" ng-bind="task.added.by"></a>
+        by <a ui-sref="user({userId: task.added.id})" ng-bind="task.added.by"></a>
         at {{ task.added.at | date : "h:mma 'on' dd/MM/yyyy"}}
     </div>
     <div ng-if="task.accepted">
         Accepted
-        by <a ui-sref="profile.public({userId: task.accepted.id})" ng-bind="task.accepted.by"></a>
+        by <a ui-sref="user({userId: task.accepted.id})" ng-bind="task.accepted.by"></a>
         at {{ task.accepted.at | date : "h:mma 'on' dd/MM/yyyy"}}
     </div>
     <div ng-if="task.completed && !task.completed.cancelled">
         Completed
-        by <a ui-sref="profile.public({userId: task.completed.id})" ng-bind="task.completed.by"></a>
+        by <a ui-sref="user({userId: task.completed.id})" ng-bind="task.completed.by"></a>
         at {{ task.completed.at | date : "h:mma 'on' dd/MM/yyyy"}}
     </div>
     <div ng-if="task.completed && task.completed.cancelled">
         Cancelled
-        by <a ui-sref="profile.public({userId: task.completed.id})" ng-bind="task.completed.by"></a>
+        by <a ui-sref="user({userId: task.completed.id})" ng-bind="task.completed.by"></a>
         at {{ task.completed.at | date : "h:mma 'on' dd/MM/yyyy"}}
-        <span class="glyphicon glyphicon-comment" tooltip="{{task.completed.cancelled}}"></span>
+        ({{task.completed.cancelled}})
     </div>
-    <!-- <button type="button" class="btn btn-info" ng-if="canStamp('accepted',task)" ng-click="stamp('accepted')">Accept</button>
-    <button type="button" class="btn btn-success" ng-if="canStamp('completed',task)" ng-click="stamp('completed')">Complete</button>
-    <button type="button" class="btn btn-danger" ng-if="canStamp('cancelled',task)" ng-click="stamp('completed', 'because...')">Cancel</button>
-    <div ng-repeat="referral in referrals">
-        Referred to <a ui-sref="profile.public({userId: referral.$id})" ng-bind="referral.to"></a>
-        by <a ui-sref="profile.public({userId: referral.id})" ng-bind="referral.by"></a>
+    <button type="button" ng-if="canStamp('accepted',task)" ng-click="stamp('accepted')">Accept</button>
+    <button type="button" ng-if="canStamp('completed',task)" ng-click="stamp('completed')">Complete</button>
+    <button type="button" ng-if="canStamp('cancelled',task)" ng-click="stamp('completed', true)">Cancel</button>
+<!--     <div ng-repeat="referral in referrals">
+        Referred to <a ui-sref="user({userId: referral.$id})" ng-bind="referral.to"></a>
+        by <a ui-sref="user({userId: referral.id})" ng-bind="referral.by"></a>
         at {{ referral.at | date : "h:mma 'on' dd/MM/yyyy"}}
     </div>
     <div ng-hide="task.completed">
@@ -51,12 +51,13 @@
                         disable when disabled(key)
                         for (key, value)
                         in allUsers">
-            <option value="">Refer to</option></select>
+            <option value="">Refer to</option>
+        </select>
         <button type="button" class="btn btn-default" ng-show="target" ng-click="refer(target)">Refer</button>
     </div> -->
     <blockquote ng-repeat="comment in comments">
         <p ng-bind="comment.text"></p>
-        <footer>by <a ui-sref="profile.public({userId: comment.id})" ng-bind="comment.by"></a>
+        <footer>by <a ui-sref="user({userId: comment.id})" ng-bind="comment.by"></a>
                                 at <em ng-bind="comment.at | date : 'short'"></em></footer>
     </blockquote>
     <form ng-hide="task.completed" class="form-inline" ng-submit="addComment(newComment); newComment = ''">

@@ -74,14 +74,7 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 					"urgency": 3
 				};
 				$scope.addTask = function(newTask){
-					// var task = angular.copy(newTask);
 					newTask.added = new Profile.stamp();
-					// var ref = FB.child("tasks").push();
-					// ref.set(newTask, function(error) {
-					// 	if (error){return console.error("There was a problem adding the task: ", error);}
-					// 	console.log("Added task");
-					// 	$state.go('tasks.detail',{taskId:ref.key()});
-					// });
 					Tasks.current.$add(newTask).then(function(ref) {
 						var id = ref.key();
 						console.log("added record with id " + id);
@@ -94,7 +87,6 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 		})
 		.state('tasks.detail',{
 			url: '/:taskId',
-			// template: 'My task: <pre ng-bind="task | json"></pre>',
 			templateUrl: '/handover/tasks/taskDetail.html',
 			resolve: {
 			    task: function(Tasks,$stateParams){
@@ -106,6 +98,23 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 			},
 			controller: function($scope,task,comments,Profile){
 				$scope.task = task;
+				$scope.canStamp = function(stamp){
+					if (stamp === 'accepted') { return !task.accepted && !task.completed;}
+					else if (stamp === 'completed' || stamp === 'cancelled') { return !task.completed;}
+					else { return false; }
+				};
+				$scope.stamp = function(stamp, cancelled){
+					var updateObject = {};
+					updateObject[stamp] = new Profile.stamp();
+					if (stamp === 'completed'){
+						if (cancelled) {updateObject.completed.cancelled = prompt('Reason for cancelling');}
+						updateObject.inactive = updateObject.completed.at;
+					}
+					task.$ref().update(updateObject, function(error){
+						if (error){return console.error("There was a problem updating the task: ", updateObject, error);}
+						console.log('Updated task');
+					});
+				};
 				$scope.comments = comments;
 				$scope.addComment = function(commentText){
 					var comment = new Profile.stamp();

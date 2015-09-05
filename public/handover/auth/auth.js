@@ -52,7 +52,6 @@
 					this.at = TIMESTAMP
 					this.by = info.f + ' ' + info.l;
 					this.id = authData.uid;
-					console.log('The stamp is',this);
 				}
 			};
 		})
@@ -91,6 +90,19 @@
 						$state.go('login');
 					};
 					$scope.update = Profile.update;
+				}
+			})
+			.state('user', {
+				url: "/user/:userId",
+				templateUrl: '/handover/auth/user.html',
+				resolve: {
+					user: function($stateParams,FB,$firebaseObject){
+						console.log('retrieving info for user: ', $stateParams.userId);
+						return $firebaseObject(FB.child('users/index/' + $stateParams.userId)).$loaded();
+					}
+				},
+				controller: function($scope, user){
+					$scope.user = user;
 				}
 			})
 		})

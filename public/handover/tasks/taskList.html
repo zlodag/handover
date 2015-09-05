@@ -1,7 +1,7 @@
 <div class="content">
   <h2>{{context}} tasks</h2>
   <ul class="tasks">
-    <li ng-repeat="task in tasks">
+    <li ng-repeat="task in tasks | orderBy : ['inactive','added.at'] : true">
       <div class="urgency" ng-class="{high: task.urgency === 3,medium: task.urgency === 2,low: task.urgency === 1}"></div>
       <div class="box" ng-class="getStatus(task)"></div>
       <div class="cont" ng-click="go('^.detail',{taskId:task.$id})">

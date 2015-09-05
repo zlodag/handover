@@ -12,7 +12,7 @@
   	<label for="bed">Bed</label>
   	<input id="bed" name="bed" class="form-control" type="text" ng-model="newTask.bed" required ng-maxlength="3"/>
   	<label for="specialty">Specialty</label>
-  	<select id="specialty" name="specialty" class="form-control" ng-model="newTask.specialty" required ng-options="specialty.$id for specialty in specialties"><option value="">Select a specialty</option></select>
+  	<select id="specialty" name="specialty" class="form-control" ng-model="newTask.specialty" required ng-options="specialty.$id as specialty.$id for specialty in specialties"><option value="">Select a specialty</option></select>
   	<label for="text">Text</label>
   	<input id="text" name="text" class="form-control" type="text" ng-model="newTask.text" required/>
   	<label for="urgency">Urgency</label>
