@@ -107,7 +107,7 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 					var updateObject = {};
 					updateObject[stamp] = new Profile.stamp();
 					if (stamp === 'completed'){
-						if (cancelled) {updateObject.completed.cancelled = prompt('Reason for cancelling');}
+						if (cancelled) {updateObject.completed.cancelled = prompt('Reason for cancelling','');}
 						updateObject.inactive = updateObject.completed.at;
 					}
 					task.$ref().update(updateObject, function(error){

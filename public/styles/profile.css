@@ -1,0 +1,38 @@
+button, input[type="submit"], a.button {
+	font-size: 1rem;
+	border: 2px solid black;
+	border-radius: 0.5em;
+	background-color: white;
+	text-decoration: none;
+	color: black;
+	font-family: sans-serif;
+	padding: 0.3em 0.5em;
+	margin:0.5em;
+	clear: both;
+}
+button:hover,input[type="submit"]:hover,a.button:hover {
+	cursor: pointer;
+	background-color:lightblue;
+}
+form {
+	overflow:auto;
+	float:none;
+}
+form>input[type="submit"] {
+	float:left;
+}
+form>label {
+	float: left;
+	clear: both;
+}
+form>label+input,form>label+select {
+	float: right;
+	clear: right;
+	width: 70%;
+	margin-bottom:1em;
+}
+#logout,a.button{
+	display:block;
+	overflow:hidden;
+	text-align: center;
+}

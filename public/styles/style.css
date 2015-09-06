@@ -1,24 +1,27 @@
 * {
     box-sizing: border-box;
-}
-body {
     margin: 0;
 }
+handover-navbar {
+    overflow-x: scroll;
+    display: block;
+    background-color:black;
+    padding-top:0.5em;
+}
 nav {
-    overflow:auto;
+    margin: 0 0.5em;
+    width: 200%;
 }
 nav>a {
-    float:left;
-    margin: 0.5em 0 0 0.5em;
+    display: inline-block;
     text-decoration:none;
     padding:  0.3em 1em;
-    border-radius: 1em 1em 0 0;
-    background-color:black;
     color:white;
 }
 nav>a.active {
     background-color:lightblue;
-    color: black;
+    border-radius: 0.5em 0.5em 0 0;
+    color: inherit;
 }
 h2 {
     font-size: 20px;
@@ -29,4 +32,18 @@ h2 {
     background-color: lightblue;
     border-width: 1px 0 0;
     border-width: 0;
+}
+.content {
+    margin:0.5em;
+}
+dl {
+    overflow: auto;
+}
+dt {
+	float: left;
+	clear: left;
+}
+dd {
+	float: right;
+	clear: right;
 }

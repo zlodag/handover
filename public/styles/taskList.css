@@ -1,129 +1,108 @@
-.tasklist {
-    margin-top: 1em;
-    display:block;
-}
-ul.tasks {
+.tasks {
     padding: 0;
     margin: 0;
 }
-ul.tasks>li {
+.task {
     list-style-type: none;
     position: relative;
     border-style: solid;
     border-width: 0 0 1px;
-    background-color:white;
 }
-ul.tasks>li:first-of-type {
+.task:first-of-type {
     border-top-width:1px;
 }
-.task-leave.task-leave-active,
-.task-enter {
-  transition:0.5s ease all;
-  opacity:0;
+.task:hover{
+    cursor: pointer;
+    background-color: lightblue;
 }
-.task-enter.task-enter-active,
-.task-leave {
-  opacity:1;
-}
-.urgency, .box {
+.task>.urgency, .task>.box {
     width: 40px;
     position: absolute;
-    left: 0;
 }
-.urgency {
+.task>.urgency {
     top: 0;
     height: 20px;
     border-bottom: 1px solid black;
 }
-.urgency.high {
+.task>.urgency.high {
     background: red;
 }
-.urgency.medium {
+.task>.urgency.medium {
     background: gold;
 }
-.urgency.low {
+.task>.urgency.low {
     background: green;
 }
-.box {
+.task>.box {
     height: 40px;
     bottom: 0;
     background-repeat: no-repeat;
     background-size: 50%;
     background-position: center;
 }
-.box.Added {
+.task>.box.Added {
     background-image: url("/icons/ellipses.svg");
 }
-.box.Accepted {
+.task>.box.Accepted {
     background-image: url("/icons/clock.svg");
 }
-.box.Completed {
+.task>.box.Completed {
     background-image: url("/icons/task.svg");
 }
-.box.Cancelled {
+.task>.box.Cancelled {
     background-image: url("/icons/ban.svg");
 }
-div.cont {
+.task>.cont {
     border-left: 1px solid black;
-    padding: 0;
     margin-left: 40px;
 }
-div.cont:hover{
-    cursor: pointer;
-}
-div.cont:active{
-    background-color: rgb(162, 249, 198);
-}
-dl {
+.task dl {
     padding: 0.5em;
-    overflow: auto;
-    margin: 0;
 }
-dl.meta>dt,dl.text>dt {
+.task dl.meta {
+    border-bottom: 1px solid black;
+}
+.task dt {
     display: none;
 }
-dl.meta>dd, dl.text>dd {
+.task dd {
     background-repeat: no-repeat;
     background-size: 0.8em;
     font-family: sans-serif;
     margin: 0;
 }
-dl.meta>dd.patient,dl.meta>dd.location,dl.text>dd {
+.task .status {
+    display: none;
+}
+.patient,.location,.text>dd {
     background-position: left;
     padding-left: 1.3em;
     float: left;
     clear: left;
 }
-dl.meta>dd.nhi,dl.meta>dd.specialty {
+.nhi,.specialty {
     background-position: right;
     padding-right: 1.3em;
     float: right;
     clear: right;
     background-position: right;
 }
-dl.meta>dd.status {
-    display: none;
-}
-dl.meta>dd.patient {
+.patient {
     background-image: url("/icons/person.svg");
 }
-dl.meta>dd.nhi {
+.nhi {
     background-image: url("/icons/medical-cross.svg");
 }
-dl.meta>dd.location {
+.location {
     background-image: url("/icons/home.svg");
 }
-dl.meta>dd.location>span.ward:after {
+.ward:after {
     content: "-"
 }
-dl.meta>dd.specialty {
+.specialty {
     background-image: url("/icons/tag.svg");
 }
-dl.text {
-    border-top: 1px solid black;
-}
-dl.text>dd {
+.text>dd {
     background-image: url("/icons/comment-square.svg");
-    font-family: serif;
     font-style: italic;
 }

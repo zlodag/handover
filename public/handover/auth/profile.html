@@ -1,5 +1,5 @@
+<h2>My info</h2>
 <div class="content">
-	<h2>My info</h2>
 	<p ng-hide="profile.info">Retrieving user information...</p>
 	<dl ng-show="profile.info">
 		<dt>Name</dt>
@@ -11,7 +11,7 @@
 		<dt ng-if="profile.details && profile.details.contact">Contact</dt>
 		<dd ng-if="profile.details && profile.details.contact" ng-bind="profile.details.contact"></dd>
 	</dl>
-	<button type="button" ng-click="logout()">Logout</button>
-	<a ui-sref=".edit">Edit</a>
+	<button id="logout" type="button" ng-click="logout()">Logout</button>
+	<a class="button" ui-sref=".edit">Edit</a>
 	<ui-view></ui-view>
 </div>
