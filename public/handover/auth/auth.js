@@ -1,9 +1,11 @@
 (function(){
 	angular.module('handover.auth',['firebase','handover.data'])
-		.factory('Profile',function(FB,$firebaseAuth,$firebaseObject,$q,TIMESTAMP){
-			var authObj = $firebaseAuth(FB),
+		.factory('Auth',function(FB,$firebaseAuth){
+			return $firebaseAuth(FB);
+		})
+		.factory('Profile',function(FB,Auth,$firebaseObject,$q,TIMESTAMP){
 			authData = null, info = null, details = null;
-			authObj.$onAuth(handleAuth);
+			Auth.$onAuth(handleAuth);
 			function handleAuth(data){
 				authData = data;
 				if (!authData) {
@@ -51,7 +53,6 @@
 				return deferred.promise;
 			}
 			return {
-				authObj: authObj,
 				get authData(){return authData;},
 				get info(){return info;},
 				get details(){return details;},
@@ -59,7 +60,7 @@
 					updateRemote(indexOrDetails,object).then(refreshInfo).then(refreshDetails).catch(console.error);
 				},
 				ensureCurrent: function(){
-					return authObj.$requireAuth().then(refreshInfo).then(refreshDetails);
+					return Auth.$requireAuth().then(refreshInfo).then(refreshDetails);
 				},
 				stamp: function(){
 					this.at = TIMESTAMP
@@ -73,10 +74,10 @@
 			.state('login', {
 				url: "/login",
 				templateUrl: '/handover/auth/login.html',
-				controller: function($scope,Profile,$state){
+				controller: function($scope,Profile,Auth,$state){
 					$scope.profile = Profile;
 					$scope.login = function(credentials){
-						Profile.authObj.$authWithPassword(credentials).then(function(authData){
+						Auth.$authWithPassword(credentials).then(function(authData){
 							$state.go('profile');
 						}).catch(function(error){
 							console.error(error);
@@ -88,32 +89,31 @@
 				url: "/profile",
 				templateUrl: '/handover/auth/profile.html',
 				resolve : {
-					profileInfo: function(Profile){
-						return Profile.ensureCurrent();
-					}
-				},
-				controller: function($scope,Profile,$state){
-					$scope.indexObject = angular.copy(Profile.info);
-					$scope.detailsObject = angular.copy(Profile.details);
-					$scope.profile = Profile;
-					$scope.logout = function(){
-						Profile.authObj.$unauth();
-						$state.go('login');
-					};
-				}
-			})
-			.state('profile.edit', {
-				url: "/edit",
-				templateUrl: '/handover/auth/profile.edit.html',
-				resolve: {
+					authData: function(Auth){
+						return Auth.$requireAuth();
+					},
+					info: function(authData,FB,$firebaseObject){
+						return $firebaseObject(FB.child('users/index/'+authData.uid)).$loaded();
+					},
 				    specialties: function(Hospital){
 				    	return Hospital.specialties.$loaded();
-				    }
+				    },
+				    roles: function(Hospital){
+				    	return Hospital.roles.$loaded();
+				    },
+					details: function(authData,FB,$firebaseObject){
+						return $firebaseObject(FB.child('users/details/'+authData.uid)).$loaded();
+					}
 				},
-				controller: function($scope,Hospital,specialties,Profile){
+				controller: function($scope,Auth,info,details,specialties,roles){
+					info.$bindTo($scope,'info');
+					details.$bindTo($scope,'details');
 					$scope.specialties = specialties;
-					$scope.roles = Hospital.roles;
-					$scope.update = Profile.update;
+					$scope.roles = roles;
+					$scope.logout = function(){
+						Auth.$unauth();
+						$state.go('login');
+					};
 				}
 			})
 			.state('user', {

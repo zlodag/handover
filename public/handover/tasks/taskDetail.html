@@ -1,5 +1,5 @@
 <h2>{{getStatus(task)}} task</h2>
-<div class="content">
+<div id="taskDetail" class="content">
     <dl>
 	    <dt>Patient</dt>
 	    <dd ng-bind="task.patient"></dd>
@@ -36,9 +36,11 @@
         at {{ task.completed.at | date : "h:mma 'on' dd/MM/yyyy"}}
         ({{task.completed.cancelled}})
     </div>
-    <button type="button" ng-if="canStamp('accepted',task)" ng-click="stamp('accepted')">Accept</button>
-    <button type="button" ng-if="canStamp('completed',task)" ng-click="stamp('completed')">Complete</button>
-    <button type="button" ng-if="canStamp('cancelled',task)" ng-click="stamp('completed', true)">Cancel</button>
+    <div class="buttons">
+        <button type="button" ng-if="canStamp('accepted',task)" ng-click="stamp('accepted')">Accept</button>
+        <button type="button" ng-if="canStamp('completed',task)" ng-click="stamp('completed')">Complete</button>
+        <button type="button" ng-if="canStamp('cancelled',task)" ng-click="stamp('completed', true)">Cancel</button>
+    </div>
 <!--     <div ng-repeat="referral in referrals">
         Referred to <a ui-sref="user({userId: referral.$id})" ng-bind="referral.to"></a>
         by <a ui-sref="user({userId: referral.id})" ng-bind="referral.by"></a>
@@ -55,18 +57,18 @@
         </select>
         <button type="button" class="btn btn-default" ng-show="target" ng-click="refer(target)">Refer</button>
     </div> -->
-    <blockquote ng-repeat="comment in comments">
-        <p ng-bind="comment.text"></p>
-        <footer>by <a ui-sref="user({userId: comment.id})" ng-bind="comment.by"></a>
-                                at <em ng-bind="comment.at | date : 'short'"></em></footer>
-    </blockquote>
-    <form ng-hide="task.completed" class="form-inline" ng-submit="addComment(newComment); newComment = ''">
-        <div class="form-group">
-    	    <label for="newComment">Add a new comment</label>
-            <input type="text" id="newComment" class="form-control" placeholder="Comment" ng-model="newComment"></input>
-        </div>
-        <div class="form-group">
-    	    <button type="submit" class="btn btn-primary">Post</button>
-        </div>
+    <ul class="comments">
+        <li ng-repeat="comment in comments" class="comment">
+            <div class="text" ng-bind="comment.text"></div>
+            <div class="meta">
+                <span class="user">by <a ui-sref="user({userId: comment.id})" ng-bind="comment.by"></a></span>
+                <span class="time">at {{comment.at | date : "h:mma 'on' dd/MM/yyyy"}}</span>
+            </div>
+        </li>
+    </ul>
+    <form ng-hide="task.completed" ng-submit="addComment(newComment); newComment = ''">
+        <label for="newComment">Add a new comment</label>
+        <input type="text" id="newComment" ng-model="newComment" />
+	    <input type="submit" class="btn btn-primary" value="Post" />
     </form>
 </div>

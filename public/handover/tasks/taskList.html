@@ -1,5 +1,5 @@
 <h2>{{context}} tasks</h2>
-<ul class="tasks">
+<ul id="taskList" class="tasks">
   <li class="task" ng-repeat="task in tasks | orderBy : ['inactive','added.at'] : true" ng-click="go('^.detail',{taskId:task.$id})">
     <div class="urgency" ng-class="{high: task.urgency === 3,medium: task.urgency === 2,low: task.urgency === 1}"></div>
     <div class="box" ng-class="getStatus(task)"></div>

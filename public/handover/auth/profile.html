@@ -1,17 +1,19 @@
 <h2>My info</h2>
-<div class="content">
-	<p ng-hide="profile.info">Retrieving user information...</p>
-	<dl ng-show="profile.info">
-		<dt>Name</dt>
-		<dd ng-bind="profile.info.f + ' ' + profile.info.l"></dd>
-		<dt>Role</dt>
-		<dd ng-bind="profile.info.r"></dd>
-		<dt ng-if="profile.details && profile.details.specialty">Specialty</dt>
-		<dd ng-if="profile.details && profile.details.specialty" ng-bind="profile.details.specialty"></dd>
-		<dt ng-if="profile.details && profile.details.contact">Contact</dt>
-		<dd ng-if="profile.details && profile.details.contact" ng-bind="profile.details.contact"></dd>
-	</dl>
-	<button id="logout" type="button" ng-click="logout()">Logout</button>
-	<a class="button" ui-sref=".edit">Edit</a>
-	<ui-view></ui-view>
+<div id="profile" class="content">
+	<form>
+		<label for="firstname">First name</label>
+		<input id="firstname" ng-model="info.f" type="text" required />
+		<label for="lastname">Last name</label>
+		<input id="lastname" ng-model="info.l" type="text" required />
+		<label for="role">Role</label>
+		<select id="role" ng-model="info.r" required ng-options="role.$id as role.$id for role in roles">
+			<option value="">Select a role</option>
+		</select>
+		<label for="contact">Contact</label>
+		<input id="contact" ng-model="details.contact" type="text" ng-pattern="/^[0-9]{3,12}$/" empty-to-null/>
+		<label for="specialty">Specialty</label>
+		<select id="specialty" ng-model="details.specialty" ng-options="specialty.$id as specialty.$id for specialty in specialties">
+			<option value="">None</option>
+		</select>
+	</form>
 </div>

@@ -35,9 +35,18 @@ h2 {
 }
 .content {
     margin:0.5em;
+    /* overflow: auto; */
 }
-dl {
+.buttons {
+	overflow: auto;
+}
+.buttons button{
+	margin:0.5em;
+	float:left;
+}
+dl,form {
     overflow: auto;
+    /* display: block; */
 }
 dt {
 	float: left;
@@ -46,4 +55,8 @@ dt {
 dd {
 	float: right;
 	clear: right;
+}
+#taskDetail button {
+    /* margin: 0.5em; */ 
+    clear: none;
 }
