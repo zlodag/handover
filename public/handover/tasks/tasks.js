@@ -54,6 +54,12 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 			url: '/new',
 			templateUrl: '/handover/tasks/newTask.html',
 			resolve: {
+				authData: function(Auth){
+					return Auth.$requireAuth();
+				},
+				waitForUser: function(authData,Me){
+					return Me.ready;
+				},
 			    wards: function(Hospital){
 			    	return Hospital.wards.$loaded();
 			    },
@@ -61,7 +67,8 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 			    	return Hospital.specialties.$loaded();
 			    }
 			},
-			controller: function($scope,wards,specialties,Profile,Tasks,$state){
+			controller: function($scope,wards,specialties,Stamp,Tasks,$state){
+				console.log('started task new controller');
 				$scope.wards = wards;
 				$scope.specialties = specialties;
 				$scope.newTask = {
@@ -74,7 +81,7 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 					"urgency": 3
 				};
 				$scope.addTask = function(newTask){
-					newTask.added = new Profile.stamp();
+					newTask.added = new Stamp();
 					Tasks.current.$add(newTask).then(function(ref) {
 						var id = ref.key();
 						console.log("added record with id " + id);
@@ -96,7 +103,7 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 			    	return Tasks.comments($stateParams.taskId).$loaded();
 			    }
 			},
-			controller: function($scope,task,comments,Profile){
+			controller: function($scope,Stamp,task,comments){
 				$scope.task = task;
 				$scope.canStamp = function(stamp){
 					if (stamp === 'accepted') { return !task.accepted && !task.completed;}
@@ -105,7 +112,7 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 				};
 				$scope.stamp = function(stamp, cancelled){
 					var updateObject = {};
-					updateObject[stamp] = new Profile.stamp();
+					updateObject[stamp] = new Stamp();
 					if (stamp === 'completed'){
 						if (cancelled) {updateObject.completed.cancelled = prompt('Reason for cancelling','');}
 						updateObject.inactive = updateObject.completed.at;
@@ -117,7 +124,7 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 				};
 				$scope.comments = comments;
 				$scope.addComment = function(commentText){
-					var comment = new Profile.stamp();
+					var comment = new Stamp();
 					comment.text = commentText;
 					comments.$add(comment);
 				};

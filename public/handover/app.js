@@ -14,10 +14,8 @@
 			restrict: 'E',
 			scope: {},
 			templateUrl: '/handover/navbar.html',
-			controller: function($scope,Profile){
-				$scope.loggedIn = function(){
-					return !!Profile.info;
-				};
+			controller: function($scope,Me){
+				$scope.me = Me;
 			}
 		};
 	})
@@ -34,6 +32,11 @@
 	            });
 	        }
 	    };
+	})
+	.run(function($rootScope){
+		$rootScope.$on('$stateChangeError',function(event, toState, toParams, fromState, fromParams, error){
+			console.error(error);
+		});
 	})
 	;
 })();
