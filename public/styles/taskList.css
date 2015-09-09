@@ -3,17 +3,17 @@
     margin: 0;
 }
 .task {
-    list-style-type: none;
     position: relative;
     border-style: solid;
     border-width: 0 0 1px;
 }
-.task:first-of-type {
+.task:first-child {
     border-top-width:1px;
 }
 .task:hover{
     cursor: pointer;
     background-color: lightblue;
+    background-color: rgb(230, 255, 230);
 }
 .task>.urgency, .task>.box {
     width: 40px;

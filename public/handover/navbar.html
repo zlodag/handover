@@ -1,6 +1,6 @@
 <nav>
-  <a ui-sref="tasks.current" ui-sref-active="active">Current</a>
-  <a ui-sref="tasks.recent" ui-sref-active="active">Recent</a>
+  <a ui-sref="tasks.list({context:'current'})" ui-sref-active="active">Current</a>
+  <a ui-sref="tasks.list({context:'recent'})" ui-sref-active="active">Recent</a>
   <a ui-sref="tasks.new" ui-sref-active="active">New</a>
   <a ng-if="me.loggedIn" ui-sref="profile" ui-sref-active="active">Profile</a>
   <a ng-if="!me.loggedIn" ui-sref="login" ui-sref-active="active">Login</a>

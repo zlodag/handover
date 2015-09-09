@@ -23,31 +23,20 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 				};
 			}
 		})
-		.state('tasks.current',{
-			url: '/current',
+		.state('tasks.list',{
+			url: '/{context:current|recent}',
 			templateUrl: '/handover/tasks/taskList.html',
 			resolve: {
-			    tasks: function(Tasks){
-			    	return Tasks.current.$loaded();
+				context: function($stateParams){
+					return $stateParams.context;
+				},
+			    tasks: function(Tasks,context){
+			    	return Tasks[context].$loaded();
 			    }
 			},
-			controller: function($scope,tasks){
+			controller: function($scope,tasks,context){
 				$scope.tasks = tasks;
-				$scope.context = 'Current';
-			}
-		})
-		.state('tasks.recent',{
-			url: '/recent',
-			templateUrl: '/handover/tasks/taskList.html',
-			resolve: {
-			    tasks: function(Tasks){
-			    	return Tasks.recent.$loaded();
-			    }
-			},
-			controller: function($scope,tasks){
-				// console.log(tasks);
-				$scope.tasks = tasks;
-				$scope.context = 'Recent';
+				$scope.context = context;
 			}
 		})
 		.state('tasks.new',{
@@ -103,24 +92,33 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 			    	return Tasks.comments($stateParams.taskId).$loaded();
 			    }
 			},
-			controller: function($scope,Stamp,task,comments){
+			controller: function($scope,Stamp,task,comments,$q){
 				$scope.task = task;
 				$scope.canStamp = function(stamp){
 					if (stamp === 'accepted') { return !task.accepted && !task.completed;}
 					else if (stamp === 'completed' || stamp === 'cancelled') { return !task.completed;}
 					else { return false; }
 				};
-				$scope.stamp = function(stamp, cancelled){
-					var updateObject = {};
-					updateObject[stamp] = new Stamp();
-					if (stamp === 'completed'){
-						if (cancelled) {updateObject.completed.cancelled = prompt('Reason for cancelling','');}
-						updateObject.inactive = updateObject.completed.at;
+				$scope.stamp = function(type, cancelled){
+					var updateObject = {},
+					stamp = new Stamp(),
+					deferred = $q.defer();
+					if (type === 'cancelled'){
+						var reason = prompt('Reason for cancelling','');
+						if (!reason) {
+							deferred.reject('No reason for cancelling provided');
+							return deferred.promise;
+						}
+						stamp.cancelled = reason;
+						type = 'completed';
 					}
+					updateObject[type] = stamp;
+					if (type === 'completed') { updateObject.inactive = stamp.at; }
 					task.$ref().update(updateObject, function(error){
-						if (error){return console.error("There was a problem updating the task: ", updateObject, error);}
-						console.log('Updated task');
+						if (error){deferred.reject("There was a problem updating the task: " + error);}
+						else {deferred.resolve(updateObject);}
 					});
+					return deferred.promise;
 				};
 				$scope.comments = comments;
 				$scope.addComment = function(commentText){

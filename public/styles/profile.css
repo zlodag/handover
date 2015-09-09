@@ -13,7 +13,7 @@ button, input[type="submit"], a.button {
 }
 button:hover,input[type="submit"]:hover,a.button:hover {
 	cursor: pointer;
-	background-color:lightblue;
+	background-color: rgb(230, 255, 230);
 }
 form>input[type="submit"] {
 	float:left;

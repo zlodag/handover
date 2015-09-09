@@ -19,6 +19,16 @@
 			}
 		};
 	})
+	.directive('handoverAlerts',function(){
+		return {
+			restrict: 'E',
+			scope: {},
+			templateUrl: '/handover/alerts.html',
+			controller: function($scope,Alerts){
+				$scope.alerts = Alerts;
+			}
+		};
+	})
 	.directive('emptyToNull', function () {
 	    return {
 	        restrict: 'A',
@@ -33,9 +43,59 @@
 	        }
 	    };
 	})
-	.run(function($rootScope){
+	.factory('Alerts',function(){
+		var list = [];
+		// list = [{
+		// 		str: 'Something boring',
+		// 		at: Date.now(),
+		// 		error: false
+		// 	},
+		// 	{
+		// 		str: 'Something exciting',
+		// 		at: Date.now(),
+		// 		error: true
+		// 	},{
+		// 		str: 'Something boring',
+		// 		at: Date.now(),
+		// 		error: false
+		// 	},{
+		// 		str: "We have a problem",
+		// 		at: Date.now(),
+		// 		error: true
+		// 	}];
+		function add(str, error){
+			list.push({
+				str: str,
+				at: Date.now(),
+				error: !!error
+			});
+			if (error) console.log(str);
+		}
+		function remove(index){
+			list.splice(index, 1);
+		}
+		function reset(){
+			list.length = 0;
+		}
+		return {
+			list : list,
+			add : add,
+			remove : remove,
+			reset: reset
+		};
+	})
+	.run(function($rootScope,$state,Alerts){
+		$rootScope.$on('$stateChangeSuccess',function(event, toState, toParams, fromState, fromParams) {
+			Alerts.reset();
+		});
 		$rootScope.$on('$stateChangeError',function(event, toState, toParams, fromState, fromParams, error){
-			console.error(error);
+			if (error === 'AUTH_REQUIRED') {
+				Alerts.add('Authentication required, redirecting to login page', true);
+				$state.go('login');
+			} else {
+				Alerts.add(error);
+			}
+
 		});
 	})
 	;
