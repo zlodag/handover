@@ -1,4 +1,4 @@
-.tasks {
+#tasks {
     padding: 0;
     margin: 0;
 }
@@ -24,13 +24,13 @@
     height: 20px;
     border-bottom: 1px solid black;
 }
-.task>.urgency.high {
+.task>.urgency.high,#detail .text.section.high {
     background: red;
 }
-.task>.urgency.medium {
+.task>.urgency.medium,#detail .text.section.medium {
     background: gold;
 }
-.task>.urgency.low {
+.task>.urgency.low,#detail .text.section.low {
     background: green;
 }
 .task>.box {
@@ -40,17 +40,21 @@
     background-size: 50%;
     background-position: center;
 }
-.task>.box.Added {
-    background-image: url("/icons/ellipses.svg");
+.task>.box.Added,
+#detail .added>.text {
+    background-image: url("/icons/star.svg");
 }
-.task>.box.Accepted {
-    background-image: url("/icons/clock.svg");
+.task>.box.Accepted,
+#detail .accepted>.text {
+    background-image: url("/icons/timer.svg");
 }
-.task>.box.Completed {
+.task>.box.Completed,
+#detail .completed>.text {
     background-image: url("/icons/task.svg");
 }
-.task>.box.Cancelled {
-    background-image: url("/icons/ban.svg");
+.task>.box.Cancelled,
+#detail .cancelled>.text {
+    background-image: url("/icons/trash.svg");
 }
 .task>.cont {
     border-left: 1px solid black;
@@ -74,35 +78,33 @@
 .task .status {
     display: none;
 }
-.patient,.location,.text>dd {
+.task dd.patient,.task dd.location {
     background-position: left;
     padding-left: 1.3em;
     float: left;
     clear: left;
 }
-.nhi,.specialty {
-    background-position: right;
+.task dd.nhi,.task dd.specialty {
     padding-right: 1.3em;
     float: right;
     clear: right;
     background-position: right;
 }
-.patient {
+.task dd.patient,#detail .meta>dd.patient {
     background-image: url("/icons/person.svg");
 }
-.nhi {
+.task dd.nhi,#detail .meta>dd.nhi {
     background-image: url("/icons/medical-cross.svg");
 }
-.location {
+.task dd.location,#detail .meta>dd.location {
     background-image: url("/icons/home.svg");
 }
-.ward:after {
-    content: "-"
+.task .ward:after,#detail .ward:after {
+    content: " - "
 }
-.specialty {
+.task dd.specialty,#detail .meta>dd.specialty {
     background-image: url("/icons/tag.svg");
 }
-.text>dd {
-    background-image: url("/icons/comment-square.svg");
-    font-style: italic;
+.task dl.text>dd {
+    float:left;
 }

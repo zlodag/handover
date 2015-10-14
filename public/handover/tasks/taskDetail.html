@@ -1,45 +1,52 @@
 <h2>{{getStatus(task)}} task</h2>
-<div id="taskDetail" class="content">
-    <dl>
-	    <dt>Patient</dt>
-	    <dd ng-bind="task.patient"></dd>
-	    <dt>NHI</dt>
-	    <dd ng-bind="task.nhi"></dd>
-	    <dt>Specialty</dt>
-	    <dd ng-bind="task.specialty"></dd>
-	    <dt>Ward</dt>
-	    <dd ng-bind="task.ward"></dd>
-	    <dt>Bed</dt>
-	    <dd ng-bind="task.bed"></dd>
-	    <dt>Urgency</dt>
-	    <dd ng-bind="task.urgency"></dd>
-    </dl>
-    <p ng-bind="task.text"></p>
-    <div>
-        Added
-        by <a ui-sref="user({userId: task.added.id})" ng-bind="task.added.by"></a>
-        at {{ task.added.at | date : "h:mma 'on' dd/MM/yyyy"}}
+<div id="detail">
+    <div class="section text" ng-class="{high: task.urgency === 3,medium: task.urgency === 2,low: task.urgency === 1}">
+        <p ng-bind="task.text"></p>
     </div>
-    <div ng-if="task.accepted">
-        Accepted
-        by <a ui-sref="user({userId: task.accepted.id})" ng-bind="task.accepted.by"></a>
-        at {{ task.accepted.at | date : "h:mma 'on' dd/MM/yyyy"}}
+    <div class="section details">
+        <h4>Details</h4>
+        <dl class="meta">
+    	    <dt class="patient">Patient</dt>
+    	    <dd class="patient" ng-bind="task.patient"></dd>
+    	    <dt class="nhi">NHI</dt>
+    	    <dd class="nhi" ng-bind="task.nhi"></dd>
+    	    <dt class="specialty">Specialty</dt>
+    	    <dd class="specialty" ng-bind="task.specialty"></dd>
+    	    <dt class="location">Location</dt>
+            <dd class="location"><span class="ward" ng-bind="task.ward"></span><span class="bed" ng-bind="task.bed"></span></dd>
+      	    <dt class="urgency">Urgency</dt>
+    	    <dd class="urgency" ng-bind="task.urgency"></dd>
+        </dl>
     </div>
-    <div ng-if="task.completed && !task.completed.cancelled">
-        Completed
-        by <a ui-sref="user({userId: task.completed.id})" ng-bind="task.completed.by"></a>
-        at {{ task.completed.at | date : "h:mma 'on' dd/MM/yyyy"}}
-    </div>
-    <div ng-if="task.completed && task.completed.cancelled">
-        Cancelled
-        by <a ui-sref="user({userId: task.completed.id})" ng-bind="task.completed.by"></a>
-        at {{ task.completed.at | date : "h:mma 'on' dd/MM/yyyy"}}
-        ({{task.completed.cancelled}})
-    </div>
-    <div class="buttons">
-        <button type="button" ng-if="canStamp('accepted',task)" ng-click="stamp('accepted')">Accept</button>
-        <button type="button" ng-if="canStamp('completed',task)" ng-click="stamp('completed')">Complete</button>
-        <button type="button" ng-if="canStamp('cancelled',task)" ng-click="stamp('cancelled')">Cancel</button>
+    <div class="section stamps">
+        <h4>Status</h4>
+        <ul>
+            <li class="added stamp">
+                <span class="text">Added</span>
+                <span class="user"><a ui-sref="user({userId: task.added.id})" ng-bind="task.added.by"></a></span>
+                <span class="time" ng-bind="task.added.at | date : 'h:mma dd/MM/yyyy'"></span>
+            </li>
+            <li ng-if="task.accepted" class="accepted stamp">
+                <span class="text">Accepted</span>
+                <span class="user"><a ui-sref="user({userId: task.accepted.id})" ng-bind="task.accepted.by"></a></span>
+                <span class="time" ng-bind="task.accepted.at | date : 'h:mma dd/MM/yyyy'"></span>
+            </li>
+            <li ng-if="task.completed && !task.completed.cancelled" class="completed stamp">
+                <span class="text">Completed</span>
+                <span class="user"><a ui-sref="user({userId: task.completed.id})" ng-bind="task.completed.by"></a></span>
+                <span class="time" ng-bind="task.completed.at | date : 'h:mma dd/MM/yyyy'"></span>
+            </li>
+            <li ng-if="task.completed && task.completed.cancelled" class="cancelled stamp">
+                <span class="text">Cancelled ({{task.completed.cancelled}})</span>
+                <span class="user"><a ui-sref="user({userId: task.completed.id})" ng-bind="task.completed.by"></a></span>
+                <span class="time" ng-bind="task.completed.at | date : 'h:mma dd/MM/yyyy'"></span>
+            </li>
+        </ul>
+        <div class="buttons">
+            <button type="button" ng-if="canStamp('accepted',task)" ng-click="stamp('accepted')">Accept</button>
+            <button type="button" ng-if="canStamp('completed',task)" ng-click="stamp('completed')">Complete</button>
+            <button type="button" ng-if="canStamp('cancelled',task)" ng-click="stamp('cancelled')">Cancel</button>
+        </div>
     </div>
 <!--     <div ng-repeat="referral in referrals">
         Referred to <a ui-sref="user({userId: referral.$id})" ng-bind="referral.to"></a>
@@ -57,18 +64,19 @@
         </select>
         <button type="button" class="btn btn-default" ng-show="target" ng-click="refer(target)">Refer</button>
     </div> -->
-    <ul class="comments">
-        <li ng-repeat="comment in comments" class="comment">
-            <div class="text" ng-bind="comment.text"></div>
-            <div class="meta">
-                <span class="user">by <a ui-sref="user({userId: comment.id})" ng-bind="comment.by"></a></span>
-                <span class="time">at {{comment.at | date : "h:mma 'on' dd/MM/yyyy"}}</span>
-            </div>
-        </li>
-    </ul>
-    <form ng-hide="task.completed" ng-submit="addComment(newComment); newComment = ''">
-        <label for="newComment">Add a new comment</label>
-        <input type="text" id="newComment" ng-model="newComment" />
-	    <input type="submit" class="btn btn-primary" value="Post" />
-    </form>
+    <div class="section comments">
+        <h4>Comments</h4>
+        <ul ng-if="comments.length">
+            <li ng-repeat="comment in comments" class="comment">
+                <span class="text" ng-bind="comment.text"></span>
+                <span class="user"><!-- by  --><a ui-sref="user({userId: comment.id})" ng-bind="comment.by"></a></span>
+                <span class="time" ng-bind="comment.at | date : 'h:mma dd/MM/yyyy'"></span>
+            </li>
+        </ul>
+        <form ng-hide="task.completed" ng-submit="addComment(newComment); newComment = ''">
+            <label for="newComment">Add a new comment</label>
+            <input type="text" id="newComment" ng-model="newComment" />
+            <input type="submit" class="btn btn-primary" value="Post" />
+        </form>
+    </div>
 </div>

@@ -1,4 +1,4 @@
-button, input[type="submit"], a.button {
+/* button, input[type="submit"], a.button {
 	font-size: 1rem;
 	border: 2px solid black;
 	border-radius: 0.5em;
@@ -7,7 +7,7 @@ button, input[type="submit"], a.button {
 	color: black;
 	font-family: sans-serif;
 	padding: 0.3em 0.5em;
-	/* margin: 0.5em 0; */
+	margin: 0.5em;
 	float: left;
 	clear: both;
 }
@@ -18,11 +18,12 @@ button:hover,input[type="submit"]:hover,a.button:hover {
 form>input[type="submit"] {
 	float:left;
 }
-form>label {
+#profile form>label {
 	float: left;
 	clear: both;
 }
-form>label+input,form>label+select {
+#profile form>label+input,
+#profile form>label+select {
 	float: right;
 	clear: right;
 	width: 70%;
@@ -33,3 +34,4 @@ form>label+input,form>label+select {
 	overflow:hidden;
 	text-align: center;
 }
+ */

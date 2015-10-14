@@ -1,0 +1,88 @@
+#detail>* {
+    /* margin-bottom:0.5em; */
+}
+#detail .meta>.urgency {
+    display: none;
+}
+#detail .meta>dd {
+    float: none;
+    background-repeat:no-repeat;
+    padding-left:1em;
+    background-size: 0.8em;
+    background-position-y:center;
+}
+#detail .meta dt {
+    display:none;
+}
+#detail .text.section {
+    padding:0;
+}
+#detail .text.section>p {
+    margin:0 1em;
+    padding: 0.5em;
+    background-color: white;
+    border: solid black;
+    border-width: 0 1px;
+}
+#detail .stamps>ul {
+    overflow:auto;
+}
+#detail .stamp {
+    float: left;
+    margin:0 0.5em 0.5em 0;
+    padding: 0.5em;
+}
+#detail .stamp.added {
+    background: #DEFFDE;
+}
+#detail .stamp.accepted {
+    background: #DEF9FF;
+}
+#detail .stamp.completed {
+    background: #FFFCAC;
+}
+#detail .stamp.cancelled {
+    background: #FFCACA;
+}
+#detail .stamp>*,#detail .comment>* {
+    background-repeat: no-repeat;
+    background-size: 0.8em;
+    background-position-y: center;
+    padding-left:1.2em;
+    display:block;
+}
+#detail .comment>.text {
+    background-image: url("/icons/comment-square.svg");
+    font-style:italic;
+}
+#detail .section {
+    border-top: 1px solid black;
+    padding: 0.5em;
+}
+#detail .section>h4 {
+    margin-bottom: 0.5em;
+}
+#detail .comments>ul {
+    margin: 0 -0.5em;
+}
+#detail .comments>form {
+    margin-top:0.5em;
+}
+#detail .comments>form>label {
+    display:none;
+}
+#detail .user {
+    background-image: url("/icons/person.svg");
+}
+#detail .time {
+    background-image: url("/icons/clock.svg");
+}
+#detail .comment {
+    padding:0.5em;
+}
+#detail .comment:nth-child(odd){
+    background-color: #EAEAEA;
+}
+#detail .comment:nth-child(even){
+    background-color: #D4D4D4;
+}

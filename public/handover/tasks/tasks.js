@@ -52,23 +52,36 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 			    wards: function(Hospital){
 			    	return Hospital.wards.$loaded();
 			    },
+			    wardlist: function(wards, $q){
+			    	var deferred = $q.defer();
+					wards.$ref().once("value",function(list){
+						deferred.resolve(Object.keys(list.val()));
+					});
+			    	return deferred.promise;
+				},
 			    specialties: function(Hospital){
 			    	return Hospital.specialties.$loaded();
 			    }
 			},
-			controller: function($scope,wards,specialties,Stamp,Tasks,$state){
+			controller: function($scope,wards,wardlist,specialties,Stamp,Tasks,$state){
 				console.log('started task new controller');
+				var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', numbers = '1234567890';
+				var randomize = function(){
+					$scope.newTask = {
+						"patient": chance.name(),
+						"nhi": chance.string({length: 3, pool: letters}) + chance.string({length: 4, pool: numbers}),
+						"ward": chance.pick(wardlist),
+						"bed": chance.natural({min: 1, max: 16}).toString() + chance.character({pool: 'ABCDEF'}),
+						// "specialty": "Obstetrics & Gynaecology",
+						"specialty": chance.pick(specialties).$id,
+						"text": chance.sentence(),
+						"urgency": chance.natural({min: 1, max: 3})
+					};
+				}
+				$scope.randomize = randomize;
+				randomize();
 				$scope.wards = wards;
 				$scope.specialties = specialties;
-				$scope.newTask = {
-					"patient": "Hugo Weaving",
-					"nhi": "LKJ1551",
-					"ward": "M12",
-					"bed": "16B",
-					"specialty": "Obstetrics & Gynaecology",
-					"text": "All of this was added subsequently",
-					"urgency": 3
-				};
 				$scope.addTask = function(newTask){
 					newTask.added = new Stamp();
 					Tasks.current.$add(newTask).then(function(ref) {

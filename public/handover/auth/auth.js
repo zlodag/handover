@@ -1,7 +1,27 @@
 (function(){
-	angular.module('handover.auth',['firebase','handover.data'])
+	angular.module('handover.auth',['firebase','handover.data','ui.bootstrap'])
 		.config(function($stateProvider) {
 			$stateProvider
+			.state('test', {
+				url: "/test",
+				templateUrl: '/handover/auth/test.html',
+				resolve: {
+				    specialties: function(Hospital){
+				    	return Hospital.specialties.$loaded();
+				    },
+				},
+				controller: function($scope,specialties){
+					$scope.list = ['alpha','gamma','marroon'];
+					$scope.getNames = function(){
+						var names = [];
+						for (var i = 0; i < specialties.length; i++) {
+							names.push(specialties.$keyAt(i));
+						}
+						console.log(names);
+						return names;
+					};
+				}
+			})
 			.state('login', {
 				url: "/login",
 				templateUrl: '/handover/auth/login.html',

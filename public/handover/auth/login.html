@@ -1,10 +1,13 @@
 <h2>Login</h2>
 <div id="login" class="content">
 	<form name="loginform" ng-submit="login(credentials)">
-		<label for="email">Email:</label><input id="email" ng-model="credentials.email" type="email" required />
-		<label for="password">Password:</label><input id="password" ng-model="credentials.password" type="password" required />
+		<label for="email">Email</label>
+		<input id="email" ng-model="credentials.email" type="email" required />
+		<label for="password">Password</label>
+		<input id="password" ng-model="credentials.password" type="password" required />
 		<input type="submit" ng-disabled="loginform.$invalid"/>
 	</form>
-	<button type="button" ng-click="login({email:'zlodag@gmail.com',password:'zlodag'})">Log in as zlodag</button>
-	<button type="button" ng-click="login({email:'hamish@hatter.com',password:'hamish'})">Log in as user</button>
+	<button type="button" ng-click="login({email:'user1@gmail.com',password:'user1'})">Log in as user1</button>
+	<button type="button" ng-click="login({email:'user2@gmail.com',password:'user2'})">Log in as user2</button>
+	<button type="button" ng-click="login({email:'user3@gmail.com',password:'user3'})">Log in as user3</button>
 </div>

@@ -1,6 +1,6 @@
 (function(){
 	angular.module('handover',[
-	 	'ngAnimate',
+	 	// 'ngAnimate',
 	 	'ui.router',
 	 	'handover.auth',
 	 	'handover.tasks'

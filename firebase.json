@@ -3,7 +3,7 @@
   "public": "public",
   "ignore": [
     "**/.*",
-  	"index-dev.html",
+    "index-dev.html",
     "components/"
   ],
   "rewrites": [{

@@ -1,22 +1,25 @@
 <h2>New Task</h2>
 <div id="newTask" class="content">
-  <form ng-submit="addTask(newTask)" name="form" novalidate>
-  	<label for="patient">Patient name</label>
-  	<input id="patient" name="patient" class="form-control" type="text" ng-model="newTask.patient" required/>
+  <form ng-submit="addTask(newTask)" name="form">
+  	<label for="patient">Patient</label>
+  	<input id="patient" name="patient" type="text" ng-model="newTask.patient" maxlength="20" required />
   	<label for="nhi">NHI</label>
-  	<input id="nhi" name="nhi" class="form-control" type="text" ng-model="newTask.nhi" required ng-pattern="/^[a-zA-Z]{3}[0-9]{4}$/"/>
+  	<input id="nhi" name="nhi" type="text" ng-model="newTask.nhi" pattern="[a-zA-Z]{3}[0-9]{4}" required />
   	<label for="ward">Ward</label>
-  	<select id="ward" name="ward" class="form-control" ng-model="newTask.ward" required ng-options="ward as ward group by building for (ward,building) in wards">
+  	<select id="ward" name="ward" ng-model="newTask.ward" ng-options="ward as ward group by building for (ward,building) in wards" required>
       <option value="">Select a ward</option>
     </select>
   	<label for="bed">Bed</label>
-  	<input id="bed" name="bed" class="form-control" type="text" ng-model="newTask.bed" required ng-maxlength="3"/>
+  	<input id="bed" name="bed" type="text" ng-model="newTask.bed" maxlength="3" required />
   	<label for="specialty">Specialty</label>
-  	<select id="specialty" name="specialty" class="form-control" ng-model="newTask.specialty" required ng-options="specialty.$id as specialty.$id for specialty in specialties"><option value="">Select a specialty</option></select>
+  	<select id="specialty" name="specialty" ng-model="newTask.specialty" ng-options="specialty.$id as specialty.$id for specialty in specialties" required >
+      <option value="">Select a specialty</option>
+    </select>
   	<label for="text">Text</label>
-  	<input id="text" name="text" class="form-control" type="text" ng-model="newTask.text" required/>
+  	<input id="text" name="text" type="text" ng-model="newTask.text" maxlength="500" required />
   	<label for="urgency">Urgency</label>
-  	<input id="urgency" name="urgency" class="form-control" type="number" ng-model="newTask.urgency" required min="1" max="3" ng-pattern="/^[0-9]+$/"/>
-  	<button type="submit" class="btn btn-primary">Add</button>
+  	<input id="urgency" name="urgency" type="number" ng-model="newTask.urgency" min="1" max="3" pattern="[0-9]+" required />
+  	<input type="submit" value="Add" />
+    <button type="button" ng-click="randomize()">Randomize</button>
   </form>
 </div>
