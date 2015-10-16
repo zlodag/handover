@@ -1,5 +1,5 @@
 (function(){
-	angular.module('handover.auth',['firebase','handover.data','ui.bootstrap'])
+	angular.module('handover.auth',['firebase','handover.data','ui.bootstrap','angular-toArrayFilter'])
 		.config(function($stateProvider) {
 			$stateProvider
 			.state('test', {
@@ -9,9 +9,18 @@
 				    specialties: function(Hospital){
 				    	return Hospital.specialties.$loaded();
 				    },
+				    users: function(FB,$q){
+				    	var deferred = $q.defer();
+				    	FB.child('users/index').once("value",function(snap){
+			    			deferred.resolve(snap.val());
+				    	});
+				    	return deferred.promise;
+				    }
 				},
-				controller: function($scope,specialties){
+				controller: function($scope,specialties,users){
 					$scope.list = ['alpha','gamma','marroon'];
+					$scope.users = users;
+					console.log(users);
 					$scope.getNames = function(){
 						var names = [];
 						for (var i = 0; i < specialties.length; i++) {
@@ -99,6 +108,10 @@
 				this.uid = uid;
 				this.info = $firebaseObject(FB.child('users/index/'+uid));
 				this.details = $firebaseObject(FB.child('users/details/'+uid));
+				this.taskboard = $firebaseObject(FB.child('referrals').orderByChild(uid).startAt(true));
+				this.taskboard.$loaded().then(function(tb){
+					console.log(tb);
+				})
 				this.ready = $q.all([
                 	this.info.$loaded(), this.details.$loaded()
                 ]);

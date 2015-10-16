@@ -1,5 +1,13 @@
-<p ng-repeat="item in list" ng-bind="item"></p>
-<pre>Model: {{selected | json}}</pre>
-<pre>Model: {{selected2 | json}}</pre>
-<input type="text" ng-model="selected" uib-typeahead="item for item in list | filter:$viewValue | limitTo:8" class="form-control">
+<!-- <p ng-repeat="item in list" ng-bind="item"></p> -->
+<!-- <pre>Model: {{selected | json}}</pre>
+<pre>Model: {{selected2 | json}}</pre> -->
+<pre>Model: {{selected3 | json}}</pre>
+<pre>Model: {{selected4 | json}}</pre>
+<br/>
+<!-- <input type="text" ng-model="selected" uib-typeahead="item for item in list | filter:$viewValue | limitTo:8" class="form-control">
+<br/>
 <input type="text" ng-model="selected2" uib-typeahead="item for item in getNames($viewValue) | filter:$viewValue | limitTo:8" typeahead-editable="false" class="form-control">
+<br/> -->
+<select ng-model="selected3" ng-options="key as value.f + ' ' + value.l + ' (' + value.r + ')' for (key, value) in users" class="form-control">
+	<br/>
+<input type="text" ng-model="selected4" uib-typeahead="value as value.f + ' ' + value.l + ' (' + value.r + ')' for value in users | toArray | filter:$viewValue | limitTo:8" class="form-control">

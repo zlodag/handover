@@ -10,4 +10,11 @@
 		<dt ng-if="user.details && user.details.contact">Contact</dt>
 		<dd ng-if="user.details && user.details.contact" ng-bind="user.details.contact"></dd>
 	</dl>
+	<div class="taskboard">
+		<h4>Taskboard:</h4>
+		<dl>
+			<dt ng-repeat-start="(key,value) in user.taskboard"><a ng-bind="key" ui-sref="tasks.detail({taskId:key})"></a></dt>
+			<dd ng-repeat-end>Referred by <span><a ng-bind="value[user.uid].by" ui-sref="user({userId: value[user.uid].id})"></a></span> at <span ng-bind="value[user.uid].at | date : 'h:mma dd/MM/yyyy'"></span></dd>
+		</dl>
+	</div>
 </div>

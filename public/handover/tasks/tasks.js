@@ -6,7 +6,8 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 			current: $firebaseArray(ref.orderByChild("completed").equalTo(null)),
 			recent: $firebaseArray(ref.orderByChild("inactive").limitToLast(3)),
 			detail: function(taskId){return $firebaseObject(ref.child(taskId));},
-			comments: function(taskId){return $firebaseArray(FB.child("comments/" + taskId));}
+			comments: function(taskId){return $firebaseArray(FB.child("comments/" + taskId));},
+			referrals: function(taskId){return $firebaseObject(FB.child("referrals/" + taskId));}
 		};
 	})
 	.config(function($stateProvider) {
@@ -98,14 +99,27 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 			url: '/:taskId',
 			templateUrl: '/handover/tasks/taskDetail.html',
 			resolve: {
-			    task: function(Tasks,$stateParams){
-			    	return Tasks.detail($stateParams.taskId).$loaded();
+				taskId: function($stateParams){
+					return $stateParams.taskId;
+				},
+			    task: function(Tasks,taskId){
+			    	return Tasks.detail(taskId).$loaded();
 			    },
-			    comments: function(Tasks,$stateParams){
-			    	return Tasks.comments($stateParams.taskId).$loaded();
+			    comments: function(Tasks,taskId){
+			    	return Tasks.comments(taskId).$loaded();
+			    },
+			    referrals: function(Tasks,taskId){
+			    	return Tasks.referrals(taskId).$loaded();
+			    },
+			    users: function(FB,$q){
+			    	var deferred = $q.defer();
+			    	FB.child('users/index').once("value",function(snap){
+		    			deferred.resolve(snap.val());
+			    	});
+			    	return deferred.promise;
 			    }
 			},
-			controller: function($scope,Stamp,task,comments,$q){
+			controller: function($scope,Stamp,FB,taskId,task,comments,referrals,users,$q){
 				$scope.task = task;
 				$scope.canStamp = function(stamp){
 					if (stamp === 'accepted') { return !task.accepted && !task.completed;}
@@ -138,6 +152,17 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 					var comment = new Stamp();
 					comment.text = commentText;
 					comments.$add(comment);
+				};
+				$scope.referrals = referrals;
+				$scope.users = users;
+				$scope.target = 'e5e3580b-e2d1-47f3-80b6-4044a53622e0';
+				$scope.refer = function(target){
+					var ref = FB.child("referrals/" + taskId + "/" + target);
+					var referral = new Stamp();
+					ref.set(referral,function(error){
+						if (error){console.error("Referral failed", referral);}
+						else {console.log("Referred successfully", referral);}
+					});
 				};
 			}
 		})
