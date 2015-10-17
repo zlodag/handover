@@ -48,12 +48,12 @@
             <button type="button" ng-if="canStamp('cancelled',task)" ng-click="stamp('cancelled')">Cancel</button>
         </div>
     </div>
-    <div class="section referrals">
+    <!-- <div class="section referrals">
         <h4>Referrals</h4>
         <ul>
             <li ng-repeat="(key, referral) in referrals.referrals" class="referral comment">
-                <span class="to"><a ui-sref="user({userId: referral.to})" ng-bind="referral.to | toUser:users"></a></span>
-                <span class="user"><a ui-sref="user({userId: referral.by})" ng-bind="referral.by | toUser:users"></a></span>
+                <span class="to"><a ui-sref="user({userId: referral.to})" ng-bind="referral.to | toUser"></a></span>
+                <span class="user"><a ui-sref="user({userId: referral.by})" ng-bind="referral.by | toUser"></a></span>
                 <span class="time" ng-bind="referral.at | date : 'h:mma dd/MM/yyyy'"></span>
             </li>
         </ul>
@@ -63,20 +63,6 @@
             </select>
             <input type="submit" value="Refer" />
         </form>
-    </div>
-    <div class="section comments">
-        <h4>Comments</h4>
-        <ul ng-if="comments.length">
-            <li ng-repeat="comment in comments" class="comment">
-                <span class="text" ng-bind="comment.text"></span>
-                <span class="user"><!-- by  --><a ui-sref="user({userId: comment.id})" ng-bind="comment.by"></a></span>
-                <span class="time" ng-bind="comment.at | date : 'h:mma dd/MM/yyyy'"></span>
-            </li>
-        </ul>
-        <form ng-hide="task.completed" ng-submit="addComment(newComment); newComment = ''">
-            <label for="newComment">Add a new comment</label>
-            <input type="text" id="newComment" ng-model="newComment" />
-            <input type="submit" class="btn btn-primary" value="Post" />
-        </form>
-    </div>
+    </div> -->
+        <events task="task" class="section events"></events>
 </div>

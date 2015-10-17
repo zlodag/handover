@@ -1,24 +1,93 @@
 (function(){
 angular.module('handover.tasks',['handover.data','ui.router','firebase'])
-	.factory('Tasks',function(FB,$firebaseArray,$firebaseObject){
+	.factory('TaskList', function($firebaseArray,$state){
+		return $firebaseArray.$extend({
+			goTo: function(taskId){$state.go('tasks.detail',{taskId:taskId});},
+			getStatus : function(taskId){
+				var task = this.$getRecord(taskId);
+				return ('completed' in task) ?
+				('cancelled' in task.completed ? 'Cancelled' : 'Completed') :
+				('accepted' in task ? 'Accepted' : 'Added');
+			}
+			// $$added: function(snap, prevChild) {
+			// 	var item = $firebaseArray.prototype.$$added.apply(this, arguments);
+			// 	return $q.all([
+	  //           	$firebaseObject(FB.child('tasks/' + item.$id)).$loaded(),
+	  //           	$firebaseObject(FB.child('referrals/' + item.$value)).$loaded()
+   //          	]).then(function(promises){
+			// 		item.task = promises[0];
+			// 		item.referral = promises[1];
+			// 		console.log(item);
+   //          		return item;
+   //          	});
+			// },
+		});
+	})
+	.factory('Events', function(FB,$firebaseArray,Stamp){
+		return function(taskId){
+			return $firebaseArray.$extend({
+				addComment: function(comment){
+					var stamp = new Stamp(taskId);
+					stamp.comment = comment;
+					this.$add(stamp);
+				},
+				referTo: function(uid){
+					var stamp = new Stamp(taskId);
+					stamp.referral = uid;
+					this.$add(stamp);
+				},
+				updateStatus: function(status){
+					var stamp = new Stamp(taskId);
+					stamp.status = status;
+					if (status === 'Cancelled'){stamp.comment = prompt('Reason for cancelling','');}
+					this.$add(stamp);
+				}
+			})(FB.child("events").orderByChild("task").equalTo(taskId));
+		};
+	})
+	.factory('Tasks',function(FB,$firebaseArray,$firebaseObject,TaskList){
 		var ref = FB.child('tasks');
 		return {
-			current: $firebaseArray(ref.orderByChild("completed").equalTo(null)),
-			recent: $firebaseArray(ref.orderByChild("inactive").limitToLast(3)),
+			current: TaskList(ref.orderByChild("completed").equalTo(null)),
+			recent: TaskList(ref.orderByChild("inactive").limitToLast(10)),
 			detail: function(taskId){return $firebaseObject(ref.child(taskId));},
-			comments: function(taskId){return $firebaseArray(FB.child("comments/" + taskId));},
 			referrals: function(taskId){return $firebaseObject(FB.child("referrals/" + taskId));}
 		};
 	})
-	.filter('toUser',function(){
-		return function(uid, users){
-			if (uid in users) {
-				var user = users[uid];
+	.directive('taskDisplay',function(Tasks){
+		return {
+			restrict: 'E',
+			templateUrl: '/handover/tasks/taskDisplay.html',
+			scope: {},
+			controller: function($scope,Tasks,$attrs){
+				$scope.tasks = Tasks[$attrs.context];
+			}
+		};
+	})
+	.directive('events',function(Events){
+		return {
+			restrict: 'E',
+			templateUrl: '/handover/tasks/events.html',
+			scope: {
+				task: '='
+			},
+			controller: function($scope,Tasks,Users){
+				$scope.events = Events($scope.task.$id);
+				$scope.users = Users;
+			}
+		};
+	})
+	.filter('toUser',function(Users){
+		function uidToUser(uid){
+			if (uid in Users) {
+				var user = Users[uid];
 				return user.f + ' ' + user.l + ' (' + user.r + ')';
 			} else {
 				return '...';
 			}
-		};
+		}
+		uidToUser.$stateful = true;
+		return uidToUser;
 	})
 	.config(function($stateProvider) {
 		$stateProvider.state('tasks', {
@@ -36,18 +105,8 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 		})
 		.state('tasks.list',{
 			url: '/{context:current|recent}',
-			templateUrl: '/handover/tasks/taskList.html',
-			resolve: {
-				context: function($stateParams){
-					return $stateParams.context;
-				},
-			    tasks: function(Tasks,context){
-			    	return Tasks[context].$loaded();
-			    }
-			},
-			controller: function($scope,tasks,context){
-				$scope.tasks = tasks;
-				$scope.context = context;
+			template: function(params){
+					return '<task-display context="' + params.context + '"></task-display>';
 			}
 		})
 		.state('tasks.new',{
@@ -115,10 +174,7 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 			    task: function(Tasks,taskId){
 			    	return Tasks.detail(taskId).$loaded();
 			    },
-			    comments: function(Tasks,taskId){
-			    	return Tasks.comments(taskId).$loaded();
-			    },
-			    referrals: function(FB,taskId,Stamp2,$q,$timeout){
+			    referrals: function(FB,taskId,Stamp,$q,$timeout){
 			    	var query = FB.child("referrals").orderByChild('task').equalTo(taskId);
 			    	var refer = function(target){
 			    		function referralHandler(callback){
@@ -130,7 +186,7 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 							};
 			    		}
 			    		var deferred = $q.defer();
-						var stamp = new Stamp2();
+						var stamp = new Stamp();
 						stamp.to = target;
 						stamp.task = taskId;
 						var ref = query.ref().push();
@@ -175,7 +231,7 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 			    // 	return deferred.promise;
 			    // }
 			},
-			controller: function($scope,Stamp,FB,taskId,task,comments,referrals,Users,$q){
+			controller: function($scope,Stamp,FB,taskId,task,referrals,Users,$q){
 				$scope.task = task;
 				$scope.canStamp = function(stamp){
 					if (stamp === 'accepted') { return !task.accepted && !task.completed;}
@@ -203,12 +259,11 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 					});
 					return deferred.promise;
 				};
-				$scope.comments = comments;
-				$scope.addComment = function(commentText){
-					var comment = new Stamp();
-					comment.text = commentText;
-					comments.$add(comment);
-				};
+				// $scope.addComment = function(commentText){
+				// 	var comment = new Stamp();
+				// 	comment.text = commentText;
+				// 	comments.$add(comment);
+				// };
 				$scope.referrals = referrals;
 				$scope.users = Users;
 				$scope.target = 'e5e3580b-e2d1-47f3-80b6-4044a53622e0';

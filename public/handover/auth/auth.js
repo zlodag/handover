@@ -89,6 +89,9 @@
 				},
 				controller: function($scope, user){
 					$scope.user = user;
+					$scope.update = function(){
+						console.log(user.taskboard);
+					};
 				}
 			})
 		})
@@ -103,17 +106,49 @@
 			});
 			return authObj;
 		})
+		// .factory('Taskboard',function(FB,$q){
+		// 	return function(uid) {
+		// 		FB.child('taskboard/'+uid).once("value",function(taskboardSnap){
+		// 			var taskboard = this;
+		// 			taskboardSnap.forEach(function(snap){
+		// 				var key = snap.key(), value = snap.val();
+		// 				var task = $q.defer(), referral = $q.defer();
+		// 				FB.child('tasks/' + key).once("value",function(taskSnap){
+		// 					task.resolve(taskSnap.val());
+		// 				});
+		// 				FB.child('referrals/' + value).once("value",function(referralSnap){
+		// 					var referralInfo = referralSnap.val();
+		// 					FB.child('users/index/' + referralInfo.by).once("value",function(personSnap){
+		// 						referralInfo.by = personSnap.val();
+		// 						referralInfo.by.id = personSnap.key();
+		// 						referral.resolve(referralInfo);
+		// 					})
+		// 				});
+		// 				taskboard[key] = {};
+		// 				task.promise.then(function(taskInfo){
+		// 					taskboard[key].task = taskInfo;
+		// 				});
+		// 				referral.promise.then(function(referralInfo){
+		// 					taskboard[key].referral = referralInfo;
+		// 				});
+		// 			});
+		// 		},this);
+		// 	};
+		// })
+		// .factory('Taskboard',function(FB){
+		// 	return function(uid){
+		// 		)(FB.child('taskboard/'+uid));
+		// 	};
+		// })
 		.factory('User',function(FB,$firebaseObject,$q){
 			return function(uid){
 				this.uid = uid;
 				this.info = $firebaseObject(FB.child('users/index/'+uid));
 				this.details = $firebaseObject(FB.child('users/details/'+uid));
-				this.taskboard = $firebaseObject(FB.child('referrals').orderByChild(uid).startAt(true));
-				this.taskboard.$loaded().then(function(tb){
-					console.log(tb);
-				})
+				// this.taskboard = Taskboard(uid);
 				this.ready = $q.all([
                 	this.info.$loaded(), this.details.$loaded()
+                	// , this.taskboard.$loaded()
                 ]);
 			};
 		})
@@ -141,17 +176,18 @@
 				}
 			};
 		})
+		// .factory('Stamp',function(Me,TIMESTAMP){
+		// 	return function(){
+		// 		this.at = TIMESTAMP
+		// 		this.by = Me.user.info.f + ' ' + Me.user.info.l;
+		// 		this.id = Me.user.uid;
+		// 	};
+		// })
 		.factory('Stamp',function(Me,TIMESTAMP){
-			return function(){
-				this.at = TIMESTAMP
-				this.by = Me.user.info.f + ' ' + Me.user.info.l;
-				this.id = Me.user.uid;
-			};
-		})
-		.factory('Stamp2',function(Me,TIMESTAMP){
-			return function(){
-				this.at = TIMESTAMP
+			return function(taskId){
+				this.at = TIMESTAMP;
 				this.by = Me.user.uid;
+				this.task = taskId;
 			};
 		})
 		// .factory('Profile',function(FB,Auth,$firebaseObject,$q,TIMESTAMP){

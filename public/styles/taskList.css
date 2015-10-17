@@ -40,22 +40,6 @@
     background-size: 50%;
     background-position: center;
 }
-.task>.box.Added,
-#detail .added>.text {
-    background-image: url("/icons/star.svg");
-}
-.task>.box.Accepted,
-#detail .accepted>.text {
-    background-image: url("/icons/timer.svg");
-}
-.task>.box.Completed,
-#detail .completed>.text {
-    background-image: url("/icons/task.svg");
-}
-.task>.box.Cancelled,
-#detail .cancelled>.text {
-    background-image: url("/icons/trash.svg");
-}
 .task>.cont {
     border-left: 1px solid black;
     margin-left: 40px;

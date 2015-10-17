@@ -12,9 +12,32 @@
 	</dl>
 	<div class="taskboard">
 		<h4>Taskboard:</h4>
-		<dl>
+		<!-- <dl>
 			<dt ng-repeat-start="(key,value) in user.taskboard"><a ng-bind="key" ui-sref="tasks.detail({taskId:key})"></a></dt>
 			<dd ng-repeat-end>Referred by <span><a ng-bind="value[user.uid].by" ui-sref="user({userId: value[user.uid].id})"></a></span> at <span ng-bind="value[user.uid].at | date : 'h:mma dd/MM/yyyy'"></span></dd>
-		</dl>
+		</dl> -->
+		<ul class="taskList">
+		  <li class="task" ng-repeat="item in user.taskboard | orderBy : ['task.inactive','task.added.at'] : true" ng-click="user.taskboard.goTo(item.$id)">
+		    <div class="urgency" ng-class="{high: item.task.urgency === 3,medium: item.task.urgency === 2,low: item.task.urgency === 1}"></div>
+		    <div class="box" ng-class="user.taskboard.getStatus(item.$id)"></div>
+		    <div class="cont">
+		        <dl class="meta">
+		          <dt class="patient">Patient</dt>
+		          <dd class="patient" ng-bind="item.task.patient"></dd>
+		          <dt class="nhi">NHI</dt>
+		          <dd class="nhi" ng-bind="item.task.nhi"></dd>
+		          <dt class="location">Location</dt>
+		          <dd class="location"><span class="ward" ng-bind="item.task.ward"></span><span class="bed" ng-bind="item.task.bed"></span></dd>
+		          <dt class="specialty">Specialty</dt>
+		          <dd class="specialty" ng-bind="item.task.specialty"></dd>
+		        </dl>
+		        <dl class="text">
+		          <dt>Text</dt>
+		          <dd ng-bind="item.task.text"></dd>
+		        </dl>
+		      </div>
+		    </div>
+		  </li>
+		</ul>
 	</div>
 </div>
