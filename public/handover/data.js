@@ -13,5 +13,8 @@
 				roles: $firebaseArray(FB.child('roles'))
 			};
 		}])
+		.factory('Users',['FB','$firebaseObject',function(FB,$firebaseObject){
+			return $firebaseObject(FB.child('users/index'));
+		}])
 	;
 })();

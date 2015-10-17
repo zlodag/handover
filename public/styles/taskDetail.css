@@ -52,12 +52,13 @@
     display:block;
 }
 #detail .comment>.text {
-    background-image: url("/icons/comment-square.svg");
+    background-image: url("/icons/double-quote-serif-left.svg");
     font-style:italic;
 }
 #detail .section {
     border-top: 1px solid black;
     padding: 0.5em;
+    overflow: auto;
 }
 #detail .section>h4 {
     margin-bottom: 0.5em;
@@ -76,6 +77,9 @@
 }
 #detail .time {
     background-image: url("/icons/clock.svg");
+}
+#detail .to {
+    background-image: url("/icons/arrow-thick-right.svg");
 }
 #detail .comment {
     padding:0.5em;

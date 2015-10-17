@@ -10,6 +10,16 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 			referrals: function(taskId){return $firebaseObject(FB.child("referrals/" + taskId));}
 		};
 	})
+	.filter('toUser',function(){
+		return function(uid, users){
+			if (uid in users) {
+				var user = users[uid];
+				return user.f + ' ' + user.l + ' (' + user.r + ')';
+			} else {
+				return '...';
+			}
+		};
+	})
 	.config(function($stateProvider) {
 		$stateProvider.state('tasks', {
 			url: "/tasks",
@@ -108,18 +118,64 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 			    comments: function(Tasks,taskId){
 			    	return Tasks.comments(taskId).$loaded();
 			    },
-			    referrals: function(Tasks,taskId){
-			    	return Tasks.referrals(taskId).$loaded();
-			    },
-			    users: function(FB,$q){
-			    	var deferred = $q.defer();
-			    	FB.child('users/index').once("value",function(snap){
-		    			deferred.resolve(snap.val());
+			    referrals: function(FB,taskId,Stamp2,$q,$timeout){
+			    	var query = FB.child("referrals").orderByChild('task').equalTo(taskId);
+			    	var refer = function(target){
+			    		function referralHandler(callback){
+			    			return function(error) {
+								if (error){
+									console.error("Referral failed", stamp);
+									deferred.reject(stamp);
+								} else {callback();}
+							};
+			    		}
+			    		var deferred = $q.defer();
+						var stamp = new Stamp2();
+						stamp.to = target;
+						stamp.task = taskId;
+						var ref = query.ref().push();
+						ref.set(stamp,referralHandler(function(){
+								FB.child("taskboard/" + target + "/" + taskId).set(ref.key(), referralHandler(function() {
+								console.log("Referred successfully", stamp);
+								deferred.resolve(stamp);
+							}));
+						}));
+						return deferred.promise;
+					};
+			    	var referrals = {};
+			    	query.on("child_added", function(snap){
+			    		$timeout(function(){
+				    		referrals[snap.key()] = snap.val();
+		    			},0);
 			    	});
-			    	return deferred.promise;
+			    	query.on("child_changed", function(snap){
+			    		$timeout(function(){
+				    		referrals[snap.key()].cancelled = snap.val().cancelled;
+		    			},0);
+			    	});
+			    	query.on("child_removed", function(snap){
+			    		$timeout(function(){
+			    			delete referrals[snap.key()];
+		    			},0);
+			    	});
+			    	return {
+			    		// ref: ref,
+			    		refer: refer,
+			    		get referrals(){return referrals;}
+			    	};
 			    }
+			    // referrals: function(Tasks,taskId){
+			    // 	return Tasks.referrals(taskId).$loaded();
+			    // },
+			    // users: function(FB,$q){
+			    // 	var deferred = $q.defer();
+			    // 	FB.child('users/index').once("value",function(snap){
+		    	// 		deferred.resolve(snap.val());
+			    // 	});
+			    // 	return deferred.promise;
+			    // }
 			},
-			controller: function($scope,Stamp,FB,taskId,task,comments,referrals,users,$q){
+			controller: function($scope,Stamp,FB,taskId,task,comments,referrals,Users,$q){
 				$scope.task = task;
 				$scope.canStamp = function(stamp){
 					if (stamp === 'accepted') { return !task.accepted && !task.completed;}
@@ -154,16 +210,8 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 					comments.$add(comment);
 				};
 				$scope.referrals = referrals;
-				$scope.users = users;
+				$scope.users = Users;
 				$scope.target = 'e5e3580b-e2d1-47f3-80b6-4044a53622e0';
-				$scope.refer = function(target){
-					var ref = FB.child("referrals/" + taskId + "/" + target);
-					var referral = new Stamp();
-					ref.set(referral,function(error){
-						if (error){console.error("Referral failed", referral);}
-						else {console.log("Referred successfully", referral);}
-					});
-				};
 			}
 		})
 		;

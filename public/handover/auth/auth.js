@@ -148,6 +148,12 @@
 				this.id = Me.user.uid;
 			};
 		})
+		.factory('Stamp2',function(Me,TIMESTAMP){
+			return function(){
+				this.at = TIMESTAMP
+				this.by = Me.user.uid;
+			};
+		})
 		// .factory('Profile',function(FB,Auth,$firebaseObject,$q,TIMESTAMP){
 		// 	authData = null, info = null, details = null;
 		// 	Auth.$onAuth(handleAuth);

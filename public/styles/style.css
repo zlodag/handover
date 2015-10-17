@@ -55,6 +55,7 @@ h2 {
 }
 dl,form {
     overflow: auto;
+    clear: both;
 }
 dt {
 	float: left;
