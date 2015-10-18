@@ -1,55 +1,119 @@
 (function(){
 angular.module('handover.tasks',['handover.data','ui.router','firebase'])
-	.factory('TaskList', function($firebaseArray,$state){
+	.factory('EventsListFactory', function($firebaseArray,Stamp){
 		return $firebaseArray.$extend({
-			goTo: function(taskId){$state.go('tasks.detail',{taskId:taskId});},
-			getStatus : function(taskId){
-				var task = this.$getRecord(taskId);
-				return ('completed' in task) ?
-				('cancelled' in task.completed ? 'Cancelled' : 'Completed') :
-				('accepted' in task ? 'Accepted' : 'Added');
+			addComment: function(comment){
+				var stamp = new Stamp(taskId);
+				stamp.comment = comment;
+				this.$add(stamp);
+			},
+			referTo: function(uid){
+				var stamp = new Stamp(taskId);
+				stamp.referral = uid;
+				this.$add(stamp);
+			},
+			updateStatus: function(status){
+				var stamp = new Stamp(taskId);
+				stamp.status = status;
+				if (status === 'Cancelled'){stamp.comment = prompt('Reason for cancelling','');}
+				this.$add(stamp);
 			}
-			// $$added: function(snap, prevChild) {
-			// 	var item = $firebaseArray.prototype.$$added.apply(this, arguments);
-			// 	return $q.all([
-	  //           	$firebaseObject(FB.child('tasks/' + item.$id)).$loaded(),
-	  //           	$firebaseObject(FB.child('referrals/' + item.$value)).$loaded()
-   //          	]).then(function(promises){
-			// 		item.task = promises[0];
-			// 		item.referral = promises[1];
-			// 		console.log(item);
-   //          		return item;
-   //          	});
-			// },
 		});
 	})
-	.factory('Events', function(FB,$firebaseArray,Stamp){
+	.factory('EventsFactory', function(FB,EventsListFactory){
 		return function(taskId){
-			return $firebaseArray.$extend({
-				addComment: function(comment){
-					var stamp = new Stamp(taskId);
-					stamp.comment = comment;
-					this.$add(stamp);
-				},
-				referTo: function(uid){
-					var stamp = new Stamp(taskId);
-					stamp.referral = uid;
-					this.$add(stamp);
-				},
-				updateStatus: function(status){
-					var stamp = new Stamp(taskId);
-					stamp.status = status;
-					if (status === 'Cancelled'){stamp.comment = prompt('Reason for cancelling','');}
-					this.$add(stamp);
-				}
-			})(FB.child("events").orderByChild("task").equalTo(taskId));
+			return EventsListFactory(FB.child("events").orderByChild("task").equalTo(taskId));
 		};
 	})
-	.factory('Tasks',function(FB,$firebaseArray,$firebaseObject,TaskList){
+	.factory("Task", function(EventsFactory,$state) {
+		function Task(snap){
+			this.data = snap.val();
+			this.$id = snap.key();
+			this.events = EventsFactory(this.$id);
+		}
+		Task.prototype = {
+			update: function(snap) {
+				// store a string into this.message (instead of the default $value)
+				if( (snap.val().Accepted !== this.data.Accepted) || (snap.val().Completed !== this.data.Completed) ) {
+					this.data = snap.val();
+					return true;
+				}
+				return false;
+			},
+			getStatus : function(){
+				// var task = this.$getRecord(taskId);
+				return ('Completed' in this.data) ? 'Completed' :
+				('Accepted' in this.data ? 'Accepted' : 'Added');
+			},
+			goToDetail: function(){
+				$state.go('tasks.detail',{taskId:this.$id});
+			},
+		};
+		return Task;
+	})
+	.factory('TaskListFactory', function($firebaseArray,$q,Task){
+		return $firebaseArray.$extend({
+			$$added: function(snap) {
+				var task = new Task(snap);
+				return task.events.$loaded().then(function(){
+					return task;
+				});
+		    },
+			$$updated: function(snap) {
+				var task = this.$getRecord(snap.key());
+				return task.update(snap);
+			},
+			newTask: function(task){
+				//newTask.added = new Stamp();
+				this.$add(task).then(function(ref) {
+					var deferred = $q.defer();
+					var id = ref.key();
+					var stamp = new Stamp(id);
+					stamp.status = 'Added';
+					FB.child("events").push(stamp,function(error){
+						if (error){
+							deferred.reject(error);
+						} else {
+							console.log('Added record with id ' + id);
+							deferred.resolve();
+							this.goTo(id);
+						}
+					});
+					return deferred;
+				}).catch(function(error){
+					console.error('Unable to add task: ',task, error);
+				});
+			}
+		});
+	})
+	.factory('IndexTaskList',function(TaskListFactory,Task,FB,$q){
+		return TaskListFactory.$extend({
+			$$added: function(snap) {
+				var taskId = snap.key();
+				var referrer = snap.val();
+				var deferred = $q.defer();
+				FB.child('tasks/' + taskId).once("value",deferred.resolve,deferred.reject);
+				return deferred.then(function(snap){
+					var task = new Task(snap);
+					return task.events.$loaded().then(function(){
+						return task;
+					});
+				}, function(error){
+					console.error(error);
+				});
+		    }
+		});
+	})
+	.factory('TaskBoard',function(IndexTaskList,FB){
+		return function(uid){
+			return IndexTaskList(FB.child('taskboard/'+uid));
+		};
+	})
+	.factory('Tasks',function(FB,$firebaseArray,$firebaseObject,TaskListFactory){
 		var ref = FB.child('tasks');
 		return {
-			current: TaskList(ref.orderByChild("completed").equalTo(null)),
-			recent: TaskList(ref.orderByChild("inactive").limitToLast(10)),
+			current: TaskListFactory(ref.orderByChild("completed").equalTo(null)),
+			recent: TaskListFactory(ref.orderByChild("inactive").limitToLast(10)),
 			detail: function(taskId){return $firebaseObject(ref.child(taskId));},
 			referrals: function(taskId){return $firebaseObject(FB.child("referrals/" + taskId));}
 		};
@@ -64,7 +128,7 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 			}
 		};
 	})
-	.directive('events',function(Events){
+	.directive('events',function(EventsFactory){
 		return {
 			restrict: 'E',
 			templateUrl: '/handover/tasks/events.html',
@@ -72,7 +136,7 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 				task: '='
 			},
 			controller: function($scope,Tasks,Users){
-				$scope.events = Events($scope.task.$id);
+				$scope.events = EventsFactory($scope.task.$id);
 				$scope.users = Users;
 			}
 		};
@@ -134,7 +198,7 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 			    }
 			},
 			controller: function($scope,wards,wardlist,specialties,Stamp,Tasks,$state){
-				console.log('started task new controller');
+				// console.log('started task new controller');
 				var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', numbers = '1234567890';
 				var randomize = function(){
 					$scope.newTask = {
@@ -153,7 +217,8 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 				$scope.wards = wards;
 				$scope.specialties = specialties;
 				$scope.addTask = function(newTask){
-					newTask.added = new Stamp();
+					//newTask.added = new Stamp();
+					console.log(newTask);
 					Tasks.current.$add(newTask).then(function(ref) {
 						var id = ref.key();
 						console.log("added record with id " + id);

@@ -99,8 +99,10 @@
 			var authObj = $firebaseAuth(FB);
 			authObj.$onAuth(function (authData){
 				if (!authData) {
+					console.log('AuthData absent');
 					Me.del();
 				} else {
+					console.log('AuthData present');
 					Me.set(authData.uid).catch(console.error);
 				}
 			});
