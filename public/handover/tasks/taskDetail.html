@@ -68,7 +68,7 @@
             <h4>Events</h4>
 <!-- <button type="button" ng-click="logme()">Log Task</button> -->
             <ul>
-                <li ng-repeat="event in task.events" class="event">
+                <li ng-repeat="event in detail.events" class="event">
                     <span class="status" ng-if="event.status" ng-class="event.status" ng-bind="event.status"></span>
                     <span class="comment" ng-if="event.comment" ng-bind="event.comment"></span>
                     <span class="referral" ng-if="event.referral"><a ui-sref="user({userId: event.referral})" ng-bind="users.getName(event.referral)"></a></span>
@@ -77,21 +77,21 @@
                 </li>
             </ul>
         </div>
-        <div class="section forms" ng-hide="task.Completed">
+        <div class="section forms" ng-hide="detail.task.info.Completed">
             <h4>Forms</h4>
             <div class="buttons">
-                <button type="button" ng-click="task.newStatus('Added')">Add</button>
-                <button type="button" ng-click="task.newStatus('Accepted')">Accept</button>
-                <button type="button" ng-click="task.newStatus('Completed')">Complete</button>
-                <button type="button" ng-click="task.newStatus('Cancelled')">Cancel</button>
+                <button type="button" ng-click="detail.newStatus('Added')">Add</button>
+                <button type="button" ng-click="detail.newStatus('Accepted')">Accept</button>
+                <button type="button" ng-click="detail.newStatus('Completed')">Complete</button>
+                <button type="button" ng-click="detail.newStatus('Cancelled')">Cancel</button>
             </div>
-            <form ng-submit="task.referTo(target)">
-                <select ng-model="target" ng-options="key as value.f + ' ' + value.l + ' (' + value.r + ')' for (key, value) in users" required >
+            <form ng-submit="detail.referTo(target)">
+                <select ng-model="target" ng-options="key as users.getName(key) for (key, value) in users" required >
                     <option value="">Refer to:</option>
                 </select>
                 <input type="submit" value="Refer" />
             </form>
-            <form ng-submit="task.addComment(newComment); newComment = ''">
+            <form ng-submit="detail.addComment(newComment); newComment = ''">
                 <label for="newComment">Add a new comment</label>
                 <input type="text" id="newComment" ng-model="newComment" />
                 <input type="submit" class="btn btn-primary" value="Post" />

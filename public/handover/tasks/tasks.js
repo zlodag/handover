@@ -63,14 +63,13 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 	})
 	.factory('TaskDetailFactory',function($firebaseObject,EventsFactory,FB,Stamp,FullSnapToTaskListItem){
 		return function(taskId){
-			function addComment(comment){
-				var stamp = new Stamp(this.$id);
-				stamp.comment = comment;
-				this.events.$add(stamp);
-			}
 			return $firebaseObject.$extend({
 				events: EventsFactory(taskId),
-				addComment: addComment,
+				addComment: function(comment){
+					var stamp = new Stamp(this.$id);
+					stamp.comment = comment;
+					this.events.$add(stamp);
+				},
 				$$updated: function(snap){
 					// angular.extend(this, snap.val());
 					// this.$id = snap.key();
@@ -91,14 +90,16 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 							taskRef.child('Accepted').set(eventRef.key());
 						}).catch(console.error);
 					}
-				}
-				/*
+				},
 				referTo: function(uid){
-					var stamp = new Stamp(this.$id);
+					var taskId = this.$id;
+					var stamp = new Stamp(taskId);
 					stamp.referral = uid;
-					this.events.$add(stamp);
+					// var taskboardRef = FB.child('taskboard');
+					this.events.$add(stamp).then(function(referralRef){
+						FB.child('taskboard/' + uid + '/' + taskId).set(referralRef.key());
+					});
 				}
-				*/
 			})(FB.child('tasks/' + taskId))
 		};
 	})
