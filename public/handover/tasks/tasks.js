@@ -34,8 +34,8 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 	.service('TaskListItem',function($state){
 		return function(){
 			this.getStatus = function(){
-				return 'Completed' in this ? 'Completed' :
-				('Accepted' in this ? 'Accepted' : 'Added');
+				return 'Completed' in this.info ? 'Completed' :
+				('Accepted' in this.info ? 'Accepted' : 'Added');
 			};
 			this.goToDetail = function(){
 				$state.go('tasks.detail',{taskId:this.$id});
@@ -45,7 +45,17 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 	.factory('FullSnapToTaskListItem',function(TaskListItem){
 		var TLI = function(snap){
 			this.$id = snap.key();
-			angular.extend(this,snap.val());
+			this.info = snap.val();
+		};
+		TLI.prototype = new TaskListItem();
+		TLI.prototype.constructor = TLI;
+		return TLI;
+	})
+	.factory('IndexSnapToTaskListItem',function(TaskListItem){
+		var TLI = function(snap){
+			this.$id = snap.key();
+			this.info = $firebaseObject(FB.child('tasks/'+snap.key()));
+			// angular.extend(this,snap.val());
 		};
 		TLI.prototype = new TaskListItem();
 		TLI.prototype.constructor = TLI;
@@ -62,8 +72,9 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 				events: EventsFactory(taskId),
 				addComment: addComment,
 				$$updated: function(snap){
-					angular.extend(this, snap.val());
-					this.data = new FullSnapToTaskListItem(snap);
+					// angular.extend(this, snap.val());
+					// this.$id = snap.key();
+					this.task = new FullSnapToTaskListItem(snap);
 					return true;
 				},
 				_newStatusEvent: function(status){
@@ -93,7 +104,7 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 	})
 	.factory('TaskListFactory',function($firebaseArray,FullSnapToTaskListItem){
 		return function(ref){
-			console.log('Making a list with ref: ' +  ref.toString());
+			// console.log('Making a list with ref: ' +  ref.toString());
 			return $firebaseArray.$extend({
 				// printMe: function(){
 				// 	console.log('This list is ' + this.$list.length + ' items long...');
@@ -129,21 +140,22 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 				}
 			},
 			controller: function($scope,context,tasks){
-				$scope.context = context
+				$scope.context = context;
 				$scope.tasks = tasks;
+				// console.log(tasks);
 			}
 		})
 		.state('tasks.detail',{
 			url: '/:taskId',
 			templateUrl: '/handover/tasks/taskDetail.html',
 			resolve: {
-			    task: function(TaskDetailFactory,$stateParams){
+			    detail: function(TaskDetailFactory,$stateParams){
 			    	return TaskDetailFactory($stateParams.taskId).$loaded();
 			    }
 			},
-			controller: function($scope,task){
-				// console.log(task.events);
-				$scope.task = task;
+			controller: function($scope,detail){
+				// console.log(detail);
+				$scope.detail = detail;
 			}
 		})
 	})

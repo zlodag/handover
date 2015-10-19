@@ -1,21 +1,21 @@
-<h2>{{task.getStatus()}} task</h2>
+<h2>{{detail.task.getStatus()}} task</h2>
 <div id="detail">
-    <div class="section text" ng-class="{high: task.urgency === 3,medium: task.urgency === 2,low: task.urgency === 1}">
-        <p ng-bind="task.text"></p>
+    <div class="section text" ng-class="{high: detail.task.info.urgency === 3,medium: detail.task.info.urgency === 2,low: detail.task.info.urgency === 1}">
+        <p ng-bind="detail.task.info.text"></p>
     </div>
     <div class="section details">
         <h4>Details</h4>
         <dl class="meta">
     	    <dt class="patient">Patient</dt>
-    	    <dd class="patient" ng-bind="task.patient"></dd>
+    	    <dd class="patient" ng-bind="detail.task.info.patient"></dd>
     	    <dt class="nhi">NHI</dt>
-    	    <dd class="nhi" ng-bind="task.nhi"></dd>
+    	    <dd class="nhi" ng-bind="detail.task.info.nhi"></dd>
     	    <dt class="specialty">Specialty</dt>
-    	    <dd class="specialty" ng-bind="task.specialty"></dd>
+    	    <dd class="specialty" ng-bind="detail.task.info.specialty"></dd>
     	    <dt class="location">Location</dt>
-            <dd class="location"><span class="ward" ng-bind="task.ward"></span><span class="bed" ng-bind="task.bed"></span></dd>
+            <dd class="location"><span class="ward" ng-bind="detail.task.info.ward"></span><span class="bed" ng-bind="detail.task.info.bed"></span></dd>
       	    <dt class="urgency">Urgency</dt>
-    	    <dd class="urgency" ng-bind="task.urgency"></dd>
+    	    <dd class="urgency" ng-bind="detail.task.info.urgency"></dd>
         </dl>
     </div>
     <!-- <div class="section stamps">
