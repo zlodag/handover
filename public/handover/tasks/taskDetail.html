@@ -68,30 +68,34 @@
             <h4>Events</h4>
 <!-- <button type="button" ng-click="logme()">Log Task</button> -->
             <ul>
-                <li ng-repeat="event in detail.events" class="event">
-                    <span class="status" ng-if="event.status" ng-class="event.status" ng-bind="event.status"></span>
-                    <span class="comment" ng-if="event.comment" ng-bind="event.comment"></span>
-                    <span class="referral" ng-if="event.referral"><a ui-sref="user({userId: event.referral})" ng-bind="users.getName(event.referral)"></a></span>
-                    <span class="user"><a ui-sref="user({userId: event.by})" ng-bind="users.getName(event.by)"></a></span>
-                    <span class="time" ng-bind="event.at | date : 'h:mma dd/MM/yyyy'"></span>
+                <li class="event">
+                    <span class="status Added">Added</span>
+                    <span class="user"><a ui-sref="user({userId: detail.task.info.by})" ng-bind="users.getName(detail.task.info.by)"></a></span>
+                    <span class="time" ng-bind="detail.task.info.at | date : 'h:mma dd/MM/yyyy'"></span>
+                </li>
+                <li ng-repeat="event in detail.task.events" class="event">
+                    <span class="status" ng-if="event.data.status" ng-class="event.data.status" ng-bind="event.data.status"></span>
+                    <span class="comment" ng-if="event.data.comment" ng-bind="event.data.comment"></span>
+                    <span class="referral" ng-if="event.data.referral"><a ui-sref="user({userId: event.data.referral})" ng-bind="users.getName(event.data.referral)"></a></span>
+                    <span class="user"><a ui-sref="user({userId: event.data.by})" ng-bind="users.getName(event.data.by)"></a></span>
+                    <span class="time" ng-bind="event.data.at | date : 'h:mma dd/MM/yyyy'"></span>
                 </li>
             </ul>
         </div>
         <div class="section forms" ng-hide="detail.task.info.Completed">
             <h4>Forms</h4>
             <div class="buttons">
-                <button type="button" ng-click="detail.newStatus('Added')">Add</button>
-                <button type="button" ng-click="detail.newStatus('Accepted')">Accept</button>
-                <button type="button" ng-click="detail.newStatus('Completed')">Complete</button>
-                <button type="button" ng-click="detail.newStatus('Cancelled')">Cancel</button>
+                <button type="button" ng-click="detail.task.newStatus('Accepted')" ng-hide="detail.task.info.Accepted">Accept</button>
+                <button type="button" ng-click="detail.task.newStatus('Completed')">Complete</button>
+                <button type="button" ng-click="detail.task.newStatus('Cancelled')">Cancel</button>
             </div>
-            <form ng-submit="detail.referTo(target)">
-                <select ng-model="target" ng-options="key as users.getName(key) disable when detail.events.alreadyReferred(key) || authData.uid === key for (key, value) in users" required >
+            <form ng-submit="detail.task.referTo(target)">
+                <select ng-model="target" ng-options="key as users.getName(key) disable when (detail.task.events.alreadyReferred(key) || authData.uid === key) for (key, value) in users" required >
                     <option value="">Refer to:</option>
                 </select>
                 <input type="submit" value="Refer" />
             </form>
-            <form ng-submit="detail.addComment(newComment); newComment = ''">
+            <form ng-submit="detail.task.addComment(newComment); newComment = ''">
                 <label for="newComment">Add a new comment</label>
                 <input type="text" id="newComment" ng-model="newComment" />
                 <input type="submit" class="btn btn-primary" value="Post" />

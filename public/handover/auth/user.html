@@ -2,20 +2,20 @@
 <div id="user" class="content">
 	<dl>
 		<dt>Name</dt>
-		<dd ng-bind="user.info.f + ' ' + user.info.l"></dd>
+		<dd ng-bind="users[userId].first + ' ' + users[userId].last"></dd>
 		<dt>Role</dt>
-		<dd ng-bind="user.info.r"></dd>
-		<dt ng-if="user.details && user.details.specialty">Specialty</dt>
-		<dd ng-if="user.details && user.details.specialty" ng-bind="user.details.specialty"></dd>
-		<dt ng-if="user.details && user.details.contact">Contact</dt>
-		<dd ng-if="user.details && user.details.contact" ng-bind="user.details.contact"></dd>
+		<dd ng-bind="users[userId].role"></dd>
+		<dt ng-if="users[userId].specialty">Specialty</dt>
+		<dd ng-if="users[userId].specialty" ng-bind="users[userId].specialty"></dd>
+		<dt ng-if="users[userId].contact">Contact</dt>
+		<dd ng-if="users[userId].contact" ng-bind="users[userId].contact"></dd>
 	</dl>
-	<div class="taskboard">
+<!-- 	<div class="taskboard">
 		<h4>Taskboard:</h4>
-		<!-- <dl>
+		<dl>
 			<dt ng-repeat-start="(key,value) in user.taskboard"><a ng-bind="key" ui-sref="tasks.detail({taskId:key})"></a></dt>
 			<dd ng-repeat-end>Referred by <span><a ng-bind="value[user.uid].by" ui-sref="user({userId: value[user.uid].id})"></a></span> at <span ng-bind="value[user.uid].at | date : 'h:mma dd/MM/yyyy'"></span></dd>
-		</dl> -->
+		</dl>
 		<ul class="taskList">
 		  <li class="task" ng-repeat="item in user.taskboard | orderBy : ['task.inactive','task.added.at'] : true" ng-click="user.taskboard.goTo(item.$id)">
 		    <div class="urgency" ng-class="{high: item.task.urgency === 3,medium: item.task.urgency === 2,low: item.task.urgency === 1}"></div>
@@ -40,4 +40,4 @@
 		  </li>
 		</ul>
 	</div>
-</div>
+ --></div>

@@ -25,11 +25,11 @@
 				}
 			})(FB.child('users'));
 		}])
-		// .factory('UserDetailFactory',['FB','$firebaseObject',function(FB,$firebaseObject){
-		// 	return function(uid){
-		// 		return $firebaseObject(FB.child('users/details/'+uid));
-		// 	};
-		// }])
+		.factory('UserDetailFactory',['FB','$firebaseObject',function(FB,$firebaseObject){
+			return function(uid){
+				return $firebaseObject(FB.child('users/'+uid));
+			};
+		}])
 
 		// .filter('toUser',function(Users){
 		// 	function uidToUser(uid){

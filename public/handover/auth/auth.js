@@ -7,7 +7,7 @@
 			return function(taskId){
 				this.at = TIMESTAMP;
 				this.by = Auth.$getAuth().uid;
-				this.task = taskId;
+				if(taskId){this.task = taskId;}
 			};
 		})
 		// .factory('Me',function(UserDetailFactory,$q){
@@ -71,7 +71,7 @@
 				controller: function($scope,Auth,$state){
 					$scope.login = function(credentials){
 						Auth.$authWithPassword(credentials).then(function(authData){
-							console.log('about to go to profile...');
+							// console.log('about to go to profile...');
 							$state.go('profile');
 						}).catch(function(error){
 							console.error(error);
@@ -86,9 +86,9 @@
 					authData: function(Auth){
 						return Auth.$requireAuth();
 					},
-					// waitForUser: function(authData,Me){
-					// 	return Me.user.ready;
-					// },
+					me: function(authData,UserDetailFactory){
+						return UserDetailFactory(authData.uid).$loaded();
+					},
 				    specialties: function(Hospital){
 				    	return Hospital.specialties.$loaded();
 				    },
@@ -96,9 +96,8 @@
 				    	return Hospital.roles.$loaded();
 				    }
 				},
-				controller: function($scope,authData,Users,UserDetailFactory,specialties,roles,$state){
-					Users[authData.uid].$bindTo($scope,'info');
-					new UserDetailFactory(authData.uid).$bindTo($scope,'details');
+				controller: function($scope,Auth,me,specialties,roles,$state){
+					me.$bindTo($scope,'me');
 					$scope.specialties = specialties;
 					$scope.roles = roles;
 					$scope.logout = function(){
@@ -110,19 +109,8 @@
 			.state('user', {
 				url: "/user/:userId",
 				templateUrl: '/handover/auth/user.html',
-				resolve: {
-					// authData: function(Auth){
-					// 	return Auth.$requireAuth();
-					// },
-					user: function($stateParams,UserDetailFactory){
-						return new UserDetailFactory($stateParams.userId).$loaded();
-					}
-				},
-				controller: function($scope, user){
-					$scope.user = user;
-					// $scope.update = function(){
-					// 	console.log(user.taskboard);
-					// };
+				controller: function($scope, $stateParams){
+					$scope.userId = $stateParams.userId;
 				}
 			})
 		})
