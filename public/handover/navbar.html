@@ -2,6 +2,7 @@
   <a ui-sref="tasks.list({context:'current'})" ui-sref-active="active">Current</a>
   <a ui-sref="tasks.list({context:'recent'})" ui-sref-active="active">Recent</a>
   <a ui-sref="tasks.new" ui-sref-active="active">New</a>
-  <a ng-if="me.loggedIn" ui-sref="profile" ui-sref-active="active">Profile</a>
-  <a ng-if="!me.loggedIn" ui-sref="login" ui-sref-active="active">Login</a>
+  <a ng-if="authData.uid" ui-sref="profile" ui-sref-active="active" ng-bind="users.getName(authData.uid)"></a>
+  <a ng-if="!authData.uid" ui-sref="login" ui-sref-active="active">Login</a>
+  <!-- <button ng-click="printMe()">Print me</button> -->
 </nav>

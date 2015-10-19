@@ -14,7 +14,34 @@
 			};
 		}])
 		.factory('Users',['FB','$firebaseObject',function(FB,$firebaseObject){
-			return $firebaseObject(FB.child('users/index'));
+			return $firebaseObject.$extend({
+				getName: function(uid){
+					if (uid in this) {
+						var user = this[uid];
+						return user.first + ' ' + user.last + ' (' + user.role + ')';
+					} else {
+						return '...';
+					}
+				}
+			})(FB.child('users'));
 		}])
+		// .factory('UserDetailFactory',['FB','$firebaseObject',function(FB,$firebaseObject){
+		// 	return function(uid){
+		// 		return $firebaseObject(FB.child('users/details/'+uid));
+		// 	};
+		// }])
+
+		// .filter('toUser',function(Users){
+		// 	function uidToUser(uid){
+		// 		if (uid in Users) {
+		// 			var user = Users[uid];
+		// 			return user.f + ' ' + user.l + ' (' + user.r + ')';
+		// 		} else {
+		// 			return '...';
+		// 		}
+		// 	}
+		// 	uidToUser.$stateful = true;
+		// 	return uidToUser;
+		// })
 	;
 })();

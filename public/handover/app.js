@@ -12,10 +12,12 @@
 	.directive('handoverNavbar',function(){
 		return {
 			restrict: 'E',
-			scope: {},
+			scope: false,
 			templateUrl: '/handover/navbar.html',
-			controller: function($scope,Me){
-				$scope.me = Me;
+			controller: function($scope){
+				$scope.printMe = function(){
+					console.log($scope);
+				};
 			}
 		};
 	})
@@ -84,7 +86,19 @@
 			reset: reset
 		};
 	})
-	.run(function($rootScope,$state,Alerts){
+	.run(function($rootScope,$state,Alerts,Users,Auth){
+		$rootScope.users = Users;
+		Auth.$onAuth(function (authData){
+			if (!authData) {
+				// console.log('AuthData absent', authData);
+				delete $rootScope.authData;
+				// Me.del();
+			} else {
+				// console.log('AuthData present', authData);
+				$rootScope.authData = authData;
+				// Me.set(authData.uid).catch(console.error);
+			}
+		});
 		$rootScope.$on('$stateChangeSuccess',function(event, toState, toParams, fromState, fromParams) {
 			Alerts.reset();
 		});
@@ -93,9 +107,9 @@
 				Alerts.add('Authentication required, redirecting to login page', true);
 				$state.go('login');
 			} else {
+				console.log(event, toState, toParams, fromState, fromParams, error);
 				Alerts.add(error);
 			}
-
 		});
 	})
 	;

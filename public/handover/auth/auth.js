@@ -1,36 +1,70 @@
 (function(){
 	angular.module('handover.auth',['firebase','handover.data','ui.bootstrap','angular-toArrayFilter'])
+		.factory('Auth',function(FB,$firebaseAuth){
+			return $firebaseAuth(FB);
+		})
+		.factory('Stamp',function(Auth,TIMESTAMP){
+			return function(taskId){
+				this.at = TIMESTAMP;
+				this.by = Auth.$getAuth().uid;
+				this.task = taskId;
+			};
+		})
+		// .factory('Me',function(UserDetailFactory,$q){
+		// 	var details = null,
+		// 	loggedIn = false,
+		// 	deferred = $q.defer();
+		// 	return {
+		// 		get user(){return user;},
+		// 		get loggedIn(){return loggedIn;},
+		// 		get ready(){return deferred.promise;},
+		// 		set: function (uid){
+		// 			user = UserDetailFactory(uid);
+		// 			user.$loaded().then(function(){
+		// 				loggedIn = true;
+		// 				console.log('Logged in as %s %s (%s)',user.f, user.l, user.r);
+		// 				console.log('Contact: %s, Specialty: %s', user.contact, user.specialty);
+		// 			}).catch(deferred.reject);
+		// 		},
+		// 		del: function(){
+		// 			user = null;
+		// 			loggedIn = false;
+		// 			deferred = $q.defer();
+		// 			console.log('Logged out');
+		// 		}
+		// 	};
+		// })
 		.config(function($stateProvider) {
 			$stateProvider
-			.state('test', {
-				url: "/test",
-				templateUrl: '/handover/auth/test.html',
-				resolve: {
-				    specialties: function(Hospital){
-				    	return Hospital.specialties.$loaded();
-				    },
-				    users: function(FB,$q){
-				    	var deferred = $q.defer();
-				    	FB.child('users/index').once("value",function(snap){
-			    			deferred.resolve(snap.val());
-				    	});
-				    	return deferred.promise;
-				    }
-				},
-				controller: function($scope,specialties,users){
-					$scope.list = ['alpha','gamma','marroon'];
-					$scope.users = users;
-					console.log(users);
-					$scope.getNames = function(){
-						var names = [];
-						for (var i = 0; i < specialties.length; i++) {
-							names.push(specialties.$keyAt(i));
-						}
-						console.log(names);
-						return names;
-					};
-				}
-			})
+			// .state('test', {
+			// 	url: "/test",
+			// 	templateUrl: '/handover/auth/test.html',
+			// 	resolve: {
+			// 	    specialties: function(Hospital){
+			// 	    	return Hospital.specialties.$loaded();
+			// 	    },
+			// 	    // users: function(FB,$q){
+			// 	    // 	var deferred = $q.defer();
+			// 	    // 	FB.child('users/index').once("value",function(snap){
+			//     	// 		deferred.resolve(snap.val());
+			// 	    // 	});
+			// 	    // 	return deferred.promise;
+			// 	    // }
+			// 	},
+			// 	controller: function($scope,specialties){
+			// 		$scope.list = ['alpha','gamma','marroon'];
+			// 		// $scope.users = users;
+			// 		// console.log(users);
+			// 		$scope.getNames = function(){
+			// 			var names = [];
+			// 			for (var i = 0; i < specialties.length; i++) {
+			// 				names.push(specialties.$keyAt(i));
+			// 			}
+			// 			console.log(names);
+			// 			return names;
+			// 		};
+			// 	}
+			// })
 			.state('login', {
 				url: "/login",
 				templateUrl: '/handover/auth/login.html',
@@ -52,9 +86,9 @@
 					authData: function(Auth){
 						return Auth.$requireAuth();
 					},
-					waitForUser: function(authData,Me){
-						return Me.user.ready;
-					},
+					// waitForUser: function(authData,Me){
+					// 	return Me.user.ready;
+					// },
 				    specialties: function(Hospital){
 				    	return Hospital.specialties.$loaded();
 				    },
@@ -62,9 +96,9 @@
 				    	return Hospital.roles.$loaded();
 				    }
 				},
-				controller: function($scope,Auth,Me,specialties,roles,$state){
-					Me.user.info.$bindTo($scope,'info');
-					Me.user.details.$bindTo($scope,'details');
+				controller: function($scope,authData,Users,UserDetailFactory,specialties,roles,$state){
+					Users[authData.uid].$bindTo($scope,'info');
+					new UserDetailFactory(authData.uid).$bindTo($scope,'details');
 					$scope.specialties = specialties;
 					$scope.roles = roles;
 					$scope.logout = function(){
@@ -77,36 +111,20 @@
 				url: "/user/:userId",
 				templateUrl: '/handover/auth/user.html',
 				resolve: {
-					authData: function(Auth){
-						return Auth.$requireAuth();
-					},
-					user: function($stateParams,User){
-						return new User($stateParams.userId);
-					},
-					waitForUser: function(user){
-						return user.ready;
+					// authData: function(Auth){
+					// 	return Auth.$requireAuth();
+					// },
+					user: function($stateParams,UserDetailFactory){
+						return new UserDetailFactory($stateParams.userId).$loaded();
 					}
 				},
 				controller: function($scope, user){
 					$scope.user = user;
-					$scope.update = function(){
-						console.log(user.taskboard);
-					};
+					// $scope.update = function(){
+					// 	console.log(user.taskboard);
+					// };
 				}
 			})
-		})
-		.factory('Auth',function(FB,$firebaseAuth,User,Me){
-			var authObj = $firebaseAuth(FB);
-			authObj.$onAuth(function (authData){
-				if (!authData) {
-					console.log('AuthData absent');
-					Me.del();
-				} else {
-					console.log('AuthData present');
-					Me.set(authData.uid).catch(console.error);
-				}
-			});
-			return authObj;
 		})
 		// .factory('Taskboard',function(FB,$q){
 		// 	return function(uid) {
@@ -142,42 +160,6 @@
 		// 		)(FB.child('taskboard/'+uid));
 		// 	};
 		// })
-		.factory('User',function(FB,$firebaseObject,$q){
-			return function(uid){
-				this.uid = uid;
-				this.info = $firebaseObject(FB.child('users/index/'+uid));
-				this.details = $firebaseObject(FB.child('users/details/'+uid));
-				// this.taskboard = Taskboard(uid);
-				this.ready = $q.all([
-                	this.info.$loaded(), this.details.$loaded()
-                	// , this.taskboard.$loaded()
-                ]);
-			};
-		})
-		.factory('Me',function(User,$q){
-			var user = null,
-			loggedIn = false,
-			deferred = $q.defer();
-			return {
-				get user(){return user;},
-				get loggedIn(){return loggedIn;},
-				get ready(){return deferred.promise;},
-				set: function (uid){
-					user = new User(uid);
-					return user.ready.then(deferred.resolve).then(function(arrays){
-						loggedIn = true;
-						console.log('Logged in as %s %s (%s)',user.info.f, user.info.l, user.info.r);
-						console.log('Contact: %s, Specialty: %s', user.details.contact, user.details.specialty);
-					}).catch(deferred.reject);
-				},
-				del: function(){
-					user = null;
-					loggedIn = false;
-					deferred = $q.defer();
-					console.log('Logged out');
-				}
-			};
-		})
 		// .factory('Stamp',function(Me,TIMESTAMP){
 		// 	return function(){
 		// 		this.at = TIMESTAMP
@@ -185,13 +167,6 @@
 		// 		this.id = Me.user.uid;
 		// 	};
 		// })
-		.factory('Stamp',function(Me,TIMESTAMP){
-			return function(taskId){
-				this.at = TIMESTAMP;
-				this.by = Me.user.uid;
-				this.task = taskId;
-			};
-		})
 		// .factory('Profile',function(FB,Auth,$firebaseObject,$q,TIMESTAMP){
 		// 	authData = null, info = null, details = null;
 		// 	Auth.$onAuth(handleAuth);
