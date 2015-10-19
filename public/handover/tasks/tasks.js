@@ -28,7 +28,23 @@
 angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 	.factory('EventsFactory', function($firebaseArray,Stamp,FB,$q){
 		return function(taskId){
-			return $firebaseArray(FB.child("events").orderByChild("task").equalTo(taskId));
+			return $firebaseArray.$extend({
+				alreadyReferred: function(uid){
+					return this._referralTargets && (uid in this._referralTargets);
+				},
+				$$added: function(snap){
+					var ret = $firebaseArray.prototype.$$added.apply(this, arguments);
+    				if ( snap.val().referral ) {
+					    if ( !this._referralTargets ) { this._referralTargets = {}; }
+    					var referral = snap.val().referral, by = snap.val().by;
+    					if (!(referral in this._referralTargets) && (referral !== by)) {
+							this._referralTargets[referral] = snap.key();
+	    					console.log('Added',this._referralTargets);
+	    				}
+    				}
+    				return ret;
+				}
+			})(FB.child("events").orderByChild("task").equalTo(taskId));
 		};
 	})
 	.service('TaskListItem',function($state){
@@ -98,6 +114,12 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 					// var taskboardRef = FB.child('taskboard');
 					this.events.$add(stamp).then(function(referralRef){
 						FB.child('taskboard/' + uid + '/' + taskId).set(referralRef.key());
+					}).catch(function(error){
+						FB.child('taskboard/' + uid + '/' + taskId).once("value",function(snap){
+							if (snap.val() !== null){
+								console.error('The referral has already been made');
+							}
+						});
 					});
 				}
 			})(FB.child('tasks/' + taskId))

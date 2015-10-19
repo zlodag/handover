@@ -86,7 +86,7 @@
                 <button type="button" ng-click="detail.newStatus('Cancelled')">Cancel</button>
             </div>
             <form ng-submit="detail.referTo(target)">
-                <select ng-model="target" ng-options="key as users.getName(key) for (key, value) in users" required >
+                <select ng-model="target" ng-options="key as users.getName(key) disable when detail.events.alreadyReferred(key) || authData.uid === key for (key, value) in users" required >
                     <option value="">Refer to:</option>
                 </select>
                 <input type="submit" value="Refer" />
