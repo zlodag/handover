@@ -1,5 +1,5 @@
 (function(){
-	angular.module('handover.auth',['firebase','handover.data','ui.bootstrap','angular-toArrayFilter'])
+	angular.module('handover.auth',['firebase','handover.data','ui.bootstrap'])
 		.factory('Auth',function(FB,$firebaseAuth){
 			return $firebaseAuth(FB);
 		})
