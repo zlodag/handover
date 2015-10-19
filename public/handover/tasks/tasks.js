@@ -176,7 +176,9 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
   }
 })
 .factory("CurrentTasks", function(TaskList,FB){
-	return TaskList(FB.child('tasks').orderByChild("Completed").equalTo(null).limitToLast(3));
+	return TaskList(FB.child('tasks').orderByChild("Completed").equalTo(null)
+	                //.limitToLast(3)
+	                );
 })
 .factory("RecentTasks", function(TaskList,FB){
 	return TaskList(FB.child('tasks').orderByChild("Completed").startAt(true).limitToLast(10));
