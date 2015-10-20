@@ -35,23 +35,33 @@
             </li>
         </ul>
     </div>
-    <div class="section forms" ng-hide="detail.task.info.Completed">
-        <h4>Forms</h4>
-        <div class="buttons">
+    <div class="section actions" ng-hide="detail.task.info.Completed">
+        <h4>Actions</h4>
+        <div class="status">
             <button type="button" ng-click="detail.task.newStatus('Accepted')" ng-hide="detail.task.info.Accepted">Accept</button>
             <button type="button" ng-click="detail.task.newStatus('Completed')">Complete</button>
-            <button type="button" ng-click="detail.task.newStatus('Cancelled')">Cancel</button>
+            <form name="cancel" ng-submit="detail.task.newStatus('Cancelled',reason); reason = ''">
+                <label for="reason">Cancel</label>
+                <input type="submit" value="Cancel" ng-disabled="cancel.cancel.$invalid" />
+                <input type="text" id="reason" name="cancel" ng-model="reason" maxlength="100" placeholder="Reason" required />
+            </form>
         </div>
-        <form ng-submit="detail.task.referTo(target)">
-            <select ng-model="target" ng-options="key as users.getName(key) disable when (detail.task.events.alreadyReferred(key) || authData.uid === key) for (key, value) in users" required >
-                <option value="">Refer to:</option>
-            </select>
-            <input type="submit" value="Refer" />
-        </form>
-        <form ng-submit="detail.task.addComment(newComment); newComment = ''">
-            <label for="newComment">Add a new comment</label>
-            <input type="text" id="newComment" ng-model="newComment" />
-            <input type="submit" class="btn btn-primary" value="Post" />
-        </form>
+        <div class="refer">
+            <form name="refer" ng-submit="detail.task.referTo(target); target = ''">
+                <select name="newReferral" ng-model="target" ng-options="key as users.getName(key)
+                disable when (detail.task.events.disableReferral(key) || authData.uid === key)
+                for (key, value) in users" required >
+                    <option value="">Refer to:</option>
+                </select>
+                <input type="submit" value="Refer" ng-disabled="refer.newReferral.$invalid" />
+            </form>
+        </div>
+        <div class="comment">
+            <form name="comment" ng-submit="detail.task.addComment(newComment); newComment = ''">
+                <label for="newComment">Comment</label>
+                <input type="text" id="newComment" name="newComment" ng-model="newComment" maxlength="100" placeholder="Add a comment" required />
+                <input type="submit" value="Post" ng-disabled="comment.newComment.$invalid" />
+            </form>
+        </div>
     </div>
 </div>

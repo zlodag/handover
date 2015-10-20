@@ -75,3 +75,38 @@
 #detail .event:nth-child(even){
     background-color: #D4D4D4;
 }
+#detail label[for="reason"],
+#detail label[for="newComment"]
+{
+    display:none;
+}
+/* .actions button,
+.actions input[type="submit"],
+.actions form {
+    display: inline;
+    margin:0;
+    top: 0;
+     color:red; 
+}
+.actions div{
+    display:block;
+    margin-top:0.5em;
+}
+.actions>div {
+    display:block;
+    width:100%;
+} */
+/* .actions button,
+.actions input,
+.actions select,
+.actions form,
+.actions div {
+width: 45%;
+display:block;
+float:left;
+margin:0.5em 2.5%;
+}
+ */
+.actions>div{
+    margin-top:0.5em;
+}

@@ -30,7 +30,7 @@
 .referral {
     background-image: url("/icons/arrow-thick-right.svg");
 }
-.comment {
+.event>.comment {
     background-image: url("/icons/double-quote-serif-left.svg");
 }
 .alert:hover{

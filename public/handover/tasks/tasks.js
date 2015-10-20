@@ -7,11 +7,16 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 	}
 	Event.prototype = {
 		addToDict : function(dict){
-			if (('referral' in this.data) && !(this.data.referral in dict) && (this.data.referral !== this.by)){
-				dict[this.data.referral] = this.$id;
-				return true;
+			var userId;
+			if ('referral' in this.data) {
+				userId = this.data.referral;
+			} else if (this.data.status === 'Accepted') {
+				userId = this.data.by;
+			} else {
+				return false;
 			}
-			return false;
+			dict[userId] = this.$id;
+			return true;
 		},
 	    update: function(snap) {
 	        this.data = snap.val();
@@ -23,8 +28,8 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 .factory('EventsFactory', function($firebaseArray,Event,FB){
 	return function(taskId){
 		return $firebaseArray.$extend({
-			alreadyReferred: function(uid){
-				return ('_referralTargets' in this) && (uid in this._referralTargets);
+			disableReferral: function(uid){
+				return (('_referralTargets' in this) && (uid in this._referralTargets));
 			},
 			$$added: function(snap){
 				if ( !this._referralTargets ) { this._referralTargets = {}; }
@@ -81,25 +86,48 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 		stamp.comment = comment;
 		this.events.$add(stamp);
 	},
-	newStatus: function(status){
+	newStatus: function(status,reason){
 		var taskId = this.$id;
 		var taskRef = FB.child('tasks/' + taskId);
 		var stamp = new Stamp(taskId);
 		var updates = {};
+		var events = this.events;
 		stamp.status = status;
 		if (status === 'Cancelled'){
-			updates.Cancelled = true;
-			stamp.comment = prompt('Reason for cancelling','');
-			if (!stamp.comment){
-				console.error('Must have a reason...');
+			if (!reason){
+				console.error('Reason required');
 				return false;
 			}
+			updates.Cancelled = true;
+			stamp.comment = reason;
 			status = 'Completed';
 		}
-		this.events.$add(stamp).then(function(eventRef){
-			updates[status] = eventRef.key();
+		events.$add(stamp).then(function(eventRef){
+			var eventKey = eventRef.key();
+			updates[status] = eventKey;
 			taskRef.update(updates,function(error){
-				if (error) {console.error(error);}
+				if (error) {
+					console.error(error);
+				} else if (status === 'Accepted'){
+					FB.child('taskboard').child(stamp.by).child(taskId).set(eventKey,function(error){
+						if (error){console.error(error);}
+					});
+				} else if (status === 'Completed'){
+					angular.forEach(events,function(e){
+						var userId;
+						if ('referral' in e.data) {
+							userId = e.data.referral;
+						} else if (e.data.status === 'Accepted') {
+							userId = e.data.by;
+						} else {
+							return;
+						}
+						FB.child('taskboard').child(userId).child(taskId).set(null,function(error){
+							if (error){console.error(error);}
+							// else {console.log('Removed ' + taskId + ' from taskboard of ' + userId);}
+						});
+					});
+				}
 			});
 		}).catch(console.error);
 	}
@@ -137,6 +165,11 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 })
 .factory("RecentTasks", function(TaskList,FB){
 	return TaskList(FB.child('tasks').orderByChild("Completed").startAt(true).limitToLast(10));
+})
+.factory("TaskBoard", function($firebaseArray,FB){
+	return function(userId){
+		return $firebaseArray(FB.child('taskboard').child(userId));
+	};
 })
 .factory('TaskDetailFactory',function($firebaseObject,Task,FB,Stamp){
 	return function(taskId){

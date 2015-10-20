@@ -1,5 +1,5 @@
 (function(){
-	angular.module('handover.auth',['firebase','handover.data','ui.bootstrap'])
+	angular.module('handover.auth',['firebase','handover.data','ui.bootstrap','handover.tasks'])
 		.factory('Auth',function(FB,$firebaseAuth){
 			return $firebaseAuth(FB);
 		})
@@ -109,8 +109,23 @@
 			.state('user', {
 				url: "/user/:userId",
 				templateUrl: '/handover/auth/user.html',
-				controller: function($scope, $stateParams){
-					$scope.userId = $stateParams.userId;
+				resolve: {
+					userId: function($stateParams){
+						return $stateParams.userId;
+					},
+					taskboard: function(TaskBoard,userId){
+						return TaskBoard(userId).$loaded();
+					},
+					tasks: function(CurrentTasks){
+						return CurrentTasks.$loaded();
+					}
+				},
+				controller: function($scope, userId, taskboard, tasks){
+					$scope.userId = userId;
+					$scope.tasks = tasks;
+					$scope.taskboardFilter = function(value, index, array){
+						return taskboard.$indexFor(value.$id) !== -1;
+					};
 				}
 			})
 		})

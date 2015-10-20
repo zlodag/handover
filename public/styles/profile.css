@@ -1,6 +1,9 @@
-#user dt {
+.userinfo dt {
 	display: none;
 }
-#user dd {
+.userinfo dd {
 	float:none;
+}
+.taskboard .empty {
+	padding:0.5em;
 }
