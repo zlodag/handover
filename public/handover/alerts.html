@@ -1,5 +1,5 @@
 <ul ng-if="alerts.list.length" class="alerts">
-	<li ng-repeat = "alert in alerts.list" ng-class="{error: alert.error}" ng-click="alerts.remove($index)">
+	<li ng-repeat = "alert in alerts.list" class="alert" ng-class="{error: alert.error}" ng-click="alerts.remove($index)">
 		<span ng-bind="alert.str"></span><!--  at <span ng-bind="alert.at | date : fulldate"></span> -->
 	</li>
 </ul>

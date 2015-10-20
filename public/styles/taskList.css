@@ -36,9 +36,6 @@
 .task>.box {
     height: 40px;
     bottom: 0;
-    background-repeat: no-repeat;
-    background-size: 50%;
-    background-position: center;
 }
 .task>.cont {
     border-left: 1px solid black;
@@ -47,6 +44,9 @@
 .task dl {
     padding: 0.5em;
 }
+.task dl.text>dd {
+    float:left;
+}
 .task dl.meta {
     border-bottom: 1px solid black;
 }
@@ -54,8 +54,6 @@
     display: none;
 }
 .task dd {
-    background-repeat: no-repeat;
-    background-size: 0.8em;
     font-family: sans-serif;
     margin: 0;
 }
@@ -63,32 +61,13 @@
     display: none;
 }
 .task dd.patient,.task dd.location {
-    background-position: left;
-    padding-left: 1.3em;
     float: left;
     clear: left;
 }
 .task dd.nhi,.task dd.specialty {
-    padding-right: 1.3em;
     float: right;
     clear: right;
-    background-position: right;
-}
-.task dd.patient,#detail .meta>dd.patient {
-    background-image: url("/icons/person.svg");
-}
-.task dd.nhi,#detail .meta>dd.nhi {
-    background-image: url("/icons/medical-cross.svg");
-}
-.task dd.location,#detail .meta>dd.location {
-    background-image: url("/icons/home.svg");
 }
 .task .ward:after,#detail .ward:after {
     content: " - "
-}
-.task dd.specialty,#detail .meta>dd.specialty {
-    background-image: url("/icons/tag.svg");
-}
-.task dl.text>dd {
-    float:left;
 }

@@ -6,10 +6,6 @@
 }
 #detail .meta>dd {
     float: none;
-    background-repeat:no-repeat;
-    padding-left:1em;
-    background-size: 0.8em;
-    background-position-y:center;
 }
 #detail .meta dt {
     display:none;
@@ -45,14 +41,9 @@
     background: #FFCACA;
 }
 #detail .stamp>*,#detail .event>* {
-    background-repeat: no-repeat;
-    background-size: 0.8em;
-    background-position-y: center;
-    padding-left:1.2em;
     display:block;
 }
 #detail .event>.comment {
-    background-image: url("/icons/double-quote-serif-left.svg");
     font-style:italic;
 }
 #detail events {
@@ -74,31 +65,6 @@
 }
 #detail .comments>form>label {
     display:none;
-}
-.task>.box.Added,
-#detail .status.Added {
-    background-image: url("/icons/star.svg");
-}
-.task>.box.Accepted,
-#detail .status.Accepted {
-    background-image: url("/icons/timer.svg");
-}
-.task>.box.Completed,
-#detail .status.Completed {
-    background-image: url("/icons/task.svg");
-}
-.task>.box.Cancelled,
-#detail .status.Cancelled {
-    background-image: url("/icons/trash.svg");
-}
-#detail .user {
-    background-image: url("/icons/person.svg");
-}
-#detail .time {
-    background-image: url("/icons/clock.svg");
-}
-#detail .referral {
-    background-image: url("/icons/arrow-thick-right.svg");
 }
 #detail .event {
     padding:0.5em;

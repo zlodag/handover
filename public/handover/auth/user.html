@@ -1,15 +1,18 @@
 <h2>User Info</h2>
 <div id="user" class="content">
-	<dl>
-		<dt>Name</dt>
-		<dd ng-bind="users[userId].first + ' ' + users[userId].last"></dd>
-		<dt>Role</dt>
-		<dd ng-bind="users[userId].role"></dd>
-		<dt ng-if="users[userId].specialty">Specialty</dt>
-		<dd ng-if="users[userId].specialty" ng-bind="users[userId].specialty"></dd>
-		<dt ng-if="users[userId].contact">Contact</dt>
-		<dd ng-if="users[userId].contact" ng-bind="users[userId].contact"></dd>
-	</dl>
+    <div class="section details">
+        <h4>Details</h4>
+		<dl class="userinfo">
+			<dt class="name">Name</dt>
+			<dd class="name" ng-bind="users[userId].first + ' ' + users[userId].last"></dd>
+			<dt class="role">Role</dt>
+			<dd class="role" ng-bind="users[userId].role"></dd>
+			<dt class="specialty" ng-if="users[userId].specialty">Specialty</dt>
+			<dd class="specialty" ng-if="users[userId].specialty" ng-bind="users[userId].specialty"></dd>
+			<dt class="contact" ng-if="users[userId].contact">Contact</dt>
+			<dd class="contact" ng-if="users[userId].contact" ng-bind="users[userId].contact"></dd>
+		</dl>
+	</div>
 <!-- 	<div class="taskboard">
 		<h4>Taskboard:</h4>
 		<dl>
@@ -40,4 +43,5 @@
 		  </li>
 		</ul>
 	</div>
- --></div>
+ -->
+</div>

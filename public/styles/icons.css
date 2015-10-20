@@ -1,0 +1,72 @@
+.patient,
+.user,
+.name {
+    background-image: url("/icons/person.svg");
+}
+.nhi {
+    background-image: url("/icons/medical-cross.svg");
+}
+.location {
+    background-image: url("/icons/home.svg");
+}
+.specialty {
+    background-image: url("/icons/tag.svg");
+}
+.Added {
+    background-image: url("/icons/star.svg");
+}
+.Accepted {
+    background-image: url("/icons/timer.svg");
+}
+.Completed {
+    background-image: url("/icons/task.svg");
+}
+.Cancelled {
+    background-image: url("/icons/trash.svg");
+}
+.time {
+    background-image: url("/icons/clock.svg");
+}
+.referral {
+    background-image: url("/icons/arrow-thick-right.svg");
+}
+.comment {
+    background-image: url("/icons/double-quote-serif-left.svg");
+}
+.alert:hover{
+    background-image: url("/icons/x.svg");
+}
+.role {
+    background-image: url("/icons/briefcase.svg");
+}
+.contact {
+    background-image: url("/icons/phone.svg");
+}
+.alert,
+.box,
+.meta>dd,
+.event>*,
+.userinfo>dd {
+   background-position-y: center;
+   background-size: 0.8em;
+}
+.alert,
+.task .nhi,
+.task .specialty {
+    background-position-x: right;
+}
+.task .patient,
+.task .location,
+#detail .meta>dd,
+#detail .event>*,
+.userinfo>dd {
+    padding-left: 1.2em;
+}
+.task .nhi,
+.task .specialty {
+    padding-right: 1.2em;
+}
+.box {
+    background-size: 50%;
+    background-position-x: center;
+}

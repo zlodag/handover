@@ -1,7 +1,7 @@
 * {
     box-sizing: border-box;
     margin: 0;
-    /* padding: 0; */
+    background-repeat: no-repeat;
 }
 ul {
     list-style-type: none;
@@ -83,16 +83,12 @@ dd {
 	max-width: 15em;
 }
 .alerts>li {
-	border-style: solid;	
+	border-style: solid;
 	border-width: 1px 0 0;
 	border-color: black;
 	padding: 0.2em;
 	text-align:left;
 	padding-right: 1.3em;
-    background-repeat: no-repeat;
-    background-size: 1em;
-    background-position: right;
-    background-repeat: no-repeat;
 }
 .alerts>li:first-child{
 	border:none;
@@ -103,5 +99,4 @@ dd {
 }
 .alerts>li:hover{
 	cursor:pointer;
-	background-image: url("/icons/x.svg");
 }
