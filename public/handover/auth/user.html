@@ -1,43 +1,21 @@
 <h2>User Info</h2>
-<div id="user" class="content">
-    <div class="section details">
-        <h4>Details</h4>
-		<dl class="userinfo">
-			<dt class="name">Name</dt>
-			<dd class="name" ng-bind="users[userId].first + ' ' + users[userId].last"></dd>
-			<dt class="role">Role</dt>
-			<dd class="role" ng-bind="users[userId].role"></dd>
-			<dt class="specialty" ng-if="users[userId].specialty">Specialty</dt>
-			<dd class="specialty" ng-if="users[userId].specialty" ng-bind="users[userId].specialty"></dd>
-			<dt class="contact" ng-if="users[userId].contact">Contact</dt>
-			<dd class="contact" ng-if="users[userId].contact" ng-bind="users[userId].contact"></dd>
-		</dl>
-	</div>
+<div class="section details">
+    <h4>Details</h4>
+	<dl class="userinfo">
+		<dt class="name">Name</dt>
+		<dd class="name" ng-bind="users[userId].first + ' ' + users[userId].last"></dd>
+		<dt class="role">Role</dt>
+		<dd class="role" ng-bind="users[userId].role"></dd>
+		<dt class="specialty" ng-if="users[userId].specialty">Specialty</dt>
+		<dd class="specialty" ng-if="users[userId].specialty" ng-bind="users[userId].specialty"></dd>
+		<dt class="contact" ng-if="users[userId].contact">Contact</dt>
+		<dd class="contact" ng-if="users[userId].contact" ng-bind="users[userId].contact"></dd>
+	</dl>
 </div>
-<!-- <pre ng-bind="taskboard | json"></pre> -->
-<div class="taskboard">
+<div class="section taskboard">
 	<h2>Taskboard</h2>
 	<ul class="taskList">
-		<li class="task" ng-repeat="item in tasks | filter:taskboardFilter | orderBy : ['data.Completed','id'] : true as results" ng-click="item.goToDetail()">
-			<div class="urgency" ng-class="{high: item.info.urgency === 3,medium: item.info.urgency === 2,low: item.info.urgency === 1}"></div>
-			<div class="box" ng-class="item.getStatus()"></div>
-			<div class="cont">
-			    <dl class="meta">
-			      <dt class="patient">Patient</dt>
-			      <dd class="patient" ng-bind="item.info.patient"></dd>
-			      <dt class="nhi">NHI</dt>
-			      <dd class="nhi" ng-bind="item.info.nhi"></dd>
-			      <dt class="location">Location</dt>
-			      <dd class="location"><span class="ward" ng-bind="item.info.ward"></span><span class="bed" ng-bind="item.info.bed"></span></dd>
-			      <dt class="specialty">Specialty</dt>
-			      <dd class="specialty" ng-bind="item.info.specialty"></dd>
-			    </dl>
-			    <dl class="text">
-			      <dt>Text</dt>
-			      <dd ng-bind="item.info.text"></dd>
-			    </dl>
-			</div>
-		</li>
+		<li ng-repeat="item in tasks | filter:taskboardFilter | orderBy:['-info.urgency',sortAccepted,'info.Added'] as results" task-item="item"></li>
 		<li ng-if="results.length == 0" class="empty">
 			<strong>No tasks...</strong>
 		</li>

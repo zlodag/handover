@@ -1,4 +1,4 @@
-<h2>New Task</h2>
+<h2>New task</h2>
 <div id="newTask" class="content">
   <form ng-submit="addTask(newTask)" name="form">
   	<label for="patient">Patient</label>
@@ -6,7 +6,7 @@
   	<label for="nhi">NHI</label>
   	<input id="nhi" name="nhi" type="text" ng-model="newTask.nhi" pattern="[a-zA-Z]{3}[0-9]{4}" required />
   	<label for="ward">Ward</label>
-  	<select id="ward" name="ward" ng-model="newTask.ward" ng-options="ward as ward group by building for (ward,building) in wards" required>
+  	<select id="ward" name="ward" ng-model="newTask.ward" ng-options="ward.$id as ward.$id group by ward.$value for ward in wards" required>
       <option value="">Select a ward</option>
     </select>
   	<label for="bed">Bed</label>

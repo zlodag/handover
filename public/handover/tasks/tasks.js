@@ -54,6 +54,9 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 		if('Accepted' in this.info){return {status:'Accepted',at:this.info.Accepted};}
 		return {status:'Added',at:this.info.Added};
 	},
+	getUrgency : function(){
+		return ['error','low','medium','high'][this.info.urgency];
+	},
 	goToDetail : function(){
 		$state.go('tasks.detail',{taskId:this.$id});
 	},
@@ -168,7 +171,7 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 					this.task = new Task(snap,true);
 				}
 				return true;
-			},
+			}
 		})(FB.child('tasks/' + taskId))
 	};
 })
@@ -192,18 +195,14 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 		    	return Hospital.specialties.$loaded();
 		    }
 		},
-		controller: function($scope,wards,specialties,CurrentTasks,$window,FB,Stamp,$state){
+		controller: function($scope,wards,specialties,$window,FB,Stamp,$state){
 			var chance = $window.chance;
 			var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', numbers = '1234567890';
-			var wardlist = [];
-			angular.forEach(wards,function(building,ward){
-				wardlist.push(ward);
-			});
 			$scope.randomize = function(){
 				$scope.newTask = {
 					"patient": chance.name(),
 					"nhi": chance.string({length: 3, pool: letters}) + chance.string({length: 4, pool: numbers}),
-					"ward": chance.pick(wardlist),
+					"ward": chance.pick(wards).$id,
 					"bed": chance.natural({min: 1, max: 16}).toString() + chance.character({pool: 'ABCDEF'}),
 					"specialty": chance.pick(specialties).$id,
 					"text": chance.sentence(),
@@ -242,12 +241,10 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 				else if (context==='recent'){return RecentTasks.$loaded();}
 			}
 		},
-		controller: function($scope,context,tasks){
+		controller: function($scope,context,tasks,sortAccepted){
 			$scope.context = context;
 			$scope.tasks = tasks;
-			$scope.sortAccepted = function(rec){
-				return rec.info.Accepted || 0;
-			};
+			$scope.sortAccepted = sortAccepted;
 		}
 	})
 	.state('tasks.detail',{
@@ -256,15 +253,18 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 		resolve: {
 		    detail: function(TaskDetailFactory,$stateParams){
 		    	return TaskDetailFactory($stateParams.taskId).$loaded();
-		    }
+		    },
+		    waitForEvents: function(detail){
+		    	return detail.task.events.$loaded();
+	    	}
 		},
 		controller: function($scope,detail){
 			$scope.detail = detail;
 			$scope.newEvent = {};
 			$scope.statusObj = {
-                'Accept task':'Accepted',
-                'Complete task':'Completed',
-                'Cancel task':'Cancelled'
+                'Accepted':'Accept task',
+                'Completed':'Complete task',
+                'Cancelled':'Cancel task'
             };
 			$scope.reset = function(){
 				$scope.newEvent.by = $scope.authData ? $scope.authData.uid : null;
@@ -276,6 +276,11 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 			$scope.reset();
 		}
 	})
+})
+.factory('sortAccepted',function(){
+	return function(rec){
+		return rec.info.Accepted || 0;
+	};
 })
 .directive('eventItem',function(){
 	return {
@@ -293,6 +298,20 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 		}
 	};
 })
+.directive('taskItem',function(){
+	return {
+		restrict:'A',
+		scope:true,
+		templateUrl:'/handover/tasks/task.html',
+		link: function(scope, iElement, iAttrs){
+			scope.task = scope.$eval(iAttrs.taskItem);
+			iElement.addClass('task');
+			iElement.on('click',function(){
+				scope.task.goToDetail();
+			});
+		}
+	};
+})
 .filter('compactTime',function(){
 	return function(timestamp){
 		var ms = Date.now() - timestamp;
@@ -302,23 +321,10 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 		var minutes = date.getUTCMinutes();
 		var seconds = date.getUTCSeconds();
 		return days ? (days + 'd') : (
-				hours ? (hours > 10 ? (hours + 'h') : (hours + 'h' + minutes + 'm')) : (
-					minutes ? (minutes > 10 ? (minutes + 'm') : (minutes + 'm' + seconds + 's')) : (seconds + 's')
-				)
-			);
-		// var days = Math.floor(ms / 86400000);
-		// if (days) {
-		// 	if (days >= 10) return days + 'd';
-		// 	return days + 'd' + (msdays * )/ 3600000) + 'h';
-		// }
-		// var hours = Math.floor(ms / 3600000);
-		// if (hours >= 10) return hours + 'h';
-		// var minutes = Math.floor(ms / 60000);
-		// if (hours) return hours + 'h' + minutes + 'm';
-		// if (minutes >= 10) return minutes + 'm';
-		// var seconds = Math.floor(ms / 1000);
-		// if (minutes) return minutes + 'm' + seconds + 's';
-		// return seconds + 's';
+			hours ? (hours >= 10 ? (hours + 'h') : (hours + 'h' + minutes + 'm')) : (
+				minutes ? (minutes >= 10 ? (minutes + 'm') : (minutes + 'm' + seconds + 's')) : (seconds + 's')
+			)
+		);
 	};
 })
 ;

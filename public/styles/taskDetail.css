@@ -46,6 +46,9 @@
 .event>.comment {
     font-style:italic;
 }
+.event>.time>.compact {
+    /* font-family:monospace; */
+}
 /* .events {
     display:block;
 } */
@@ -64,15 +67,41 @@
 .event.preview {
     background-color:yellow;
 }
-form[name="eventForm"].ng-invalid{
+.actions form.ng-invalid{
     border-color: red;
 }
-form[name="eventForm"]{
-    border:5px solid green;
-}
-form[name="eventForm"]>label {
+.actions label {
     display:none;
 }
-form[name="eventForm"]>* {
-    display:block;
+.actions form {
+    border:5px solid green;
+    padding:0.5em;
+}
+.actions form>* {
+    width:50%;
+    float:left;
+}
+#newStatus,#newComment {
+    margin-bottom:0.5em;
+}
+.actions form>*>* {
+    width:100%;
+}
+.actions form>*:last-child{
+    width:100%;
+}
+.leftform{
+    padding-right:0.25em;
+}
+.rightform{
+    padding-left:0.25em;
+}
+.actions form input[type="submit"]{
+    margin-top:0.5em;
+}
+.actions form select:disabled{
+    visibility:hidden;
+}
+.actions form.ng-invalid input[type="submit"]{
+    display:none;
 }

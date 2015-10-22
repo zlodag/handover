@@ -3,4 +3,4 @@
 <span class="referral" ng-if="event.referral"><a ui-sref="user({userId: event.referral})" ng-bind="users.getName(event.referral)"></a></span>
 <span class="comment" ng-if="event.comment" ng-bind="event.comment"></span>
 <span class="user"><a ui-sref="user({userId: event.by})" ng-bind="users.getName(event.by)"></a></span>
-<span class="time" ng-bind="event.at | date : 'h:mma dd/MM/yyyy'"></span>
+<span class="time"><span ng-bind="event.at | date : 'h:mma dd/MM/yyyy'"></span> <span class="compact">({{event.at | compactTime}} ago)</span></span>

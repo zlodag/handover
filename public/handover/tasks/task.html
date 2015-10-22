@@ -1,0 +1,21 @@
+<div class="left">
+  <div class="urgency" ng-class="task.getUrgency()"></div>
+  <div class="box" ng-class="task.getStatus().status"></div>
+  <div class="updated" ng-bind="task.getStatus().at | compactTime"></div>
+</div>
+<div class="right">
+  <dl class="meta">
+    <dt class="patient">Patient</dt>
+    <dd class="patient" ng-bind="task.info.patient"></dd>
+    <dt class="nhi">NHI</dt>
+    <dd class="nhi" ng-bind="task.info.nhi"></dd>
+    <dt class="location">Location</dt>
+    <dd class="location"><span class="ward" ng-bind="task.info.ward"></span><span class="bed" ng-bind="task.info.bed"></span></dd>
+    <dt class="specialty">Specialty</dt>
+    <dd class="specialty" ng-bind="task.info.specialty"></dd>
+  </dl>
+    <dl class="text">
+    <dt>Text</dt>
+    <dd ng-bind="task.info.text"></dd>
+  </dl>
+</div>

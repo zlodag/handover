@@ -6,28 +6,28 @@
 		.factory("TIMESTAMP",["$window",function($window){
 			return $window.Firebase.ServerValue.TIMESTAMP;
 		}])
-		.factory('Hospital',['FB','$firebaseObject','$firebaseArray',function(FB,$firebaseObject,$firebaseArray){
+		.factory('Hospital',['FB','$firebaseArray',function(FB,$firebaseArray){
 			return {
-				wards: $firebaseObject(FB.child('wards')),
+				wards: $firebaseArray(FB.child('wards')),
 				specialties: $firebaseArray(FB.child('specialties')),
 				roles: $firebaseArray(FB.child('roles'))
 			};
 		}])
-		.factory('Users',['FB','$firebaseObject',function(FB,$firebaseObject){
-			return $firebaseObject.$extend({
+		.factory('Users',['FB','$firebaseArray',function(FB,$firebaseArray){
+			return $firebaseArray.$extend({
 				getName: function(uid){
-					if (uid in this) {
-						var user = this[uid];
+					var user = this.$getRecord(uid);
+					if (user) {
 						return user.first + ' ' + user.last + ' (' + user.role + ')';
 					} else {
 						return '...';
 					}
 				}
-			})(FB.child('users'));
+			})(FB.child('users').orderByChild('last'));
 		}])
 		.factory('UserDetailFactory',['FB','$firebaseObject',function(FB,$firebaseObject){
 			return function(uid){
-				return $firebaseObject(FB.child('users/'+uid));
+				return $firebaseObject(FB.child('users').child(uid));
 			};
 		}])
 

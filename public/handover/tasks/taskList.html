@@ -1,27 +1,10 @@
-<h2>{{context}} tasks</h2>
+<h2>{{context}} tasks <small ng-if="context === 'current' && tasks.length">(total = {{tasks.length | number}})</small></h2>
 <ul class="taskList">
-  <li class="task" ng-repeat="item in tasks | orderBy:['-info.Completed','-info.urgency',sortAccepted,'info.Added']" ng-click="item.goToDetail()">
-    <div class="left">
-      <div class="urgency" ng-class="{high: item.info.urgency === 3,medium: item.info.urgency === 2,low: item.info.urgency === 1}"></div>
-      <div class="box" ng-class="item.getStatus().status"></div>
-      <div class="updated" ng-bind="item.getStatus().at | compactTime"></div>
-   </div>
-    <div class="right">
-        <dl class="meta">
-          <dt class="patient">Patient</dt>
-          <dd class="patient" ng-bind="item.info.patient"></dd>
-          <dt class="nhi">NHI</dt>
-          <dd class="nhi" ng-bind="item.info.nhi"></dd>
-          <dt class="location">Location</dt>
-          <dd class="location"><span class="ward" ng-bind="item.info.ward"></span><span class="bed" ng-bind="item.info.bed"></span></dd>
-          <dt class="specialty">Specialty</dt>
-          <dd class="specialty" ng-bind="item.info.specialty"></dd>
-        </dl>
-        <dl class="text">
-          <dt>Text</dt>
-          <dd ng-bind="item.info.text"></dd>
-        </dl>
-      </div>
-    </div>
+  <li ng-repeat="item in tasks | orderBy:['-info.Completed','-info.urgency',sortAccepted,'info.Added'] as results" task-item="item"></li>
+  <li ng-if="!tasks.length" class="empty">
+    <strong>No {{context}} tasks</strong>
+  </li>
+  <li ng-if="tasks.length && results.length == 0" class="empty">
+    <strong>No results found</strong>
   </li>
 </ul>

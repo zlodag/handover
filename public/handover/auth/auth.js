@@ -119,9 +119,10 @@
 						return CurrentTasks.$loaded();
 					}
 				},
-				controller: function($scope, userId, taskboard, tasks){
+				controller: function($scope, userId, taskboard, tasks, sortAccepted){
 					$scope.userId = userId;
 					$scope.tasks = tasks;
+					$scope.sortAccepted = sortAccepted;
 					$scope.taskboardFilter = function(value, index, array){
 						return taskboard.$indexFor(value.$id) !== -1;
 					};
