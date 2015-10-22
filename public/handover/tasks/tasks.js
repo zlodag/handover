@@ -2,8 +2,12 @@
 angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 .factory('Event',function(){
 	function Event(snap){
-		this.$id = snap.key();
 		this.data = snap.val();
+		var key = snap.key();
+		this.$id = key;
+        if (key === 'Added' || key === 'Accepted' || key === 'Completed' || key === 'Cancelled'){
+        	this.data.status = key;
+        }
 	}
 	Event.prototype = {
 		addToDict : function(dict){
@@ -17,11 +21,7 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 			}
 			dict[userId] = this.$id;
 			return true;
-		},
-	    update: function(snap) {
-	        this.data = snap.val();
-	        return true;
-	    }
+		}
 	};
 	return Event;
 })
@@ -36,12 +36,8 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 				var rec = new Event(snap);
 				rec.addToDict(this._referralTargets);
 				return rec;
-			},
-		    $$updated: function(snap) {
-		      var rec = this.$getRecord(snap.key());
-		      return rec.update(snap);
-		    },
-		})(FB.child("events").orderByChild("task").equalTo(taskId));
+			}
+		})(FB.child("events").child(taskId).orderByChild("at"));
 	};
 })
 .factory("Task", function($state,EventsFactory,Stamp,FB) {
@@ -53,97 +49,88 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
   }
   Task.prototype = {
   	getStatus : function(){
-		var ret =  'Cancelled' in this.info ? 'Cancelled' :
-		('Completed' in this.info ? 'Completed' :
-		('Accepted' in this.info ? 'Accepted' : 'Added'));
-  		return ret;
+		if('Cancelled' in this.info){return {status:'Cancelled',at:this.info.Completed};}
+		if('Completed' in this.info){return {status:'Completed',at:this.info.Completed};}
+		if('Accepted' in this.info){return {status:'Accepted',at:this.info.Accepted};}
+		return {status:'Added',at:this.info.Added};
 	},
 	goToDetail : function(){
 		$state.go('tasks.detail',{taskId:this.$id});
 	},
     update: function(snap) {
-        angular.extend(this.info,snap.val());
+        this.info = snap.val();
         return true;
     },
-	referTo: function(uid){
-		if (!('events' in this)){return false;}
+    newEvent: function(eventObj){
+    	if (eventObj.status){
+    		return this.newStatus(eventObj.status,eventObj.comment);
+    	}
+    	if (eventObj.referral){
+    		return this.referTo(eventObj.referral,eventObj.comment);
+    	}
+		return this.addComment(eventObj.comment);
+    },
+	newStatus: function(status,comment){
 		var taskId = this.$id;
-		var stamp = new Stamp(taskId);
-		stamp.referral = uid;
-		this.events.$add(stamp).then(function(referralRef){
-			FB.child('taskboard/' + uid + '/' + taskId).set(referralRef.key());
-		}).catch(function(error){
-			FB.child('taskboard/' + uid + '/' + taskId).once("value",function(snap){
-				if (snap.val() !== null){
-					console.error('The referral has already been made');
-				}
-			});
-		});
-	},
-	addComment: function(comment){
-		if (!('events' in this)){return false;}
-		var stamp = new Stamp(this.$id);
-		stamp.comment = comment;
-		this.events.$add(stamp);
-	},
-	newStatus: function(status,reason){
-		var taskId = this.$id;
-		var taskRef = FB.child('tasks/' + taskId);
-		var stamp = new Stamp(taskId);
-		var updates = {};
-		var events = this.events;
-		stamp.status = status;
+		var updateObj = {};
+		var stamp = new Stamp();
+		if (comment){stamp.comment = comment;}
+    	updateObj['events/' + taskId + '/' + status] = stamp;
 		if (status === 'Cancelled'){
-			if (!reason){
+			if (!comment) {
 				console.error('Reason required');
 				return false;
 			}
-			updates.Cancelled = true;
-			stamp.comment = reason;
+			updateObj['tasks/' + taskId + '/Cancelled'] = true;
 			status = 'Completed';
+		} else if (status === 'Accepted') {
+			// add to my taskboard
+			updateObj['taskboard/' + stamp.by + '/' + taskId] = true;
+		} else if (status !== 'Completed') {
+			console.error('Invalid status');
+			return false;
 		}
-		events.$add(stamp).then(function(eventRef){
-			var eventKey = eventRef.key();
-			updates[status] = eventKey;
-			taskRef.update(updates,function(error){
-				if (error) {
-					console.error(error);
-				} else if (status === 'Accepted'){
-					FB.child('taskboard').child(stamp.by).child(taskId).set(eventKey,function(error){
-						if (error){console.error(error);}
+		updateObj['tasks/' + taskId + '/' + status] = stamp.at;
+		FB.update(updateObj,function(error){
+			if (error){ console.log(error); }
+			else if (status === 'Completed'){
+				var eventRef = FB.child('events').child(taskId);
+				// remove the taskboard entry arising from a user accepting task
+				eventRef.child('Accepted').once("value",function(snap){
+					if (snap.exists()){FB.child('taskboard').child(snap.val().by).child(taskId).remove();}
+				});
+				// remove all taskboard entries arising from referrals
+				eventRef.orderByChild('referral').startAt(true).once("value",function(snap){
+					snap.forEach(function(childSnap){
+						FB.child('taskboard').child(childSnap.val().referral).child(taskId).remove();
 					});
-				} else if (status === 'Completed'){
-					angular.forEach(events,function(e){
-						var userId;
-						if ('referral' in e.data) {
-							userId = e.data.referral;
-						} else if (e.data.status === 'Accepted') {
-							userId = e.data.by;
-						} else {
-							return;
-						}
-						FB.child('taskboard').child(userId).child(taskId).set(null,function(error){
-							if (error){console.error(error);}
-							// else {console.log('Removed ' + taskId + ' from taskboard of ' + userId);}
-						});
-					});
-				}
-			});
-		}).catch(console.error);
+				});
+			}
+		});
+		return true;
+	},
+	referTo: function(uid,comment){
+		var stamp = new Stamp();
+		stamp.referral = uid;
+		if (comment){stamp.comment = comment;}
+		var eventKey = FB.push().key();
+		var updateObj = {};
+		updateObj['taskboard/' + uid + '/' + this.$id] = eventKey;
+    	updateObj['events/' + this.$id + '/' + eventKey] = stamp;
+		FB.update(updateObj);
+		return true;
+	},
+	addComment: function(comment){
+		var stamp = new Stamp();
+		stamp.comment = comment;
+		FB.child('events').child(this.$id).push(stamp);
+		return true;
 	}
   };
   return Task;
 })
-.factory("TaskListFactory", function($firebaseArray, Task,Stamp,Alerts) {
+.factory("TaskListFactory", function($firebaseArray, Task) {
   return $firebaseArray.$extend({
-	newTask: function(task){
-		var stamp = new Stamp();
-		angular.extend(stamp,task);
-		var tasklist = this;
-		this.$add(stamp).then(function(ref){
-			tasklist.$getRecord(ref.key()).goToDetail();
-		}, Alerts.add);
-	},
     $$added: function(snap) {
       return new Task(snap,false);
     },
@@ -205,7 +192,7 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 		    	return Hospital.specialties.$loaded();
 		    }
 		},
-		controller: function($scope,wards,specialties,CurrentTasks,$window){
+		controller: function($scope,wards,specialties,CurrentTasks,$window,FB,Stamp,$state){
 			var chance = $window.chance;
 			var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', numbers = '1234567890';
 			var wardlist = [];
@@ -227,7 +214,19 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 			$scope.wards = wards;
 			$scope.specialties = specialties;
 			$scope.addTask = function(newTask){
-				return CurrentTasks.newTask(newTask);
+				var stamp = new Stamp();
+				var task = angular.extend({'Added':stamp.at},newTask);
+				var taskId = FB.push().key();
+				var updateObj = {};
+				updateObj['tasks/' + taskId] = task;
+		    	updateObj['events/' + taskId + '/Added'] = stamp;
+				FB.update(updateObj,function(error){
+					if (error){console.error(error);}
+					else {
+						console.log('Added task successfully, id: ' + taskId);
+						$state.go('tasks.detail',{taskId:taskId});
+					}
+				});
 			};
 		}
 	})
@@ -258,8 +257,66 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 		},
 		controller: function($scope,detail){
 			$scope.detail = detail;
+			$scope.newEvent = {};
+			$scope.statusObj = {
+                'Accept task':'Accepted',
+                'Complete task':'Completed',
+                'Cancel task':'Cancelled'
+            };
+			$scope.reset = function(){
+				$scope.newEvent.by = $scope.authData ? $scope.authData.uid : null;
+				$scope.newEvent.at = new Date();
+				delete $scope.newEvent.status;
+				delete $scope.newEvent.referral;
+				delete $scope.newEvent.comment;
+			};
+			$scope.reset();
 		}
 	})
+})
+.directive('eventItem',function(){
+	return {
+		restrict:'A',
+		scope:true,
+		templateUrl:'/handover/tasks/event.html',
+		link: function(scope, iElement, iAttrs){
+			scope.event = scope.$eval(iAttrs.eventItem);
+			iElement.addClass('event');
+			if (!iElement.hasClass('preview')){
+				if (scope.event.referral){iElement.addClass('referral');}
+				else if (scope.event.status){iElement.addClass(scope.event.status);}
+				// scope.watch('event')
+			}
+		}
+	};
+})
+.filter('compactTime',function(){
+	return function(timestamp){
+		var ms = Date.now() - timestamp;
+		var date = new Date(ms);
+		var days = date.getUTCDate() - 1;
+		var hours = date.getUTCHours();
+		var minutes = date.getUTCMinutes();
+		var seconds = date.getUTCSeconds();
+		return days ? (days + 'd') : (
+				hours ? (hours > 10 ? (hours + 'h') : (hours + 'h' + minutes + 'm')) : (
+					minutes ? (minutes > 10 ? (minutes + 'm') : (minutes + 'm' + seconds + 's')) : (seconds + 's')
+				)
+			);
+		// var days = Math.floor(ms / 86400000);
+		// if (days) {
+		// 	if (days >= 10) return days + 'd';
+		// 	return days + 'd' + (msdays * )/ 3600000) + 'h';
+		// }
+		// var hours = Math.floor(ms / 3600000);
+		// if (hours >= 10) return hours + 'h';
+		// var minutes = Math.floor(ms / 60000);
+		// if (hours) return hours + 'h' + minutes + 'm';
+		// if (minutes >= 10) return minutes + 'm';
+		// var seconds = Math.floor(ms / 1000);
+		// if (minutes) return minutes + 'm' + seconds + 's';
+		// return seconds + 's';
+	};
 })
 ;
 })();

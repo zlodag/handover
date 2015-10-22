@@ -12,22 +12,26 @@
 .specialty {
     background-image: url("/icons/tag.svg");
 }
-.Added {
+.event>.Added,
+.box.Added {
     background-image: url("/icons/star.svg");
 }
-.Accepted {
+.event>.Accepted,
+.box.Accepted {
     background-image: url("/icons/timer.svg");
 }
-.Completed {
+.event>.Completed,
+.box.Completed {
     background-image: url("/icons/task.svg");
 }
-.Cancelled {
+.event>.Cancelled,
+.box.Cancelled {
     background-image: url("/icons/trash.svg");
 }
-.time {
+.event>.time {
     background-image: url("/icons/clock.svg");
 }
-.referral {
+.event>.referral {
     background-image: url("/icons/arrow-thick-right.svg");
 }
 .event>.comment {
@@ -43,8 +47,8 @@
     background-image: url("/icons/phone.svg");
 }
 .alert,
-.box,
-.meta>dd,
+.details dd,
+.task dd,
 .event>*,
 .userinfo>dd {
    background-position-y: center;
@@ -57,8 +61,8 @@
 }
 .task .patient,
 .task .location,
-#detail .meta>dd,
-#detail .event>*,
+.details dd,
+.event>*,
 .userinfo>dd {
     padding-left: 1.2em;
 }
@@ -68,5 +72,5 @@
 }
 .box {
     background-size: 50%;
-    background-position-x: center;
+    background-position: center;
 }

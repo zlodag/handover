@@ -43,15 +43,7 @@ h2 {
     border-width: 0;
 }
 .content {
-    margin:0.5em;
-    /* overflow: auto; */
-}
-.buttons {
-	overflow: auto;
-}
-.buttons button{
-	/* margin:0.5em; */
-	/* float:left; */
+    padding:0.5em;
 }
 dl,form {
     overflow: auto;
@@ -64,9 +56,6 @@ dt {
 dd {
 	float: right;
 	clear: right;
-}
-#taskDetail button {
-    clear: none;
 }
 .alerts{
 	position: absolute;

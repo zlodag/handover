@@ -1,7 +1,6 @@
-<h2>{{detail.task.getStatus()}} task</h2>
-<div id="detail">
+<h2>{{detail.task.getStatus().status}} task</h2>
     <div class="section text" ng-class="{high: detail.task.info.urgency === 3,medium: detail.task.info.urgency === 2,low: detail.task.info.urgency === 1}">
-        <p ng-bind="detail.task.info.text"></p>
+        <div ng-bind="detail.task.info.text"></div>
     </div>
     <div class="section details">
         <h4>Details</h4>
@@ -21,23 +20,29 @@
     <div class="section events">
         <h4>Events</h4>
         <ul>
-            <li class="event">
-                <span class="status Added">Added</span>
-                <span class="user"><a ui-sref="user({userId: detail.task.info.by})" ng-bind="users.getName(detail.task.info.by)"></a></span>
-                <span class="time" ng-bind="detail.task.info.at | date : 'h:mma dd/MM/yyyy'"></span>
-            </li>
-            <li ng-repeat="event in detail.task.events" class="event">
-                <span class="status" ng-if="event.data.status" ng-class="event.data.status" ng-bind="event.data.status"></span>
-                <span class="comment" ng-if="event.data.comment" ng-bind="event.data.comment"></span>
-                <span class="referral" ng-if="event.data.referral"><a ui-sref="user({userId: event.data.referral})" ng-bind="users.getName(event.data.referral)"></a></span>
-                <span class="user"><a ui-sref="user({userId: event.data.by})" ng-bind="users.getName(event.data.by)"></a></span>
-                <span class="time" ng-bind="event.data.at | date : 'h:mma dd/MM/yyyy'"></span>
-            </li>
+            <!-- <li event-item="{status:'Added',by:detail.task.info.by,at:detail.task.info.at}"></li> -->
+            <li ng-repeat="item in detail.task.events" event-item="item.data"></li>
+            <li class="preview" event-item="newEvent" ng-hide="detail.task.info.Completed || eventForm.$invalid"></li>
         </ul>
     </div>
     <div class="section actions" ng-hide="detail.task.info.Completed">
         <h4>Actions</h4>
-        <div class="status">
+        <form name="eventForm" ng-submit="detail.task.newEvent(newEvent) && reset()">
+            <label for="newStatus">Update task status</label>
+            <select id="newStatus" name="status" ng-model="newEvent.status" ng-options="label as status for (status,label) in statusObj" ng-required="(!newEvent.referral && !newEvent.comment)" ng-disabled="newEvent.referral" ng-hide="newEvent.referral"><option value="">Update status</option></select>
+            <label for="newReferral">Refer task</label>
+            <select id="newReferral" name="referral" ng-model="newEvent.referral" ng-options="key as users.getName(key)
+            disable when (detail.task.events.disableReferral(key) || authData.uid === key)
+            for (key, value) in users" ng-required="(!newEvent.status && !newEvent.comment)" ng-disabled="newEvent.status" ng-hide="newEvent.status">
+                <option value="">Refer to:</option>
+            </select>
+            <label for="newComment">Add a comment</label>
+            <input id="newComment" name="comment" type="text" ng-model="newEvent.comment" maxlength="100" placeholder="Add a comment" ng-required="(!newEvent.status && !newEvent.referral) || (newEvent.status === 'Cancelled')" />
+            <input type="submit" value="Submit" ng-disabled="eventForm.$invalid" />
+            <button ng-click="reset()" type="button">Reset</button>
+        </form>
+        <pre ng-bind="newEvent | json"></pre>
+        <!-- <div>
             <button type="button" ng-click="detail.task.newStatus('Accepted')" ng-hide="detail.task.info.Accepted">Accept</button>
             <button type="button" ng-click="detail.task.newStatus('Completed')">Complete</button>
             <form name="cancel" ng-submit="detail.task.newStatus('Cancelled',reason); reason = ''">
@@ -58,10 +63,8 @@
         </div>
         <div class="comment">
             <form name="comment" ng-submit="detail.task.addComment(newComment); newComment = ''">
-                <label for="newComment">Comment</label>
                 <input type="text" id="newComment" name="newComment" ng-model="newComment" maxlength="100" placeholder="Add a comment" required />
                 <input type="submit" value="Post" ng-disabled="comment.newComment.$invalid" />
             </form>
-        </div>
+        </div> -->
     </div>
-</div>

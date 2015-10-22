@@ -1,112 +1,84 @@
-#detail>* {
-    /* margin-bottom:0.5em; */
-}
-#detail .meta>.urgency {
+.details dt,
+.details .urgency,
+.events h4,
+.actions h4
+{
     display: none;
 }
-#detail .meta>dd {
+.details dd {
     float: none;
 }
-#detail .meta dt {
-    display:none;
-}
-#detail .text.section {
+.text.section {
     padding:0;
 }
-#detail .text.section>p {
+.text.section>* {
     margin:0 1em;
     padding: 0.5em;
     background-color: white;
     border: solid black;
     border-width: 0 1px;
 }
-#detail .stamps>ul {
-    overflow:auto;
-}
-#detail .stamp {
-    float: left;
-    margin:0 0.5em 0.5em 0;
-    padding: 0.5em;
-}
-#detail .stamp.added {
-    background: #DEFFDE;
-}
-#detail .stamp.accepted {
-    background: #DEF9FF;
-}
-#detail .stamp.completed {
-    background: #FFFCAC;
-}
-#detail .stamp.cancelled {
-    background: #FFCACA;
-}
-#detail .stamp>*,#detail .event>* {
-    display:block;
-}
-#detail .event>.comment {
-    font-style:italic;
-}
-#detail events {
-    display:block;
-}
-#detail .section {
-    border-top: 1px solid black;
-    padding: 0.5em;
-    overflow: auto;
-}
-#detail .section>h4 {
-    margin-bottom: 0.5em;
-}
-#detail .comments>ul {
-    margin: 0 -0.5em;
-}
-#detail .comments>form {
-    margin-top:0.5em;
-}
-#detail .comments>form>label {
-    display:none;
-}
-#detail .event {
+.event {
     padding:0.5em;
 }
-#detail .event:nth-child(odd){
+.event:nth-child(odd){
     background-color: #EAEAEA;
 }
-#detail .event:nth-child(even){
+.event:nth-child(even){
     background-color: #D4D4D4;
+}
+.event.Added {
+    background: #DEF9FF;
+}
+.event.Accepted {
+    background: #DEFFDE;
+}
+.event.Completed {
+    background: #FFFCAC;
+}
+.event.Cancelled {
+    background: #FFCACA;
+}
+.event>* {
+    display:block;
+}
+.event>.comment {
+    font-style:italic;
+}
+/* .events {
+    display:block;
+} */
+.section {
+    border-color: black;
+    border-style: solid;
+    border-width: 1px 0 0;
+}
+.section.details {
+    padding: 0.5em;
+}
+.section.details>h4 {
+    margin-bottom: 0.5em;
 }
 #detail label[for="reason"],
 #detail label[for="newComment"]
 {
     display:none;
 }
-/* .actions button,
-.actions input[type="submit"],
-.actions form {
-    display: inline;
-    margin:0;
-    top: 0;
-     color:red; 
-}
-.actions div{
-    display:block;
-    margin-top:0.5em;
-}
-.actions>div {
-    display:block;
-    width:100%;
-} */
-/* .actions button,
-.actions input,
-.actions select,
-.actions form,
-.actions div {
-width: 45%;
-display:block;
-float:left;
-margin:0.5em 2.5%;
-}
- */
 .actions>div{
     margin-top:0.5em;
+}
+.event.preview {
+    background-color:yellow;
+}
+form[name="eventForm"].ng-invalid{
+    border-color: red;
+}
+form[name="eventForm"]{
+    border:5px solid green;
+}
+form[name="eventForm"]>label {
+    display:none;
+}
+form[name="eventForm"]>* {
+    display:block;
 }

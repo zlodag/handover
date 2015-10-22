@@ -1,8 +1,11 @@
 <h2>{{context}} tasks</h2>
 <ul class="taskList">
-  <li class="task" ng-repeat="item in tasks | orderBy : ['data.Completed','id'] : true" ng-click="item.goToDetail()">
-    <div class="urgency" ng-class="{high: item.info.urgency === 3,medium: item.info.urgency === 2,low: item.info.urgency === 1}"></div>
-    <div class="box" ng-class="item.getStatus()"></div>
+  <li class="task" ng-repeat="item in tasks | orderBy:'-info.Completed'" ng-click="item.goToDetail()">
+    <div class="side">
+      <div class="urgency" ng-class="{high: item.info.urgency === 3,medium: item.info.urgency === 2,low: item.info.urgency === 1}"></div>
+      <div class="box" ng-class="item.getStatus().status"></div>
+      <div class="updated" ng-bind="item.getStatus().at | compactTime"></div>
+   </div>
     <div class="cont">
         <dl class="meta">
           <dt class="patient">Patient</dt>

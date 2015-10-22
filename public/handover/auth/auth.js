@@ -1,13 +1,12 @@
 (function(){
-	angular.module('handover.auth',['firebase','handover.data','ui.bootstrap','handover.tasks'])
+	angular.module('handover.auth',['firebase','handover.data','handover.tasks'])
 		.factory('Auth',function(FB,$firebaseAuth){
 			return $firebaseAuth(FB);
 		})
 		.factory('Stamp',function(Auth,TIMESTAMP){
-			return function(taskId){
+			return function(){
 				this.at = TIMESTAMP;
 				this.by = Auth.$getAuth().uid;
-				if(taskId){this.task = taskId;}
 			};
 		})
 		// .factory('Me',function(UserDetailFactory,$q){

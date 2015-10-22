@@ -1,62 +1,48 @@
-#tasks {
-    padding: 0;
-    margin: 0;
-}
 .task {
-    position: relative;
     border-style: solid;
     border-width: 0 0 1px;
+    font-family:monospace;
+    position:relative;
 }
 .task:first-child {
     border-top-width:1px;
 }
 .task:hover{
     cursor: pointer;
-    background-color: lightblue;
     background-color: rgb(230, 255, 230);
 }
-.task>.urgency, .task>.box {
-    width: 40px;
+.side>*{
+    width: 6ch;
     position: absolute;
 }
-.task>.urgency {
-    top: 0;
-    height: 20px;
+.side>.urgency {
+    height: 1.5em;
     border-bottom: 1px solid black;
 }
-.task>.urgency.high,#detail .text.section.high {
-    background: red;
-}
-.task>.urgency.medium,#detail .text.section.medium {
-    background: gold;
-}
-.task>.urgency.low,#detail .text.section.low {
-    background: green;
-}
-.task>.box {
+.high {background: red;}
+.medium {background: gold;}
+.low {background: green;}
+.box {
     height: 40px;
-    bottom: 0;
+    bottom: 1.5em;
 }
-.task>.cont {
+.updated {
+    bottom: 0;
+    line-height: 1.5em;
+    text-align:center;
+}
+.cont {
     border-left: 1px solid black;
-    margin-left: 40px;
+    margin-left: 6ch;
 }
 .task dl {
     padding: 0.5em;
+    font-family: sans-serif;
 }
-.task dl.text>dd {
-    float:left;
-}
-.task dl.meta {
+.task .meta {
     border-bottom: 1px solid black;
 }
-.task dt {
-    display: none;
-}
-.task dd {
-    font-family: sans-serif;
-    margin: 0;
-}
+.task dt,
 .task .status {
     display: none;
 }
@@ -68,6 +54,9 @@
     float: right;
     clear: right;
 }
-.task .ward:after,#detail .ward:after {
+.ward:after {
     content: " - "
+}
+.task .text>dd {
+    float:none;
 }
