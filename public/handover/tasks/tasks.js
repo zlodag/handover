@@ -292,6 +292,9 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 			if (!iElement.hasClass('preview')){
 				if (scope.event.referral){iElement.addClass('referral');}
 				else if (scope.event.status){iElement.addClass(scope.event.status);}
+			} else {
+//				iElement.append('<button ng-click="detail.task.newEvent(newEvent) && reset()"></button>');
+				iElement.append('<input type="submit" value="Submit!" ng-disabled="eventForm.$invalid" />');
 			}
 		}
 	};

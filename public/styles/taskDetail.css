@@ -21,6 +21,7 @@
 .details,
 .event {
     padding:0.5em;
+    position:relative;
 }
 .event:nth-child(odd){
     background-color: #EAEAEA;
@@ -61,33 +62,31 @@
 .section.details>h4 {
     margin-bottom: 0.5em;
 }
-.actions>div{
-    margin-top:0.5em;
+.mainform>div{
+/*     margin-top:0.5em; */
 }
 .event.preview {
     background-color:yellow;
 }
-.actions form.ng-invalid{
+form.ng-invalid .mainform{
     border-color: red;
 }
 .actions label {
     display:none;
 }
-.actions form {
+.mainform {
     border:5px solid green;
     padding:0.5em;
+    overflow:auto;
 }
-.actions form>* {
+.mainform>* {
     width:50%;
     float:left;
 }
 #newStatus,#newComment {
     margin-bottom:0.5em;
 }
-.actions form>*>* {
-    width:100%;
-}
-.actions form>*:last-child{
+.mainform>*>* {
     width:100%;
 }
 .leftform{
@@ -96,12 +95,12 @@
 .rightform{
     padding-left:0.25em;
 }
-.actions form input[type="submit"]{
-    margin-top:0.5em;
+form .event>input[type="submit"]{
+    margin:0.5em;
+    position:absolute;
+    right:0;
+    bottom:0;
 }
-.actions form select:disabled{
+.mainform select:disabled{
     visibility:hidden;
-}
-.actions form.ng-invalid input[type="submit"]{
-    display:none;
 }
