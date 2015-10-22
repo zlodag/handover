@@ -30,18 +30,5 @@
 				return $firebaseObject(FB.child('users').child(uid));
 			};
 		}])
-
-		// .filter('toUser',function(Users){
-		// 	function uidToUser(uid){
-		// 		if (uid in Users) {
-		// 			var user = Users[uid];
-		// 			return user.f + ' ' + user.l + ' (' + user.r + ')';
-		// 		} else {
-		// 			return '...';
-		// 		}
-		// 	}
-		// 	uidToUser.$stateful = true;
-		// 	return uidToUser;
-		// })
 	;
 })();

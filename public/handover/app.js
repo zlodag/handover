@@ -47,24 +47,6 @@
 	})
 	.factory('Alerts',function(){
 		var list = [];
-		// list = [{
-		// 		str: 'Something boring',
-		// 		at: Date.now(),
-		// 		error: false
-		// 	},
-		// 	{
-		// 		str: 'Something exciting',
-		// 		at: Date.now(),
-		// 		error: true
-		// 	},{
-		// 		str: 'Something boring',
-		// 		at: Date.now(),
-		// 		error: false
-		// 	},{
-		// 		str: "We have a problem",
-		// 		at: Date.now(),
-		// 		error: true
-		// 	}];
 		function add(str, error){
 			list.push({
 				str: str,
@@ -90,13 +72,9 @@
 		$rootScope.users = Users;
 		Auth.$onAuth(function (authData){
 			if (!authData) {
-				// console.log('AuthData absent', authData);
 				delete $rootScope.authData;
-				// Me.del();
 			} else {
-				// console.log('AuthData present', authData);
 				$rootScope.authData = authData;
-				// Me.set(authData.uid).catch(console.error);
 			}
 		});
 		$rootScope.$on('$stateChangeSuccess',function(event, toState, toParams, fromState, fromParams) {

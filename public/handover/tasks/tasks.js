@@ -95,7 +95,7 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 		}
 		updateObj['tasks/' + taskId + '/' + status] = stamp.at;
 		FB.update(updateObj,function(error){
-			if (error){ console.log(error); }
+			if (error){ console.error(error); }
 			else if (status === 'Completed'){
 				var eventRef = FB.child('events').child(taskId);
 				// remove the taskboard entry arising from a user accepting task
@@ -222,7 +222,6 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 				FB.update(updateObj,function(error){
 					if (error){console.error(error);}
 					else {
-						console.log('Added task successfully, id: ' + taskId);
 						$state.go('tasks.detail',{taskId:taskId});
 					}
 				});
@@ -293,7 +292,6 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 			if (!iElement.hasClass('preview')){
 				if (scope.event.referral){iElement.addClass('referral');}
 				else if (scope.event.status){iElement.addClass(scope.event.status);}
-				// scope.watch('event')
 			}
 		}
 	};
