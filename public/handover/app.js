@@ -12,9 +12,10 @@
 	.directive('handoverNavbar',function(){
 		return {
 			restrict: 'E',
-			scope: false,
+			scope: true,
 			templateUrl: '/handover/navbar.html',
-			controller: function($scope){
+			controller: function($scope,MyData){
+				$scope.MyData = MyData;
 				$scope.printMe = function(){
 					console.log($scope);
 				};

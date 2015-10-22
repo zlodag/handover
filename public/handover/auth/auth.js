@@ -1,7 +1,39 @@
 (function(){
 	angular.module('handover.auth',['firebase','handover.data','handover.tasks'])
+		.factory('MyData',function(TaskBoard,Auth){
+			var taskboard = null,currentUid = null;
+			Auth.$onAuth(function (authData){
+				if (!authData) {
+					currentUid = null;
+					if (taskboard) taskboard.$destroy();
+					taskboard = null;
+				} else {
+					setAndGet(authData.uid);
+				}
+			});
+			function setAndGet(uid){
+				if (uid !== currentUid){
+					if (taskboard) taskboard.$destroy();
+					currentUid = uid;
+					taskboard = TaskBoard(uid);
+				}
+				return taskboard;
+			}
+			return {
+				get taskboard(){return taskboard;},
+				setAndGet: setAndGet
+			};
+		})
 		.factory('Auth',function(FB,$firebaseAuth){
-			return $firebaseAuth(FB);
+			var authObj = $firebaseAuth(FB);
+			// authObj.$onAuth(function (authData){
+			// 	if (!authData) {
+			// 		TaskBoard.taskboard = null;
+			// 	} else {
+			// 		TaskBoard.taskboard = authData.uid;
+			// 	}
+			// });
+			return authObj;
 		})
 		.factory('Stamp',function(Auth,TIMESTAMP){
 			return function(){
@@ -31,8 +63,12 @@
 					userId: function($stateParams){
 						return $stateParams.userId;
 					},
-					taskboard: function(TaskBoard,userId){
-						return TaskBoard(userId).$loaded();
+					authData: function(Auth){
+						return Auth.$requireAuth();
+					},
+					taskboard: function(TaskBoard,userId,authData,MyData){
+						var taskboard = authData.uid === userId ? MyData.setAndGet(authData.uid) : TaskBoard(userId);
+						return taskboard.$loaded();
 					},
 					tasks: function(CurrentTasks){
 						return CurrentTasks.$loaded();
