@@ -245,6 +245,9 @@ angular.module('handover.tasks',['handover.data','ui.router','firebase'])
 		controller: function($scope,context,tasks){
 			$scope.context = context;
 			$scope.tasks = tasks;
+			$scope.sortAccepted = function(rec){
+				return rec.info.Accepted || 0;
+			};
 		}
 	})
 	.state('tasks.detail',{

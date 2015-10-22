@@ -11,11 +11,11 @@
     cursor: pointer;
     background-color: rgb(230, 255, 230);
 }
-.side>*{
+.left>*{
     width: 6ch;
     position: absolute;
 }
-.side>.urgency {
+.left>.urgency {
     height: 1.5em;
     border-bottom: 1px solid black;
 }
@@ -31,7 +31,7 @@
     line-height: 1.5em;
     text-align:center;
 }
-.cont {
+.right {
     border-left: 1px solid black;
     margin-left: 6ch;
 }

@@ -1,70 +1,41 @@
 <h2>{{detail.task.getStatus().status}} task</h2>
-    <div class="section text" ng-class="{high: detail.task.info.urgency === 3,medium: detail.task.info.urgency === 2,low: detail.task.info.urgency === 1}">
-        <div ng-bind="detail.task.info.text"></div>
-    </div>
-    <div class="section details">
-        <h4>Details</h4>
-        <dl class="meta">
-    	    <dt class="patient">Patient</dt>
-    	    <dd class="patient" ng-bind="detail.task.info.patient"></dd>
-    	    <dt class="nhi">NHI</dt>
-    	    <dd class="nhi" ng-bind="detail.task.info.nhi"></dd>
-    	    <dt class="specialty">Specialty</dt>
-    	    <dd class="specialty" ng-bind="detail.task.info.specialty"></dd>
-    	    <dt class="location">Location</dt>
-            <dd class="location"><span class="ward" ng-bind="detail.task.info.ward"></span><span class="bed" ng-bind="detail.task.info.bed"></span></dd>
-      	    <dt class="urgency">Urgency</dt>
-    	    <dd class="urgency" ng-bind="detail.task.info.urgency"></dd>
-        </dl>
-    </div>
-    <div class="section events">
-        <h4>Events</h4>
-        <ul>
-            <!-- <li event-item="{status:'Added',by:detail.task.info.by,at:detail.task.info.at}"></li> -->
-            <li ng-repeat="item in detail.task.events" event-item="item.data"></li>
-            <li class="preview" event-item="newEvent" ng-hide="detail.task.info.Completed || eventForm.$invalid"></li>
-        </ul>
-    </div>
-    <div class="section actions" ng-hide="detail.task.info.Completed">
-        <h4>Actions</h4>
-        <form name="eventForm" ng-submit="detail.task.newEvent(newEvent) && reset()">
-            <label for="newStatus">Update task status</label>
-            <select id="newStatus" name="status" ng-model="newEvent.status" ng-options="label as status for (status,label) in statusObj" ng-required="(!newEvent.referral && !newEvent.comment)" ng-disabled="newEvent.referral" ng-hide="newEvent.referral"><option value="">Update status</option></select>
-            <label for="newReferral">Refer task</label>
-            <select id="newReferral" name="referral" ng-model="newEvent.referral" ng-options="key as users.getName(key)
-            disable when (detail.task.events.disableReferral(key) || authData.uid === key)
-            for (key, value) in users" ng-required="(!newEvent.status && !newEvent.comment)" ng-disabled="newEvent.status" ng-hide="newEvent.status">
-                <option value="">Refer to:</option>
-            </select>
-            <label for="newComment">Add a comment</label>
-            <input id="newComment" name="comment" type="text" ng-model="newEvent.comment" maxlength="100" placeholder="Add a comment" ng-required="(!newEvent.status && !newEvent.referral) || (newEvent.status === 'Cancelled')" />
-            <input type="submit" value="Submit" ng-disabled="eventForm.$invalid" />
-            <button ng-click="reset()" type="button">Reset</button>
-        </form>
-        <pre ng-bind="newEvent | json"></pre>
-        <!-- <div>
-            <button type="button" ng-click="detail.task.newStatus('Accepted')" ng-hide="detail.task.info.Accepted">Accept</button>
-            <button type="button" ng-click="detail.task.newStatus('Completed')">Complete</button>
-            <form name="cancel" ng-submit="detail.task.newStatus('Cancelled',reason); reason = ''">
-                <label for="reason">Cancel</label>
-                <input type="submit" value="Cancel" ng-disabled="cancel.cancel.$invalid" />
-                <input type="text" id="reason" name="cancel" ng-model="reason" maxlength="100" placeholder="Reason" required />
-            </form>
-        </div>
-        <div class="refer">
-            <form name="refer" ng-submit="detail.task.referTo(target); target = ''">
-                <select name="newReferral" ng-model="target" ng-options="key as users.getName(key)
-                disable when (detail.task.events.disableReferral(key) || authData.uid === key)
-                for (key, value) in users" required >
-                    <option value="">Refer to:</option>
-                </select>
-                <input type="submit" value="Refer" ng-disabled="refer.newReferral.$invalid" />
-            </form>
-        </div>
-        <div class="comment">
-            <form name="comment" ng-submit="detail.task.addComment(newComment); newComment = ''">
-                <input type="text" id="newComment" name="newComment" ng-model="newComment" maxlength="100" placeholder="Add a comment" required />
-                <input type="submit" value="Post" ng-disabled="comment.newComment.$invalid" />
-            </form>
-        </div> -->
-    </div>
+<div class="section text" ng-class="{high: detail.task.info.urgency === 3,medium: detail.task.info.urgency === 2,low: detail.task.info.urgency === 1}">
+    <div ng-bind="detail.task.info.text"></div>
+</div>
+<div class="section details">
+    <h4>Details</h4>
+    <dl class="meta">
+	    <dt class="patient">Patient</dt>
+	    <dd class="patient" ng-bind="detail.task.info.patient"></dd>
+	    <dt class="nhi">NHI</dt>
+	    <dd class="nhi" ng-bind="detail.task.info.nhi"></dd>
+	    <dt class="specialty">Specialty</dt>
+	    <dd class="specialty" ng-bind="detail.task.info.specialty"></dd>
+	    <dt class="location">Location</dt>
+        <dd class="location"><span class="ward" ng-bind="detail.task.info.ward"></span><span class="bed" ng-bind="detail.task.info.bed"></span></dd>
+    </dl>
+</div>
+<div class="section events">
+    <h4>Events</h4>
+    <ul>
+        <li ng-repeat="item in detail.task.events" event-item="item.data"></li>
+        <li class="preview" event-item="newEvent" ng-hide="detail.task.info.Completed || eventForm.$invalid"></li>
+    </ul>
+</div>
+<div class="section actions" ng-hide="detail.task.info.Completed">
+    <h4>Actions</h4>
+    <form name="eventForm" ng-submit="detail.task.newEvent(newEvent) && reset()">
+        <label for="newStatus">Update task status</label>
+        <select id="newStatus" name="status" ng-model="newEvent.status" ng-options="label as status for (status,label) in statusObj" ng-required="(!newEvent.referral && !newEvent.comment)" ng-disabled="newEvent.referral" ng-hide="newEvent.referral"><option value="">Update status</option></select>
+        <label for="newReferral">Refer task</label>
+        <select id="newReferral" name="referral" ng-model="newEvent.referral" ng-options="key as users.getName(key)
+        disable when (detail.task.events.disableReferral(key) || authData.uid === key)
+        for (key, value) in users" ng-required="(!newEvent.status && !newEvent.comment)" ng-disabled="newEvent.status" ng-hide="newEvent.status">
+            <option value="">Refer to:</option>
+        </select>
+        <label for="newComment">Add a comment</label>
+        <input id="newComment" name="comment" type="text" ng-model="newEvent.comment" maxlength="100" placeholder="Add a comment" ng-required="(!newEvent.status && !newEvent.referral) || (newEvent.status === 'Cancelled')" />
+        <input type="submit" value="Submit" ng-disabled="eventForm.$invalid" />
+        <button ng-click="reset()" type="button">Reset</button>
+    </form>
+</div>
