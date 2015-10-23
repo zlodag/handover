@@ -8,9 +8,6 @@
 .details dd {
     float: none;
 }
-.text.section {
-    padding:0;
-}
 .text.section>* {
     margin:0 1em;
     padding: 0.5em;
