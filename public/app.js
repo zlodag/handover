@@ -9,13 +9,14 @@ angular.module('myApp', [
     'myApp.chat',
     'myApp.login'
   ])
-  
-  .config(['$routeProvider', function ($routeProvider) {
+
+  .config(['$routeProvider','$locationProvider', function ($routeProvider,$locationProvider) {
     $routeProvider.otherwise({
       redirectTo: '/home'
     });
+    $locationProvider.html5Mode(true);
   }])
-  
+
   .run(['$rootScope', 'Auth', function($rootScope, Auth) {
     // track status of authentication
     Auth.$onAuth(function(user) {

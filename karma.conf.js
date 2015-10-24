@@ -4,33 +4,35 @@ module.exports = function(config){
     basePath : './',
 
     files : [
-      'app/bower_components/angular/angular.js',
-      'app/bower_components/angular-route/angular-route.js',
-      'app/bower_components/angular-mocks/angular-mocks.js',
-      'app/bower_components/mockfirebase/browser/mockfirebase.js',
-      'app/bower_components/angularfire/dist/angularfire.js',
+      'public/bower_components/angular/angular.js',
+      'public/bower_components/angular-route/angular-route.js',
+      'public/bower_components/angular-mocks/angular-mocks.js',
+      'public/bower_components/mockfirebase/browser/mockfirebase.js',
+      'public/bower_components/angularfire/dist/angularfire.js',
       'test/lib/**/*.js',
-      'app/app.js',
-      'app/config.js',
-      'app/components/**/*.js',
-      'app/account/**/*.js',
-      'app/chat/**/*.js',
-      'app/home/**/*.js',
-      'app/login/**/*.js',
-      'app/config_test.js'
+      'public/app.js',
+      'public/config.js',
+      'public/components/**/*.js',
+      'public/account/**/*.js',
+      'public/chat/**/*.js',
+      'public/home/**/*.js',
+      'public/login/**/*.js',
+      'public/config_test.js'
     ],
 
     autoWatch : true,
 
     frameworks: ['jasmine'],
-
+    preprocessors: {
+      '*.js': ['jshint']
+    },
     browsers : ['Chrome'],
 
     plugins : [
             'karma-chrome-launcher',
-            'karma-firefox-launcher',
             'karma-jasmine',
-            'karma-junit-reporter'
+            'karma-junit-reporter',
+            'karma-jshint-preprocessor'
             ],
 
     junitReporter : {

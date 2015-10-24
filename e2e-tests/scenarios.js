@@ -3,7 +3,7 @@
 /* http://docs.angularjs.org/guide/dev_guide.e2e-testing */
 describe('my app', function() {
 
-  browser.get('index.html');
+  browser.get('/');
 
   it('should automatically redirect to /home when location hash/fragment is empty', function() {
     expect(browser.getLocationAbsUrl()).toMatch("/home");
@@ -12,7 +12,7 @@ describe('my app', function() {
   describe('home', function() {
 
     beforeEach(function() {
-      browser.get('index.html#/home');
+      browser.get('/home');
     });
 
 
@@ -26,7 +26,7 @@ describe('my app', function() {
 
   describe('chat', function() {
      beforeEach(function() {
-        browser.get('index.html#/chat');
+        browser.get('/chat');
      });
 
      it('should render chat when user navigates to /chat', function() {
@@ -37,7 +37,7 @@ describe('my app', function() {
 
    describe('account', function() {
       it('should redirect to /login if not logged in', function() {
-         browser.get('index.html#/account');
+         browser.get('/account');
          expect(browser.getLocationAbsUrl()).toMatch('/login');
       });
 
@@ -46,7 +46,7 @@ describe('my app', function() {
 
    describe('login', function() {
       beforeEach(function() {
-         browser.get('index.html#/login');
+         browser.get('/login');
       });
 
       it('should render login when user navigates to /login', function() {

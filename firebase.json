@@ -1,9 +1,13 @@
 {
-  "firebase": "INSTANCE",
-  "public": "app",
+  "firebase": "nutm",
+  "public": "public",
   "ignore": [
     "firebase.json",
     "**/.*",
-    "**/node_modules/**"
-  ]
+    "bower_components/"
+  ],
+  "rewrites": [{
+    "source": "**",
+    "destination": "/index.html"
+  }]
 }
