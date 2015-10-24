@@ -1,0 +1,62 @@
+.task {
+    border-style: solid;
+    border-width: 0 0 1px;
+    font-family:monospace;
+    position:relative;
+}
+.task:first-child {
+    border-top-width:1px;
+}
+.task:hover{
+    cursor: pointer;
+    background-color: rgb(230, 255, 230);
+}
+.left>*{
+    width: 6ch;
+    position: absolute;
+}
+.urgency {
+    height: 1.5em;
+    border-bottom: 1px solid black;
+}
+.high {background: red;}
+.medium {background: gold;}
+.low {background: green;}
+.box {
+    height: 40px;
+    bottom: 1.5em;
+}
+.updated {
+    bottom: 0;
+    line-height: 1.5em;
+    text-align:center;
+}
+.right {
+    border-left: 1px solid black;
+    margin-left: 6ch;
+}
+.task dl {
+    padding: 0.5em;
+    font-family: sans-serif;
+}
+.task .meta {
+    border-bottom: 1px solid black;
+}
+.task dt,
+.task .status {
+    display: none;
+}
+.task dd.patient,.task dd.location {
+    float: left;
+    clear: left;
+}
+.task dd.nhi,.task dd.specialty {
+    float: right;
+    clear: right;
+}
+.ward:after {
+    content: " - "
+}
+.task .text>dd {
+    float:none;
+}

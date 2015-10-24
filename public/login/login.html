@@ -1,24 +1,52 @@
 
 <h2>Login Page</h2>
 
-<form>
+<form ng-submit="createMode ? createAccount(credentials,me) : login(credentials)">
     <label>
-        <span>email</span>
-        <input type="text" ng-model="email" />
+        <span>Email</span>
+        <input type="email" ng-model="credentials.email" required />
     </label>
     <label>
-        <span>password</span>
-        <input type="password" ng-model="pass" />
+        <span>Password</span>
+        <input type="password" ng-model="credentials.password" required />
     </label>
-    <label ng-cloak ng-show="createMode">
-        <span>confirm pass</span>
-        <input type="password" ng-model="confirm" />
-    </label>
-    <button ng-click="login(email, pass)" ng-hide="createMode">Log In</button>
-    <button ng-click="createMode = true" ng-hide="createMode">Register</button>
-    <button ng-cloak ng-show="createMode" ng-click="createAccount()">Create Account</button>
-    <button ng-cloak ng-show="createMode" ng-click="createMode = false">Cancel</button>
+    <div ng-cloak ng-if="createMode">
+        <label>
+            <span>Confirm password</span>
+            <input type="password" ng-model="credentials.confirm" required />
+        </label>
+        <label>
+            <span>First name</span>
+            <input type="text" ng-model="me.first" required />
+        </label>
+        <label>
+            <span>Last name</span>
+            <input type="text" ng-model="me.last" required />
+        </label>
+        <label>
+            <span>Role</span>
+            <select ng-options="role.$id as role.$id for role in roles" ng-model="me.role" required >
+                <option value="">Select a role</option>
+            </select>
+        </label>
+        <label>
+            <span>Contact</span>
+            <input type="text" ng-model="me.contact" />
+        </label>
+        <label>
+            <span>Specialty</span>
+            <select ng-options="specialty.$id as specialty.$id for specialty in specialties" ng-model="me.specialty" >
+                <option value="">None</option>
+            </select>
+        </label>
+    </div>
 
-    <p ng-show="err" class="error">{{err}}</p>
+    <button type="submit" ng-if="!createMode">Log In</button>
+    <button type="button" ng-hide="createMode" ng-click="createMode = true">Register</button>
+    <button type="submit" ng-cloak ng-if="createMode">Create Account</button>
+    <button type="button" ng-cloak ng-show="createMode" ng-click="createMode = false">Cancel</button>
+
+    <p ng-show="err" class="error" ng-bind="err"></p>
+
 </form>
 

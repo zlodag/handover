@@ -1,0 +1,103 @@
+.details dt,
+.details .urgency,
+.events h4,
+.actions h4
+{
+    display: none;
+}
+.details dd {
+    float: none;
+}
+.text.section>* {
+    margin:0 1em;
+    padding: 0.5em;
+    background-color: white;
+    border: solid black;
+    border-width: 0 1px;
+}
+.details,
+.event {
+    padding:0.5em;
+    position:relative;
+}
+.event:nth-child(odd){
+    background-color: #EAEAEA;
+}
+.event:nth-child(even){
+    background-color: #D4D4D4;
+}
+.event.Added {
+    background: #DEF9FF;
+}
+.event.Accepted {
+    background: #DEFFDE;
+}
+.event.Completed {
+    background: #FFFCAC;
+}
+.event.Cancelled {
+    background: #FFCACA;
+}
+.event>* {
+    display:block;
+}
+.event>.comment {
+    font-style:italic;
+}
+.event>.time>.compact {
+    /* font-family:monospace; */
+}
+/* .events {
+    display:block;
+} */
+.section {
+    border-color: black;
+    border-style: solid;
+    border-width: 1px 0 0;
+}
+
+.section.details>h4 {
+    margin-bottom: 0.5em;
+}
+.mainform>div{
+/*     margin-top:0.5em; */
+}
+.event.preview {
+    background-color:yellow;
+}
+form.ng-invalid .mainform{
+    border-color: red;
+}
+.actions label {
+    display:none;
+}
+.mainform {
+    border:5px solid green;
+    padding:0.5em;
+    overflow:auto;
+}
+.mainform>* {
+    width:50%;
+    float:left;
+}
+#newStatus,#newComment {
+    margin-bottom:0.5em;
+}
+.mainform>*>* {
+    width:100%;
+}
+.leftform{
+    padding-right:0.25em;
+}
+.rightform{
+    padding-left:0.25em;
+}
+form .event>input[type="submit"]{
+    margin:0.5em;
+    position:absolute;
+    right:0;
+    bottom:0;
+}
+.mainform select:disabled{
+    visibility:hidden;
+}

@@ -1,0 +1,17 @@
+.taskList .empty {
+	padding:0.5em;
+}
+#userpage{
+	position:relative;
+}
+#logOut,#editProfile{
+	position:absolute;
+	right:0;
+	margin:0.5em;
+}
+#logOut{
+	top:0;
+}
+#editProfile{
+	bottom:0;
+}

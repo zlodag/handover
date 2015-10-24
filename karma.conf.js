@@ -12,12 +12,15 @@ module.exports = function(config){
       'test/lib/**/*.js',
       'public/app.js',
       'public/config.js',
+      'public/config_test.js',
       'public/components/**/*.js',
-      'public/account/**/*.js',
+      'public/data.js',
+      // 'public/data_test.js',
+      'public/profile/**/*.js',
       'public/chat/**/*.js',
       'public/home/**/*.js',
       'public/login/**/*.js',
-      'public/config_test.js'
+      'public/tasks/**/*.js'
     ],
 
     autoWatch : true,

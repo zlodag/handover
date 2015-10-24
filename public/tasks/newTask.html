@@ -1,0 +1,25 @@
+<h2>New task</h2>
+<div id="newTask" class="content">
+  <form ng-submit="addTask(newTask)" name="form">
+  	<label for="patient">Patient</label>
+  	<input id="patient" name="patient" type="text" ng-model="newTask.patient" maxlength="20" required />
+  	<label for="nhi">NHI</label>
+  	<input id="nhi" name="nhi" type="text" ng-model="newTask.nhi" pattern="[a-zA-Z]{3}[0-9]{4}" required />
+  	<label for="ward">Ward</label>
+  	<select id="ward" name="ward" ng-model="newTask.ward" ng-options="ward.$id as ward.$id group by ward.$value for ward in wards" required>
+      <option value="">Select a ward</option>
+    </select>
+  	<label for="bed">Bed</label>
+  	<input id="bed" name="bed" type="text" ng-model="newTask.bed" maxlength="3" required />
+  	<label for="specialty">Specialty</label>
+  	<select id="specialty" name="specialty" ng-model="newTask.specialty" ng-options="specialty.$id as specialty.$id for specialty in specialties" required >
+      <option value="">Select a specialty</option>
+    </select>
+  	<label for="text">Text</label>
+  	<input id="text" name="text" type="text" ng-model="newTask.text" maxlength="500" required />
+  	<label for="urgency">Urgency</label>
+  	<input id="urgency" name="urgency" type="number" ng-model="newTask.urgency" min="1" max="3" pattern="[0-9]+" required />
+  	<input type="submit" value="Add" />
+    <button type="button" ng-click="randomize()">Randomize</button>
+  </form>
+</div>

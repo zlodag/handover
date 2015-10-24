@@ -3,7 +3,7 @@
 /* Directives */
 
 
-angular.module('myApp')
+angular.module('handover')
 
   .directive('appVersion', ['version', function(version) {
     return function(scope, elm) {

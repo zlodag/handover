@@ -2,8 +2,8 @@
 
 /* verify config settings are present */
 
-describe('config', function() {
-  beforeEach(module('myApp.config'));
+describe('handover.config', function() {
+  beforeEach(module('handover.config'));
 
   it('should have a valid FBURL', inject(function(FBURL) {
     expect(FBURL).toMatch(/^https:\/\/[a-zA-Z0-9_-]+\.firebaseio\.com$/i);

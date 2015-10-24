@@ -1,0 +1,27 @@
+#newTask label,
+#profile label,
+#login label {
+    float:left;
+    clear: left;
+    width:30%;
+    margin-bottom:0.5em;
+    text-align:right;
+    padding-right:1em;
+}
+#newTask input,
+#newTask select,
+#profile input,
+#profile select,
+#login input {
+    float:right;
+    clear:right;
+    width:70%;
+}
+#newTask input[type="submit"],
+#newTask button,
+#profile button,
+#login input[type="submit"],
+#login button {
+    width:40%;
+    margin:0 30% 0.5em;
+}

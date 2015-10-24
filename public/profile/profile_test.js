@@ -1,21 +1,23 @@
 
-describe('myApp.account', function() {
+describe('handover.profile', function() {
   beforeEach(function() {
-    module('myApp');
-    module('myApp.account');
+    module('handover');
+    module('handover.profile');
   });
 
-  describe('AccountCtrl', function() {
-    var accountCtrl, $scope;
+  describe('ProfileCtrl', function() {
+    var profileCtrl, $scope;
     beforeEach(function() {
+
       module(function($provide) {
-        // comes from routes.js in the resolve: {} attribute
+        $provide.value('specialties', ['O&G','Respiratory','Plastics']);
+        $provide.value('roles', ['RMO','SMO','MDT']);
         $provide.value('user', {uid: 'test123'});
       });
 
       inject(function($controller) {
         $scope = {};
-        accountCtrl = $controller('AccountCtrl', {$scope: $scope});
+        profileCtrl = $controller('ProfileCtrl', {$scope: $scope});
       });
     });
 
@@ -31,8 +33,8 @@ describe('myApp.account', function() {
       expect(typeof $scope.changeEmail).toBe('function');
     });
 
-    it('should define clear method', function() {
-      expect(typeof $scope.clear).toBe('function');
-    });
+    // it('should define clear method', function() {
+    //   expect(typeof $scope.clear).toBe('function');
+    // });
   });
 });

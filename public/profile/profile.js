@@ -1,14 +1,19 @@
 (function (angular) {
   "use strict";
 
-  var app = angular.module('myApp.account', ['firebase', 'firebase.utils', 'firebase.auth', 'ngRoute']);
+  var app = angular.module('handover.profile', ['firebase', 'firebase.utils', 'firebase.auth', 'ngRoute']);
 
-  app.controller('AccountCtrl', ['$scope', 'Auth', 'fbutil', 'user', '$location', '$firebaseObject',
-    function($scope, Auth, fbutil, user, $location, $firebaseObject) {
+  app.controller('ProfileCtrl', ['$scope', 'Auth', 'fbutil', 'user', '$location', '$firebaseObject','specialties','roles',
+    function($scope, Auth, fbutil, user, $location, $firebaseObject,specialties,roles) {
+
+      $scope.specialties = specialties;
+      $scope.roles = roles;
+
+
       var unbind;
       // create a 3-way binding with the user profile object in Firebase
       var profile = $firebaseObject(fbutil.ref('users', user.uid));
-      profile.$bindTo($scope, 'profile').then(function(ub) { unbind = ub; });
+      profile.$bindTo($scope, 'me').then(function(ub) { unbind = ub; });
 
       // expose logout function to scope
       $scope.logout = function() {
@@ -18,7 +23,7 @@
         $location.path('/login');
       };
 
-      $scope.changePassword = function(pass, confirm, newPass) {
+      $scope.changePassword = function(passwordObj,confirm) {
         resetMessages();
         if( !pass || !confirm || !newPass ) {
           $scope.err = 'Please fill in all password fields';
@@ -36,18 +41,11 @@
         }
       };
 
-      $scope.clear = resetMessages;
+      // $scope.clear = resetMessages;
 
-      $scope.changeEmail = function(pass, newEmail) {
+      $scope.changeEmail = function(emailObj) {
         resetMessages();
-        var oldEmail = profile.email;
         Auth.$changeEmail({oldEmail: oldEmail, newEmail: newEmail, password: pass})
-          .then(function() {
-            // store the new email address in the user's profile
-            return fbutil.handler(function(done) {
-              fbutil.ref('users', user.uid, 'email').set(newEmail, done);
-            });
-          })
           .then(function() {
             $scope.emailmsg = 'Email changed';
           }, function(err) {
@@ -68,9 +66,17 @@
     // require user to be authenticated before they can access this page
     // this is handled by the .whenAuthenticated method declared in
     // components/router/router.js
-    $routeProvider.whenAuthenticated('/account', {
-      templateUrl: 'account/account.html',
-      controller: 'AccountCtrl'
+    $routeProvider.whenAuthenticated('/profile', {
+      templateUrl: 'profile/profile.html',
+      controller: 'ProfileCtrl',
+      resolve: {
+        specialties:['Specialties',function(Specialties){
+          return Specialties.$loaded();
+        }],
+        roles:['Roles',function(Roles){
+          return Roles.$loaded();
+        }]
+      }
     })
   }]);
 

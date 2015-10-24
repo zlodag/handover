@@ -1,0 +1,93 @@
+
+<h2>Account</h2>
+
+<form>
+    <fieldset>
+        <legend>Profile</legend>
+
+        <label>
+            <span>First name</span>
+            <input type="text" ng-model="me.first" required />
+        </label>
+        <label>
+            <span>Last name</span>
+            <input type="text" ng-model="me.last" required />
+        </label>
+        <label>
+            <span>Role</span>
+            <select ng-options="role.$id as role.$id for role in roles" ng-model="me.role" required >
+                <option value="">Select a role</option>
+            </select>
+        </label>
+        <label>
+            <span>Contact</span>
+            <input type="text" ng-model="me.contact" />
+        </label>
+        <label>
+            <span>Specialty</span>
+            <select ng-options="specialty.$id as specialty.$id for specialty in specialties" ng-model="me.specialty" >
+                <option value="">None</option>
+            </select>
+        </label>
+
+    </fieldset>
+</form>
+
+<form>
+    <fieldset>
+        <legend>Change Password</legend>
+
+        <label>
+            <span>Email:</span>
+            <input type="email" ng-model="oldEmail"/>
+        </label>
+        <label>
+            <span>Current Password:</span>
+            <input type="password" ng-model="oldPassword"/>
+        </label>
+
+        <label>
+            <span>New Password:</span>
+            <input type="password" ng-model="newPassword"/>
+        </label>
+
+        <label>
+            <span>Confirm New Password:</span>
+            <input type="password" ng-model="confirmPassword"/>
+        </label>
+
+        <button ng-click="changePassword(oldEmail, oldPassword, newPassword, confirmPassword)">Change password</button>
+
+        <p class="error" ng-show="err" ng-bind="err"></p>
+        <p class="good" ng-show="msg" ng-bind="msg"></p>
+    </fieldset>
+</form>
+
+<form>
+    <fieldset>
+        <legend>Change Email</legend>
+
+        <label>
+            <span>Email:</span>
+            <input type="email" ng-model="oldEmail"/>
+        </label>
+
+        <label>
+            <span>New Email:</span>
+            <input type="email" ng-model="newEmail"/>
+        </label>
+
+        <label>
+            <span>Password:</span>
+            <input type="password" ng-model="oldPassword"/>
+        </label>
+
+        <button ng-click="changeEmail(oldEmail, newEmail, oldPassword)">update email</button>
+
+        <p class="error" ng-show="emailerr" ng-bind="emailerr"></p>
+        <p class="good" ng-show="emailmsg" ng-bind="emailmsg"</p>
+    </fieldset>
+</form>
+
+
+<button ng-click="logout()">Log Out</button>
