@@ -1,5 +1,14 @@
 (function(){
 	angular.module('handover.auth',['firebase','handover.data','handover.tasks'])
+		.controller('LoginCtrl',function($scope,Auth,$state){
+			$scope.login = function(credentials){
+				Auth.$authWithPassword(credentials).then(function(authData){
+					$state.go('user',{userId:authData.uid});
+				}).catch(function(error){
+					console.error(error);
+				});
+			};
+		})
 		.factory('MyData',function(TaskBoard,Auth){
 			var taskboard = null,currentUid = null;
 			Auth.$onAuth(function (authData){
@@ -26,13 +35,6 @@
 		})
 		.factory('Auth',function(FB,$firebaseAuth){
 			var authObj = $firebaseAuth(FB);
-			// authObj.$onAuth(function (authData){
-			// 	if (!authData) {
-			// 		TaskBoard.taskboard = null;
-			// 	} else {
-			// 		TaskBoard.taskboard = authData.uid;
-			// 	}
-			// });
 			return authObj;
 		})
 		.factory('Stamp',function(Auth,TIMESTAMP){
@@ -46,15 +48,7 @@
 			.state('login', {
 				url: "/login",
 				templateUrl: '/handover/auth/login.html',
-				controller: function($scope,Auth,$state){
-					$scope.login = function(credentials){
-						Auth.$authWithPassword(credentials).then(function(authData){
-							$state.go('user',{userId:authData.uid});
-						}).catch(function(error){
-							console.error(error);
-						});
-					};
-				}
+				controller: "LoginCtrl"
 			})
 			.state('user', {
 				url: "/user/:userId",

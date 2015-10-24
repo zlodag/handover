@@ -6,7 +6,7 @@
 	 	'handover.tasks'
 	])
 	.config(["$urlRouterProvider", "$locationProvider", function($urlRouterProvider, $locationProvider) {
-		$urlRouterProvider.otherwise("/tasks/new");
+		$urlRouterProvider.otherwise("/login");
 		$locationProvider.html5Mode(true);
 	}])
 	.directive('handoverNavbar',function(){
@@ -78,17 +78,19 @@
 				$rootScope.authData = authData;
 			}
 		});
-		$rootScope.$on('$stateChangeSuccess',function(event, toState, toParams, fromState, fromParams) {
-			Alerts.reset();
-		});
+		// $rootScope.$on('$stateChangeSuccess',function(event, toState, toParams, fromState, fromParams) {
+		// 	// Alerts.reset();
+		// });
 		$rootScope.$on('$stateChangeError',function(event, toState, toParams, fromState, fromParams, error){
-			if (error === 'AUTH_REQUIRED') {
-				Alerts.add('Authentication required, redirecting to login page', true);
-				$state.go('login');
-			} else {
-				console.log(event, toState, toParams, fromState, fromParams, error);
-				Alerts.add(error);
-			}
+			// if (error === 'AUTH_REQUIRED') {
+			// 	// Alerts.add('Authentication required, redirecting to login page', true);
+			// 	// console.log('Auth')
+			// 	$state.go('login');
+			// } else {
+				// console.log(event, toState, toParams, fromState, fromParams, error);
+				console.error(error);
+				// Alerts.add(error);
+			// }
 		});
 	})
 	;
