@@ -47,8 +47,11 @@
       <a ng-class="{active:route==='current'}" href="/current">Current</a>
       <a ng-class="{active:route==='recent'}" href="/recent">Recent</a>
       <a ng-class="{active:route==='new'}" href="/new">New</a>
-      <a ng-if="!loggedIn" href="/login">Login</a>
-      <a ng-if="loggedIn" ng-href="/user/{{authData.uid}}" ng-bind="users.$getRecord(authData.uid).first"></a>
+      <a ng-class="{active:route==='login'}" ng-if="!loggedIn" href="/login">Login</a>
+      <a ng-if="loggedIn" ng-href="/user/{{authData.uid}}">
+        <span ng-bind="users.$getRecord(authData.uid).first"></span>
+        <span class="badge" ng-show="users.$getRecord(authData.uid)" ng-bind="taskboard.length"></span>
+      </a>
     </nav>
   </div>
 

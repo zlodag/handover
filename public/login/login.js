@@ -4,6 +4,7 @@ angular.module('handover.login', ['firebase.utils', 'firebase.auth', 'ngRoute','
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/login', {
       controller: 'LoginCtrl',
+      name:'login',
       templateUrl: 'login/login.html',
       resolve: {
         specialties:['Specialties',function(Specialties){

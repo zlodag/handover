@@ -314,12 +314,6 @@ angular.module('handover.tasks',['handover.data','ngRoute','firebase','firebase.
 		templateUrl:'tasks/task.html',
 		link: function(scope, iElement, iAttrs){
 			scope.task = scope.$eval(iAttrs.taskItem);
-// 			iElement.wrap('<a href="/task/' + scope.task.$id + '"></a>');
-			// iElement.addClass('task');
-// 			iElement.on('click',function(){
-// 				scope.task.goToDetail();
-// 				scope.$apply();
-// 			});
 		}
 	};
 })

@@ -1,6 +1,5 @@
 #newTask label,
-#profile label,
-#login label {
+#profile label {
     float:left;
     clear: left;
     width:30%;
@@ -11,17 +10,42 @@
 #newTask input,
 #newTask select,
 #profile input,
-#profile select,
-#login input {
+#profile select {
     float:right;
     clear:right;
     width:70%;
 }
 #newTask input[type="submit"],
 #newTask button,
-#profile button,
-#login input[type="submit"],
-#login button {
+#profile button {
     width:40%;
     margin:0 30% 0.5em;
+}
+#loginForm label {
+    display:block;
+    margin: 0.5em;
+    overflow:auto;
+}
+#loginForm label>span{
+    width:45%;
+    text-align:right;
+    float:left;
+    position:relative;
+
+}
+#loginForm label>.asterisk:after{
+    content:'* ';
+    color:red;
+    position:absolute;
+    right:-0.6em;
+}
+#loginForm label>:not(span){
+    float:right;
+    width: 50%;
+}
+#loginForm button,
+#loginForm input[type="submit"] {
+    display:block;
+    width:50%;
+    margin:0.5em 25%;
 }

@@ -24,6 +24,7 @@ angular.module('handover.user', ['handover.tasks','ngRoute','firebase.auth'])
     $routeProvider.when('/user/:userId', {
       templateUrl: 'user/user.html',
       controller: 'UserCtrl',
+      name: 'userDetail',
       resolve: {
         userId: ['$route',function($route){
           return $route.current.params.userId;

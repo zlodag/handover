@@ -1,36 +1,36 @@
 
 <h2>Login Page</h2>
 
-<form ng-submit="createMode ? createAccount(credentials,me) : login(credentials)">
+<form id="loginForm" ng-submit="createMode ? createAccount(credentials,me) : login(credentials)">
     <label>
-        <span>Email</span>
+        <span ng-class="{asterisk:createMode}">Email</span>
         <input type="email" ng-model="credentials.email" required />
     </label>
     <label>
-        <span>Password</span>
+        <span ng-class="{asterisk:createMode}">Password</span>
         <input type="password" ng-model="credentials.password" required />
     </label>
     <div ng-cloak ng-if="createMode">
         <label>
-            <span>Confirm password</span>
+            <span class="asterisk">Confirm password</span>
             <input type="password" ng-model="credentials.confirm" required />
         </label>
         <label>
-            <span>First name</span>
+            <span class="asterisk">First name</span>
             <input type="text" ng-model="me.first" required />
         </label>
         <label>
-            <span>Last name</span>
+            <span class="asterisk">Last name</span>
             <input type="text" ng-model="me.last" required />
         </label>
         <label>
-            <span>Role</span>
+            <span class="asterisk">Role</span>
             <select ng-options="role.$id as role.$id for role in roles" ng-model="me.role" required >
                 <option value="">Select a role</option>
             </select>
         </label>
         <label>
-            <span>Contact</span>
+            <span>Contact number</span>
             <input type="text" ng-model="me.contact" />
         </label>
         <label>
