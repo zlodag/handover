@@ -5,8 +5,8 @@
 
 angular.module('handover')
 
-  .directive('appVersion', ['version', function(version) {
+  .directive('appVersion', ['appName','version', function(appName,version) {
     return function(scope, elm) {
-      elm.text(version);
+      elm.text(appName + ' v' + version);
     };
   }]);

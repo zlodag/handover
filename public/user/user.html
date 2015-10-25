@@ -1,0 +1,27 @@
+<h2 ng-bind="userId === authData.uid ? 'My info' : 'User info'"></h2>
+<div id="userpage" class="section details">
+    <h4>Details</h4>
+	<dl>
+		<dt class="name">Name</dt>
+		<dd class="name" ng-bind="users.$getRecord(userId).first + ' ' + users.$getRecord(userId).last"></dd>
+		<dt class="role">Role</dt>
+		<dd class="role" ng-bind="users.$getRecord(userId).role"></dd>
+		<dt class="specialty" ng-if="users.$getRecord(userId).specialty">Specialty</dt>
+		<dd class="specialty" ng-if="users.$getRecord(userId).specialty" ng-bind="users.$getRecord(userId).specialty"></dd>
+		<dt class="contact" ng-if="users.$getRecord(userId).contact">Contact</dt>
+		<dd class="contact" ng-if="users.$getRecord(userId).contact" ng-bind="users.$getRecord(userId).contact"></dd>
+	</dl>
+	<!-- <div class="userActions" ng-if="userId === authData.uid"> -->
+		<button id="editProfile" type="button" ng-click="edit()">Edit profile</button>
+		<button id="logOut" type="button" ng-click="logout()">Log out</button>
+	<!-- </div> -->
+</div>
+<div class="section taskboard">
+	<h2>Taskboard</h2>
+	<ul class="taskList">
+		<li ng-repeat="item in tasks | filter:taskboardFilter | orderBy:['-info.urgency',sortAccepted,'info.Added'] as results" task-item="item"></li>
+		<li ng-if="!results.length" class="empty">
+			<strong>No tasks</strong>
+		</li>
+	</ul>
+</div>

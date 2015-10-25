@@ -35,6 +35,7 @@
         $routeProvider.when(path, route);
         return this;
       }
+
     }])
 
   /**

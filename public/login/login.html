@@ -46,6 +46,10 @@
     <button type="submit" ng-cloak ng-if="createMode">Create Account</button>
     <button type="button" ng-cloak ng-show="createMode" ng-click="createMode = false">Cancel</button>
 
+    <button type="button" ng-hide="createMode" ng-click="login({email:'user1@gmail.com',password:'user1'})">Log in as user1</button>
+    <button type="button" ng-hide="createMode" ng-click="login({email:'user2@gmail.com',password:'user2'})">Log in as user2</button>
+    <button type="button" ng-hide="createMode" ng-click="login({email:'user3@gmail.com',password:'user3'})">Log in as user3</button>
+
     <p ng-show="err" class="error" ng-bind="err"></p>
 
 </form>

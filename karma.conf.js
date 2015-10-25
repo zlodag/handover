@@ -20,7 +20,8 @@ module.exports = function(config){
       'public/chat/**/*.js',
       'public/home/**/*.js',
       'public/login/**/*.js',
-      'public/tasks/**/*.js'
+      'public/tasks/**/*.js',
+      'public/user/**/*.js'
     ],
 
     autoWatch : true,

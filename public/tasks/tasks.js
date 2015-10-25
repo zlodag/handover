@@ -216,8 +216,7 @@ angular.module('handover.tasks',['handover.data','ngRoute','firebase','firebase.
 		});
 	};
 })
-.controller('TaskListCtrl',function($scope,context,tasks,sortAccepted){
-	$scope.context = context;
+.controller('TaskListCtrl',function($scope,tasks,sortAccepted){
 	$scope.tasks = tasks;
 	$scope.sortAccepted = sortAccepted;
 })
@@ -243,6 +242,7 @@ angular.module('handover.tasks',['handover.data','ngRoute','firebase','firebase.
 	.when('/new', {
 	  templateUrl: 'tasks/newTask.html',
 	  controller: 'NewTaskCtrl',
+	  name: 'new',
 	  resolve: {
 	    specialties:['Specialties',function(Specialties){
 	      return Specialties.$loaded();
@@ -255,8 +255,8 @@ angular.module('handover.tasks',['handover.data','ngRoute','firebase','firebase.
 	.when('/current', {
 	  templateUrl: 'tasks/taskList.html',
 	  controller: 'TaskListCtrl',
+	  name: 'current',
 	  resolve: {
-	  	context: function(){return 'current';},
 		tasks: function(CurrentTasks){
 			return CurrentTasks.$loaded();
 		}
@@ -265,8 +265,8 @@ angular.module('handover.tasks',['handover.data','ngRoute','firebase','firebase.
 	.when('/recent', {
 	  templateUrl: 'tasks/taskList.html',
 	  controller: 'TaskListCtrl',
+	  name: 'recent',
 	  resolve: {
-	  	context: function(){return 'recent';},
 		tasks: function(RecentTasks){
 			return RecentTasks.$loaded();
 		}
@@ -275,6 +275,7 @@ angular.module('handover.tasks',['handover.data','ngRoute','firebase','firebase.
 	.when('/task/:taskId', {
 	  templateUrl: 'tasks/taskDetail.html',
 	  controller: 'TaskDetailCtrl',
+	  name: 'detail',
 	  resolve: {
 	    detail: function(TaskDetailFactory,$route){
 	      return TaskDetailFactory($route.current.params.taskId).eventsLoaded();
@@ -313,11 +314,12 @@ angular.module('handover.tasks',['handover.data','ngRoute','firebase','firebase.
 		templateUrl:'tasks/task.html',
 		link: function(scope, iElement, iAttrs){
 			scope.task = scope.$eval(iAttrs.taskItem);
-			iElement.addClass('task');
-			iElement.on('click',function(){
-				scope.task.goToDetail();
-				scope.$apply();
-			});
+// 			iElement.wrap('<a href="/task/' + scope.task.$id + '"></a>');
+			// iElement.addClass('task');
+// 			iElement.on('click',function(){
+// 				scope.task.goToDetail();
+// 				scope.$apply();
+// 			});
 		}
 	};
 })

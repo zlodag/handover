@@ -1,4 +1,4 @@
-<h2>{{context}} tasks <small ng-if="context === 'current' && tasks.length">(total = {{tasks.length | number}})</small></h2>
+<h2>{{route}} tasks <small ng-if="route === 'current' && tasks.length">(total = {{tasks.length | number}})</small></h2>
 <ul class="taskList">
   <li ng-repeat="item in tasks | orderBy:['-info.Completed','-info.urgency',sortAccepted,'info.Added'] as results" task-item="item"></li>
   <li ng-if="!tasks.length" class="empty">
