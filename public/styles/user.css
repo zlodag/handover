@@ -6,12 +6,11 @@
 }
 #logOut,#editProfile{
 	position:absolute;
-	right:0;
-	margin:0.5em;
+	right: 0.5em;
 }
 #logOut{
-	top:0;
+	top: 0.5em;
 }
 #editProfile{
-	bottom:0;
+	bottom: 0.5em;
 }

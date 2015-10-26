@@ -1,56 +1,55 @@
 
 <h2>Login Page</h2>
-
-<form id="loginForm" ng-submit="createMode ? createAccount(credentials,me) : login(credentials)">
-    <label>
-        <span ng-class="{asterisk:createMode}">Email</span>
-        <input type="email" ng-model="credentials.email" required />
-    </label>
-    <label>
-        <span ng-class="{asterisk:createMode}">Password</span>
-        <input type="password" ng-model="credentials.password" required />
-    </label>
-    <div ng-cloak ng-if="createMode">
+<div class="userForms">
+    <form ng-submit="createMode ? createAccount(credentials,me) : login(credentials)">
         <label>
-            <span class="asterisk">Confirm password</span>
-            <input type="password" ng-model="credentials.confirm" required />
+            <span ng-class="{asterisk:createMode}">Email</span>
+            <input type="email" ng-model="credentials.email" required />
         </label>
         <label>
-            <span class="asterisk">First name</span>
-            <input type="text" ng-model="me.first" required />
+            <span ng-class="{asterisk:createMode}">Password</span>
+            <input type="password" ng-model="credentials.password" required />
         </label>
-        <label>
-            <span class="asterisk">Last name</span>
-            <input type="text" ng-model="me.last" required />
-        </label>
-        <label>
-            <span class="asterisk">Role</span>
-            <select ng-options="role.$id as role.$id for role in roles" ng-model="me.role" required >
-                <option value="">Select a role</option>
-            </select>
-        </label>
-        <label>
-            <span>Contact number</span>
-            <input type="text" ng-model="me.contact" />
-        </label>
-        <label>
-            <span>Specialty</span>
-            <select ng-options="specialty.$id as specialty.$id for specialty in specialties" ng-model="me.specialty" >
-                <option value="">None</option>
-            </select>
-        </label>
-    </div>
+        <div ng-cloak ng-if="createMode">
+            <label>
+                <span class="asterisk">Confirm password</span>
+                <input type="password" ng-model="credentials.confirm" required />
+            </label>
+            <label>
+                <span class="asterisk">First name</span>
+                <input type="text" ng-model="me.first" required />
+            </label>
+            <label>
+                <span class="asterisk">Last name</span>
+                <input type="text" ng-model="me.last" required />
+            </label>
+            <label>
+                <span class="asterisk">Role</span>
+                <select ng-options="role.$id as role.$id for role in roles" ng-model="me.role" required >
+                    <option value="">Select a role</option>
+                </select>
+            </label>
+            <label>
+                <span>Contact number</span>
+                <input type="text" ng-model="me.contact" />
+            </label>
+            <label>
+                <span>Specialty</span>
+                <select ng-options="specialty.$id as specialty.$id for specialty in specialties" ng-model="me.specialty" >
+                    <option value="">None</option>
+                </select>
+            </label>
+        </div>
 
-    <button type="submit" ng-if="!createMode">Log In</button>
-    <button type="button" ng-hide="createMode" ng-click="createMode = true">Register</button>
-    <button type="submit" ng-cloak ng-if="createMode">Create Account</button>
-    <button type="button" ng-cloak ng-show="createMode" ng-click="createMode = false">Cancel</button>
+        <button type="submit" ng-if="!createMode">Log In</button>
+        <button type="button" ng-hide="createMode" ng-click="createMode = true">Register</button>
+        <button type="submit" ng-cloak ng-if="createMode">Create Account</button>
+        <button type="button" ng-cloak ng-show="createMode" ng-click="createMode = false">Cancel</button>
 
-    <button type="button" ng-hide="createMode" ng-click="login({email:'user1@gmail.com',password:'user1'})">Log in as user1</button>
-    <button type="button" ng-hide="createMode" ng-click="login({email:'user2@gmail.com',password:'user2'})">Log in as user2</button>
-    <button type="button" ng-hide="createMode" ng-click="login({email:'user3@gmail.com',password:'user3'})">Log in as user3</button>
+        <button type="button" ng-hide="createMode" ng-click="login({email:'user1@gmail.com',password:'user1'})">Log in as user1</button>
+        <button type="button" ng-hide="createMode" ng-click="login({email:'user2@gmail.com',password:'user2'})">Log in as user2</button>
+        <button type="button" ng-hide="createMode" ng-click="login({email:'user3@gmail.com',password:'user3'})">Log in as user3</button>
 
-    <p ng-show="err" class="error" ng-bind="err"></p>
-
-</form>
-
+        <p ng-show="err" class="error" ng-bind="err"></p>
+    </form>
+</div>

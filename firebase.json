@@ -2,8 +2,9 @@
   "firebase": "nutm",
   "public": "public",
   "ignore": [
-    "firebase.json",
     "**/.*",
+    "**/*_test.js",
+    "index-dev.html",
     "bower_components/"
   ],
   "rewrites": [{

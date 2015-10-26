@@ -28,35 +28,55 @@ nav {
 }
 nav>a {
 	float:left;
-	margin:0 0.25em;
-    text-decoration:none;
-    text-align:center;
-    padding:  0.3em 0.5em 0.2em;
-    color:white;
+	margin-left: 0.5em;
+	text-decoration:none;
+	text-align:center;
+	padding:  0.3em 0.5em 0.2em;
+	color:white;
+}
+nav>a:first-child{
+	margin-left:0;
 }
 nav>a.active,nav>a:hover {
 	background-color:lightblue;
     background: linear-gradient(black, lightblue 20%);
     color: black;
 }
-nav .badge {
-/*     display: inline-block; */
+.badge {
+display: inline-block;
     min-width: 10px;
     padding: 3px 7px;
     font-size: 0.7em;
-/*     font-family: sans-serif; */
-    font-weight: 700;
+    font-weight: bold;
     line-height: 1;
     color: black;
     text-align: center;
     white-space: nowrap;
-    vertical-align: middle;
+    
     background-color: white;
     border-radius: 10px;
+vertical-align: top;
 }
-
 h2::first-letter {
 	text-transform:uppercase;
+}
+h5 {
+	font-size: 1em;
+    text-align: center;
+    padding:  0.2em 0;
+    overflow:auto;
+}
+h5 .badge{
+	background-color:black;
+	color:white;
+}
+h5>span:first-child{
+	float:left;
+	margin-left:0.5em;
+}
+h5>span:last-child{
+	float:right;
+	margin-right:0.5em;
 }
 h2 {
     font-size: 1.2em;
@@ -64,7 +84,6 @@ h2 {
     margin: 0;
     background-color: lightblue;
     padding:  0.2em 0;
-    border-width: 1px 0 0;
 }
 .content {
     padding:0.5em;

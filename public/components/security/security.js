@@ -29,7 +29,7 @@
       $routeProvider.whenAuthenticated = function (path, route) {
         securedRoutes.push(path); // store all secured routes for use with authRequired() below
         route.resolve = route.resolve || {};
-        route.resolve.user = ['Auth', function (Auth) {
+        route.resolve.authData = ['Auth', function (Auth) {
           return Auth.$requireAuth();
         }];
         $routeProvider.when(path, route);
@@ -57,9 +57,9 @@
           }
         });
 
-        function check(user) {
-          if (!user && authRequired($location.path())) {
-            console.log('check failed', user, $location.path()); //debug
+        function check(authData) {
+          if (!authData && authRequired($location.path())) {
+            console.log('check failed', authData, $location.path()); //debug
             $location.path(loginRedirectPath);
           }
         }

@@ -239,7 +239,7 @@ angular.module('handover.tasks',['handover.data','ngRoute','firebase','firebase.
 })
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider
-	.when('/new', {
+	.whenAuthenticated('/new', {
 	  templateUrl: 'tasks/newTask.html',
 	  controller: 'NewTaskCtrl',
 	  name: 'new',
@@ -252,8 +252,8 @@ angular.module('handover.tasks',['handover.data','ngRoute','firebase','firebase.
 	    }]
 	  }
 	})
-	.when('/current', {
-	  templateUrl: 'tasks/taskList.html',
+	.whenAuthenticated('/current', {
+	  templateUrl: 'tasks/currentTasks.html',
 	  controller: 'TaskListCtrl',
 	  name: 'current',
 	  resolve: {
@@ -262,8 +262,8 @@ angular.module('handover.tasks',['handover.data','ngRoute','firebase','firebase.
 		}
 	  }
 	})
-	.when('/recent', {
-	  templateUrl: 'tasks/taskList.html',
+	.whenAuthenticated('/recent', {
+	  templateUrl: 'tasks/recentTasks.html',
 	  controller: 'TaskListCtrl',
 	  name: 'recent',
 	  resolve: {
@@ -272,7 +272,7 @@ angular.module('handover.tasks',['handover.data','ngRoute','firebase','firebase.
 		}
 	  }
 	})
-	.when('/task/:taskId', {
+	.whenAuthenticated('/task/:taskId', {
 	  templateUrl: 'tasks/taskDetail.html',
 	  controller: 'TaskDetailCtrl',
 	  name: 'detail',

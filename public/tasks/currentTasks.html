@@ -1,0 +1,10 @@
+<h2>Current tasks <span class="badge" ng-if="tasks.length" ng-bind="tasks.length"></span></h2>
+<ul class="taskList">
+  <li ng-repeat="item in tasks | orderBy:['-info.urgency',sortAccepted,'info.Added'] as results" task-item="item"></li>
+  <li ng-if="!tasks.length" class="empty">
+    <strong>No current tasks</strong>
+  </li>
+  <li ng-if="tasks.length && !results.length" class="empty">
+    <strong>No results found</strong>
+  </li>
+</ul>

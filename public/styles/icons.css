@@ -17,7 +17,9 @@
     background-image: url("/icons/star.svg");
 }
 .event>.Accepted,
-.box.Accepted {
+.box.Accepted,
+h5>span:first-child,
+.acceptedByMe .text>dd {
     background-image: url("/icons/timer.svg");
 }
 .event>.Completed,
@@ -31,7 +33,9 @@
 .event>.time {
     background-image: url("/icons/clock.svg");
 }
-.event>.referral {
+.event>.referral,
+h5>span:last-child,
+.referredToMe .text>dd {
     background-image: url("/icons/arrow-thick-right.svg");
 }
 .event>.comment {
@@ -45,6 +49,13 @@
 }
 .contact {
     background-image: url("/icons/phone.svg");
+}
+h5>span,
+.referredToMe .text>dd,
+.acceptedByMe .text>dd {
+    background-position:left top;
+    background-size:1em;
+    padding-left: 1.4em;
 }
 .alert,
 .details dd,

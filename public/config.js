@@ -6,7 +6,7 @@ angular.module('handover.config', [])
   // version of this seed app is compatible with angularFire 1.0.0
   // see tags for other versions: https://github.com/firebase/angularFire-seed/tags
   .constant('appName', 'Handover')
-  .constant('version', '0.0.1')
+  .constant('version', '0.0.0')
 
   // where to redirect users if they need to authenticate (see security.js)
   .constant('loginRedirectPath', '/login')

@@ -17,7 +17,7 @@
 }
 .details,
 .event {
-    padding:0.5em;
+    padding: 0.5em;
     position:relative;
 }
 .event:nth-child(odd){
@@ -30,13 +30,13 @@
     background: #DEF9FF;
 }
 .event.Accepted {
-    background: #DEFFDE;
+    background: #A1FFA1;
 }
 .event.Completed {
     background: #FFFCAC;
 }
 .event.Cancelled {
-    background: #FFCACA;
+    background: #FF9E9E;
 }
 .event>* {
     display:block;
@@ -63,7 +63,7 @@
 /*     margin-top:0.5em; */
 }
 .event.preview {
-    background-color:yellow;
+    background-color: #FAFFB2;
 }
 form.ng-invalid .mainform{
     border-color: red;

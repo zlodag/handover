@@ -3,16 +3,17 @@
 
   var app = angular.module('handover.profile', ['firebase', 'firebase.utils', 'firebase.auth', 'ngRoute']);
 
-  app.controller('ProfileCtrl', ['$scope', 'Auth', 'fbutil', 'user', '$location', '$firebaseObject','specialties','roles',
-    function($scope, Auth, fbutil, user, $location, $firebaseObject,specialties,roles) {
+  app.controller('ProfileCtrl', ['$scope', 'Auth', 'fbutil', 'authData', '$location', '$firebaseObject','specialties','roles',
+    function($scope, Auth, fbutil, authData, $location, $firebaseObject,specialties,roles) {
 
       $scope.specialties = specialties;
       $scope.roles = roles;
-
+      $scope.formChoice = 'info';
+      $scope.data = {};
 
       var unbind;
-      // create a 3-way binding with the user profile object in Firebase
-      var profile = $firebaseObject(fbutil.ref('users', user.uid));
+      // create a 3-way binding with the authData profile object in Firebase
+      var profile = $firebaseObject(fbutil.ref('users', authData.uid));
       profile.$bindTo($scope, 'me').then(function(ub) { unbind = ub; });
 
       // expose logout function to scope
@@ -23,16 +24,16 @@
         $location.path('/login');
       };
 
-      $scope.changePassword = function(passwordObj,confirm) {
+      $scope.changePassword = function(data) {
         resetMessages();
-        if( !pass || !confirm || !newPass ) {
-          $scope.err = 'Please fill in all password fields';
+        if( !data.oldEmail || !data.oldPassword || !data.newPassword || !data.confirmPassword) {
+          $scope.err = 'Please fill in all fields';
         }
-        else if( newPass !== confirm ) {
-          $scope.err = 'New pass and confirm do not match';
+        else if( data.newPassword !== data.confirmPassword ) {
+          $scope.err = 'New password and confirmation do not match';
         }
         else {
-          Auth.$changePassword({email: profile.email, oldPassword: pass, newPassword: newPass})
+          Auth.$changePassword({email: data.oldEmail, oldPassword: data.oldPassword, newPassword: data.newPassword})
             .then(function() {
               $scope.msg = 'Password changed';
             }, function(err) {
@@ -43,9 +44,9 @@
 
       // $scope.clear = resetMessages;
 
-      $scope.changeEmail = function(emailObj) {
+      $scope.changeEmail = function(data) {
         resetMessages();
-        Auth.$changeEmail({oldEmail: oldEmail, newEmail: newEmail, password: pass})
+        Auth.$changeEmail({oldEmail: data.oldEmail, newEmail: data.newEmail, password: data.oldPassword})
           .then(function() {
             $scope.emailmsg = 'Email changed';
           }, function(err) {

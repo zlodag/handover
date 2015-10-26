@@ -1,10 +1,30 @@
 
 <h2>Profile</h2>
 
-<form>
-    <fieldset>
-        <legend>Profile</legend>
+<select class="formChoice" ng-model="formChoice">
+    <option value="info">Edit profile information</option>
+    <option value="password">Change password</option>
+    <option value="email">Change email address</option>
+</select>
 
+<!-- <div class="radios">
+  <label>
+    <input type="radio" ng-model="formChoice" value="info">
+    Edit profile information
+  </label>
+  <label>
+    <input type="radio" ng-model="formChoice" value="password">
+    Change password
+  </label>
+  <label>
+    <input type="radio" ng-model="formChoice" value="email">
+    Change email address
+  </label>
+</div> -->
+
+<div class="userForms" ng-switch="formChoice">
+
+    <form ng-switch-when="info">
         <label>
             <span>First name</span>
             <input type="text" ng-model="me.first" required />
@@ -29,65 +49,45 @@
                 <option value="">None</option>
             </select>
         </label>
+    </form>
 
-    </fieldset>
-</form>
-
-<form>
-    <fieldset>
-        <legend>Change Password</legend>
-
+    <form ng-switch-when="password" ng-submit="changePassword(data)">
         <label>
-            <span>Email:</span>
-            <input type="email" ng-model="oldEmail"/>
+            <span>Email</span>
+            <input type="email" ng-model="data.oldEmail" required/>
         </label>
         <label>
-            <span>Current Password:</span>
-            <input type="password" ng-model="oldPassword"/>
+            <span>Current password</span>
+            <input type="password" ng-model="data.oldPassword" required/>
         </label>
-
         <label>
-            <span>New Password:</span>
-            <input type="password" ng-model="newPassword"/>
+            <span>New password</span>
+            <input type="password" ng-model="data.newPassword" required/>
         </label>
-
-        <label>
-            <span>Confirm New Password:</span>
-            <input type="password" ng-model="confirmPassword"/>
+        <label ng-show="data.newPassword">
+            <span>Confirm new password</span>
+            <input type="password" ng-model="data.confirmPassword" required/>
         </label>
-
-        <button ng-click="changePassword(oldEmail, oldPassword, newPassword, confirmPassword)">Change password</button>
-
+        <input type="submit" value="Change password"/>
         <p class="error" ng-show="err" ng-bind="err"></p>
         <p class="good" ng-show="msg" ng-bind="msg"></p>
-    </fieldset>
-</form>
+    </form>
 
-<form>
-    <fieldset>
-        <legend>Change Email</legend>
-
+    <form ng-switch-when="email" ng-submit="changeEmail(data)">
         <label>
-            <span>Email:</span>
-            <input type="email" ng-model="oldEmail"/>
+            <span>Email</span>
+            <input type="email" ng-model="data.oldEmail" required/>
         </label>
-
         <label>
-            <span>New Email:</span>
-            <input type="email" ng-model="newEmail"/>
+            <span>New email</span>
+            <input type="email" ng-model="data.newEmail" required/>
         </label>
-
         <label>
-            <span>Password:</span>
-            <input type="password" ng-model="oldPassword"/>
+            <span>Password</span>
+            <input type="password" ng-model="data.oldPassword" required/>
         </label>
-
-        <button ng-click="changeEmail(oldEmail, newEmail, oldPassword)">update email</button>
-
+        <input type="submit" value="Update email"/>
         <p class="error" ng-show="emailerr" ng-bind="emailerr"></p>
-        <p class="good" ng-show="emailmsg" ng-bind="emailmsg"</p>
-    </fieldset>
-</form>
-
-
-<button ng-click="logout()">Log Out</button>
+        <p class="good" ng-show="emailmsg" ng-bind="emailmsg"></p>
+    </form>
+</div>

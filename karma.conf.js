@@ -15,10 +15,7 @@ module.exports = function(config){
       'public/config_test.js',
       'public/components/**/*.js',
       'public/data.js',
-      // 'public/data_test.js',
       'public/profile/**/*.js',
-      'public/chat/**/*.js',
-      'public/home/**/*.js',
       'public/login/**/*.js',
       'public/tasks/**/*.js',
       'public/user/**/*.js'

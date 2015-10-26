@@ -17,9 +17,14 @@
 	<!-- </div> -->
 </div>
 <div class="section taskboard">
-	<h2>Taskboard</h2>
+	<h2>Taskboard <span class="badge" ng-if="taskboard.length" ng-bind="taskboard.length"></span></h2>
+	<h5 ng-if="taskboard.length">
+		<span>Accepted <span class="badge" ng-bind="countAccepted()"></span></span>
+		<span>Referred <span class="badge" ng-bind="taskboard.length - countAccepted()"></span></span>
+	</h5>
+	<!-- <h3 ng-if="taskboard.length">({{countAccepted()}} accepted, {{taskboard.length - countAccepted()}} referred)</h3> -->
 	<ul class="taskList">
-		<li ng-repeat="item in tasks | filter:taskboardFilter | orderBy:['-info.urgency',sortAccepted,'info.Added'] as results" task-item="item"></li>
+		<li ng-repeat="item in tasks | filter:taskboardFilter | orderBy:['-info.urgency',sortAccepted,'info.Added'] as results" task-item="item" ng-class="taskboard.$getRecord(item.$id).$value === true ? 'acceptedByMe' : 'referredToMe'"></li>
 		<li ng-if="!results.length" class="empty">
 			<strong>No tasks</strong>
 		</li>

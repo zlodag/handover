@@ -17,13 +17,9 @@ angular.module('handover.login', ['firebase.utils', 'firebase.auth', 'ngRoute','
     });
   }])
 
-  .controller('LoginCtrl', ['$scope', 'Auth', '$location', 'fbutil','specialties','roles',
-              function($scope, Auth, $location, fbutil, specialties, roles) {
-
-                // console.log(hospitalData);
+  .controller('LoginCtrl', ['$scope', 'Auth', '$location', 'fbutil','specialties','roles', function($scope, Auth, $location, fbutil, specialties, roles) {
     $scope.specialties = specialties;
     $scope.roles = roles;
-
     $scope.credentials = {};
     $scope.me = {};
     $scope.createMode = false;
@@ -31,8 +27,8 @@ angular.module('handover.login', ['firebase.utils', 'firebase.auth', 'ngRoute','
     $scope.login = function(credentials) {
       $scope.err = null;
       Auth.$authWithPassword(credentials)
-        .then(function(/* user */) {
-          $location.path('/profile');
+        .then(function(authData) {
+          $location.path('/user/'+authData.uid);
         }, function(err) {
           $scope.err = errMessage(err);
         });
@@ -54,9 +50,8 @@ angular.module('handover.login', ['firebase.utils', 'firebase.auth', 'ngRoute','
               ref.set(me, cb);
             });
           })
-          .then(function(/* user */) {
-            // redirect to the profile page
-            $location.path('/profile');
+          .then(function(authData) {
+            $location.path('/user/'+authData.uid);
           }, function(err) {
             $scope.err = errMessage(err);
           });

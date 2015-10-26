@@ -16,36 +16,43 @@
     width:70%;
 }
 #newTask input[type="submit"],
-#newTask button,
-#profile button {
+#newTask button {
     width:40%;
     margin:0 30% 0.5em;
 }
-#loginForm label {
+.userForms>form {
+    margin:0 0.5em;
+}
+.userForms>form label {
     display:block;
-    margin: 0.5em;
+    margin: 0.5em 0;
     overflow:auto;
 }
-#loginForm label>span{
-    width:45%;
+.userForms>form label>span{
+    width: 50%;
     text-align:right;
-    float:left;
+    float: left;
     position:relative;
-
+    padding-right:0.5em;
 }
-#loginForm label>.asterisk:after{
-    content:'* ';
+.userForms>form label>.asterisk:after{
+    content:' *';
     color:red;
-    position:absolute;
-    right:-0.6em;
 }
-#loginForm label>:not(span){
+.userForms>form label>:not(span){
     float:right;
     width: 50%;
 }
-#loginForm button,
-#loginForm input[type="submit"] {
+.userForms>form button,
+.userForms>form input[type="submit"],
+.formChoice {
     display:block;
     width:50%;
-    margin:0.5em 25%;
+    margin: 0.5em 25% 0;
+}
+.userForms .error {
+    color:red;
+}
+.userForms .good {
+    color:blue;
 }

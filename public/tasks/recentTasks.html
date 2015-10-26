@@ -1,0 +1,7 @@
+<h2>Recent tasks</h2>
+<ul class="taskList">
+  <li ng-repeat="item in tasks | reverse" task-item="item"></li>
+  <li ng-if="!tasks.length" class="empty">
+    <strong>No recent tasks</strong>
+  </li>
+</ul>

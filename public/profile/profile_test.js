@@ -12,7 +12,7 @@ describe('handover.profile', function() {
       module(function($provide) {
         $provide.value('specialties', ['O&G','Respiratory','Plastics']);
         $provide.value('roles', ['RMO','SMO','MDT']);
-        $provide.value('user', {uid: 'test123'});
+        $provide.value('authData', {uid: 'test123'});
       });
 
       inject(function($controller) {
